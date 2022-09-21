@@ -15,12 +15,6 @@
   padding-right: 10px;
 }
 
-/* .CustomSelect-selected-item {
-  display: flex;
-  align-items: center;
-  padding-right: 10px;
-  flex-direction: column;
-} */
 .CustomSelect-selector:focus {
   outline: 2px solid #808DFF;
 }
