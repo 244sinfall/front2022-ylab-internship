@@ -1,0 +1,95 @@
+.CustomSelect { 
+  width: 240px;
+  background-color: white;
+  padding: 5px;
+  user-select: none;
+}
+
+.CustomSelect-selector p {
+  cursor: default;
+}
+
+
+.CustomSelect-selector svg {
+  text-align: center;
+  padding-right: 10px;
+}
+
+/* .CustomSelect-selected-item {
+  display: flex;
+  align-items: center;
+  padding-right: 10px;
+  flex-direction: column;
+} */
+.CustomSelect-selector:focus {
+  outline: 2px solid #808DFF;
+}
+
+.CustomSelect-selector:hover {
+  outline: 1px solid #808DFF;
+}
+
+.CustomSelect-search {
+  padding: 5px;
+  border: 0;
+}
+
+.CustomSelect-search:focus {
+  outline: 0;
+}
+
+
+.CustomSelect-selector {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.CustomSelect-search::placeholder {
+  font-style: italic;
+  font-size: 13px;
+  color: #CCCDD4;
+}
+
+.CustomSelect-dropdown {
+  background: white;
+  position: absolute;
+  width: inherit;
+  box-shadow: 0px 8px 8px rgba(60, 60, 63, 0.25);
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+
+.CustomSelect-dropdown-items {
+  display: block;
+  max-height: 120px;
+  overflow-y: scroll;
+  scrollbar-gutter: stable;
+
+}
+
+.CustomSelect-dropdown-items::-webkit-scrollbar {
+  width: 8px;
+}
+
+
+.CustomSelect-dropdown-items::-webkit-scrollbar-thumb {
+  min-height: 60px;
+  background-color: #E5E6E9;
+  border-radius: 5px;
+}
+
+.CustomSelect-dropdown-items .CustomSelectListItem:focus {
+  outline: 0;
+  background-color: #808DFF;
+  color: white;
+
+}
+
+.CustomSelect-dropdown-items .CustomSelectListItem:hover {
+  cursor: pointer;
+  background-color: #808DFF;
+  color: white;
+}
