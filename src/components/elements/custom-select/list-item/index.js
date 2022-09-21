@@ -6,7 +6,7 @@ import './styles.css'
 function CustomSelectListItem(props) {
   const cn = bem('CustomSelectListItem');
   return (
-    <span aria-role className={cn()} onClick={props.onClick} onKeyDown={e => e.code === "Enter" && props.onClick()} role="option" tabIndex={props.tabIndex}>
+    <span className={cn()} onClick={props.onClick} onKeyDown={e => e.code === "Enter" && props.onClick()} role="option" tabIndex={props.tabIndex}>
       <p aria-hidden="true" className={cn('code')}>{props.code ?? props.name.substring(0, 2).toUpperCase()}</p>
       <p className={cn('name')}>{props.name}</p>
     </span>

@@ -36,7 +36,6 @@
 .CustomSelect-selector {
   display: flex;
   flex-direction: row;
-  width: 100%;
   justify-content: space-between;
   align-items: center;
 }
@@ -57,7 +56,6 @@
 }
 
 .CustomSelect-dropdown-items {
-  display: block;
   max-height: 120px;
   overflow-y: scroll;
   scrollbar-gutter: stable;
