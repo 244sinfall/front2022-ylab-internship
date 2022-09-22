@@ -8,7 +8,7 @@ import { useMemo } from 'react';
 
 function CustomSelect(props) {
   const cn = bem('CustomSelect');
-  const [selectedItem, setSelectedItem] = useState(props.value.title ? props.value : props.items[0])
+  const [selectedItem, setSelectedItem] = useState(props.items.find(i => i.value === props.value) ?? props.items[0])
   const [searchString, setSearchString] = useState("")
   const [opened, setOpened] = useState(null)
   const selectorRef = useRef()
@@ -17,9 +17,10 @@ function CustomSelect(props) {
   }, [searchString])
 
   useEffect(() => {
+    if(props.value !== selectedItem.value) setSelectedItem(props.items.find(i => i.value === props.value) ?? props.items[0])
     if(!opened) setSearchString("")
     if(selectorRef && opened === false) selectorRef.current.focus() // Я сделал это, потому что не хочу, чтобы он брался в фокус при первом рендер
-  }, [opened])
+  }, [props, opened])
   return (
     <div className={cn()} onKeyDown={e => e.code === "Escape" && opened && setOpened(false)}>
         <span  ref={selectorRef} className={cn('selector')} onClick={() => setOpened(!opened)}

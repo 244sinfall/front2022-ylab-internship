@@ -2,7 +2,6 @@ import React, {useCallback, useMemo} from "react";
 import useSelector from "@src/hooks/use-selector";
 import useStore from "@src/hooks/use-store";
 import useTranslate from "@src/hooks/use-translate";
-import Select from "@src/components/elements/select";
 import Input from "@src/components/elements/input";
 import LayoutFlex from "@src/components/layouts/layout-flex";
 import listToTree from "@src/utils/list-to-tree";
@@ -49,10 +48,11 @@ function CatalogFilter() {
       )
     ], [select.categories]),
   }
+  console.log(select.sort, options.sort)
   return (
     <LayoutFlex flex="start" indent="big">
       <CustomSelect onChange={callbacks.onCategory} value={select.category} items={options.categories}/>
-      <Select onChange={callbacks.onSort} value={select.sort} options={options.sort}/>
+      <CustomSelect onChange={callbacks.onSort} value={select.sort} items={options.sort}/>
       <Input onChange={callbacks.onSearch} value={select.query} placeholder={'Поиск'} theme="big"/>
       <button onClick={callbacks.onReset}>{t('filter.reset')}</button>
     </LayoutFlex>
