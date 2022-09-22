@@ -24,3 +24,8 @@
   font-size: 15px;
   margin: 0;
 }
+
+.CustomSelectListItem[data-selected=true] {
+  background-color: #808DFF;
+  color: white;
+}

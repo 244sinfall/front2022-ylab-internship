@@ -48,7 +48,6 @@ function CatalogFilter() {
       )
     ], [select.categories]),
   }
-  console.log(select.sort, options.sort)
   return (
     <LayoutFlex flex="start" indent="big">
       <CustomSelect onChange={callbacks.onCategory} value={select.category} items={options.categories}/>

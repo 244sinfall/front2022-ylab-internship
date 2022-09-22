@@ -14,7 +14,7 @@
 }
 
 .CustomSelect-selector:focus {
-  outline: 2px solid #808DFF;
+  outline: 1px solid #808DFF;
 }
 
 .CustomSelect-selector:hover {
@@ -71,13 +71,12 @@
 
 .CustomSelect-dropdown-items .CustomSelectListItem:focus {
   outline: 0;
-  background-color: #808DFF;
-  color: white;
-
+  background-color: #DBDFFF;
+  color: black;
 }
 
 .CustomSelect-dropdown-items .CustomSelectListItem:hover {
   cursor: pointer;
-  background-color: #808DFF;
-  color: white;
+  background-color: #DBDFFF;
+  color: black;
 }
