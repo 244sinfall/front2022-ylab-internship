@@ -1,4 +1,4 @@
-.CustomSelect { 
+.CustomSelect {
   width: 240px;
   background-color: white;
   padding: 5px;
@@ -8,7 +8,6 @@
 .CustomSelect-selector p {
   cursor: default;
 }
-
 
 .CustomSelect-selector svg {
   text-align: center;
@@ -32,7 +31,6 @@
   outline: 0;
 }
 
-
 .CustomSelect-selector {
   display: flex;
   flex-direction: row;
@@ -50,7 +48,7 @@
   background: white;
   position: absolute;
   width: inherit;
-  box-shadow: 0px 8px 8px rgba(60, 60, 63, 0.25);
+  box-shadow: 0 8px 8px rgba(60, 60, 63, 0.25);
   padding-top: 5px;
   padding-bottom: 5px;
 }
@@ -59,13 +57,11 @@
   max-height: 120px;
   overflow-y: scroll;
   scrollbar-gutter: stable;
-
 }
 
 .CustomSelect-dropdown-items::-webkit-scrollbar {
   width: 8px;
 }
-
 
 .CustomSelect-dropdown-items::-webkit-scrollbar-thumb {
   min-height: 60px;
