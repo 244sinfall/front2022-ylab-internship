@@ -7,6 +7,10 @@
   padding: 5px;
 }
 
+abbr {
+  text-decoration: none;
+}
+
 .CustomSelectListItem-code {
   width: 18px;
   height: 18px;

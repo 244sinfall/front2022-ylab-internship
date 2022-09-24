@@ -48,9 +48,17 @@
   background: white;
   position: absolute;
   width: inherit;
+  transition: opacity 0.2s;
   box-shadow: 0 8px 8px rgba(60, 60, 63, 0.25);
   padding-top: 5px;
   padding-bottom: 5px;
+}
+.CustomSelect-dropdown[data-state=opened] {
+  opacity: 100%;
+  z-index: 9999;
+}
+.CustomSelect-dropdown[data-state=closed] {
+  opacity: 0;
 }
 
 .CustomSelect-dropdown-items {

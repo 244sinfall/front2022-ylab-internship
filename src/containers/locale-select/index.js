@@ -14,7 +14,7 @@ function LocaleSelect() {
   };
 
   return (
-    <CustomSelect onChange={setLang} value={lang} items={options.lang}/>
+    <CustomSelect onChange={setLang} value={lang} options={options.lang}/>
   );
 }
 
