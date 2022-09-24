@@ -35,7 +35,7 @@ function CustomSelect(props) {
   })
 
   useEffect(() => {
-    if(props.value !== selectedItem.value) setSelectedItem(props.options.find(i => i.value === props.value) ?? props.options[0])
+    if(props.value && props.value !== selectedItem.value) setSelectedItem(props.options.find(i => i.value === props.value) ?? props.options[0])
     if(!opened) setSearchString("")
     if(selectorRef && opened === false) selectorRef.current.focus() // Я сделал это, потому что не хочу, чтобы он брался в фокус при первом рендер
   }, [props, opened])
