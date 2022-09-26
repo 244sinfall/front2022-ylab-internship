@@ -69,6 +69,21 @@ function CustomSelect(props) {
     if(!opened) setSearchString("")
     if(selectorRef && opened === false) selectorRef.current.focus()
   }, [props, opened])
+
+  const defaultRenderItems = useMemo(() => {
+    return props.options.map((v) => {
+      if(!searchRegExp || searchRegExp.test(v.title) || searchRegExp.test(v.code))
+        return <CustomSelectListItem key={v.value} name={v.title} code={v.code} onClick={() => {
+          if(v.value !== selectedItem.value) {
+            setSelectedItem({value: v.value, title: v.title, code: v.code})
+            props.onChange(v.value)
+          }
+          callbacks.handleDropdownOpenClose()
+        }} ref={currentSelection.current === null ? currentSelection :
+          v.value === selectedItem.value ? currentSelection : null}
+                                     selected={v.value === selectedItem.value}/>})
+  },[props, selectedItem, searchRegExp, opened])
+
   return (
     <div ref={componentRef} className={cn()} onKeyDown={callbacks.handleEscapeKeyWhileOpened}
          onKeyDownCapture={callbacks.handleArrowFocusShift}>
@@ -84,17 +99,7 @@ function CustomSelect(props) {
              onTransitionEnd={callbacks.handleDropdownCloseAnimationEnd}>
         <input className={cn('search')} value={searchString} placeholder="Поиск" onChange={(e) => setSearchString(e.target.value)}/>
         <div className={cn('dropdown-items')}>
-          {props.options.map((v) => {
-            if(!searchRegExp || searchRegExp.test(v.title) || searchRegExp.test(v.code))
-              return <CustomSelectListItem key={v.value} name={v.title} code={v.code} onClick={() => {
-                if(v.value !== selectedItem.value) {
-                  setSelectedItem({value: v.value, title: v.title, code: v.code})
-                  props.onChange(v.value)
-                }
-                callbacks.handleDropdownOpenClose()
-              }} ref={v.value === selectedItem.value ? currentSelection : null}
-                                           selected={v.value === selectedItem.value}/>
-            })}
+          {props.renderItems || defaultRenderItems}
         </div>
       </div>
     </div>
@@ -104,7 +109,8 @@ function CustomSelect(props) {
 CustomSelect.propTypes = {
   options: propTypes.arrayOf(propTypes.object).isRequired,
   onChange: propTypes.func,
-  value: propTypes.any
+  value: propTypes.any,
+  renderItems: propTypes.arrayOf(propTypes.node)
 }
 
 CustomSelect.defaultProps = {
