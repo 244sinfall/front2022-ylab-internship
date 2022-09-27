@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from "react";
+import React, {useCallback} from "react";
 import useSelector from "@src/hooks/use-selector";
 import useStore from "@src/hooks/use-store";
 import useTranslate from "@src/hooks/use-translate";
@@ -21,19 +21,14 @@ function CatalogList() {
   }));
 
   const {t} = useTranslate();
-  const [intersectionLimit, setIntersectionLimit] = useState(select.limit)
-  useEffect(() => {
-    if(intersectionLimit < select.limit) return setIntersectionLimit(select.limit)
-    if(select.limit < select.count || select.count === 0)
-      store.get('catalog').setParams({limit: intersectionLimit})
-  }, [intersectionLimit])
+
   const callbacks = {
     // Добавление в корзину
     addToBasket: useCallback(_id => store.get('basket').addToBasket(_id), []),
     //Пагианция
     onPaginate: useCallback(page => store.get('catalog').setParams({page}), []),
-    //Бесконечный скролл
-    onIntersect: useCallback(() => setIntersectionLimit(prev => prev + 20), [])
+    //Бесконечный скролл. Отказался от useCallback, поскольку в нем замыкается select limit
+    onIntersect: () => store.get('catalog').setParams({limit: select.limit + 20})
   };
   const renders = {
     item: useCallback(item => (
@@ -42,7 +37,7 @@ function CatalogList() {
   }
 
   return (
-    <InfiniteScroller triggerIntersectionAt={0.95} onIntersection={callbacks.onIntersect}>
+    <InfiniteScroller onIntersection={callbacks.onIntersect}>
       <Spinner active={select.waiting}>
         <List items={select.items} renderItem={renders.item}/>
         <Pagination count={select.count} page={select.page} limit={select.limit} onChange={callbacks.onPaginate}/>
