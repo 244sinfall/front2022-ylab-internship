@@ -34,7 +34,7 @@ const InfiniteScroller = (props) => {
       }, observeOptions)
       observer.observe(observable.current)
       // Отписка от обсервера, когда он больше не нужен
-      return () => observer.unobserve(observable.current)
+      return () => observable.current && observer.unobserve(observable.current)
     }
   }, [container])
 
