@@ -64,9 +64,10 @@ class CatalogState extends StateModule {
    * Устанвока параметров и загрузка списка товаров
    * @param params
    * @param historyReplace {Boolean} Заменить адрес (true) или сделаит новую запис в истории браузера (false)
+   * @param appendList {Boolean} Добавить к текущему списку items (true) или заменить items (false)
    * @returns {Promise<void>}
    */
-  async setParams(params = {}, historyReplace = false) {
+  async setParams(params = {}, historyReplace = false, {appendList = false}) {
     const newParams = {...this.getState().params, ...params};
 
     // Установка новых параметров и признака загрузки
@@ -93,7 +94,7 @@ class CatalogState extends StateModule {
     // Установка полученных данных и сброс признака загрузки
     this.setState({
       ...this.getState(),
-      items: json.result.items,
+      items: appendList ? [...this.getState().items, ...json.result.items] : json.result.items,
       count: json.result.count,
       waiting: false
     }, 'Обновление списка товара');
