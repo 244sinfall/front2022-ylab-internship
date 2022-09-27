@@ -67,7 +67,7 @@ class CatalogState extends StateModule {
    * @param appendList {Boolean} Добавить к текущему списку items (true) или заменить items (false)
    * @returns {Promise<void>}
    */
-  async setParams(params = {}, historyReplace = false, {appendList = false}) {
+  async setParams(params = {}, historyReplace = false, appendList = false) {
     const newParams = {...this.getState().params, ...params};
 
     // Установка новых параметров и признака загрузки
