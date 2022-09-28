@@ -24,5 +24,8 @@
   "confirmation.title": "Add Confirmation",
   "confirmation.label": "Select the number of goods you want to add to basket",
   "confirmation.close": "Cancel",
-  "confirmation.add": "Add to basket"
+  "confirmation.add": "Add to basket",
+  "catalog.openInModal": "Open in modal window",
+  "separateStore.title": "Store in 'window'",
+  "separateStore.close": "Back to main"
 }

@@ -26,5 +26,8 @@
   "confirmation.title": "Подтверждение",
   "confirmation.label": "Выберите количество товара, которое желаете добавить в корзину",
   "confirmation.close": "Отменить",
-  "confirmation.add": "Добавить"
+  "confirmation.add": "Добавить",
+  "catalog.openInModal": "Открыть в модальном окне",
+  "separateStore.title": "Магазин 'в окне'",
+  "separateStore.close": "На главную"
 }

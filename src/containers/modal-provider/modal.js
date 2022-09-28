@@ -2,6 +2,7 @@ import React from 'react';
 import propTypes from 'prop-types';
 import Basket from '@src/app/basket';
 import CatalogConfirmation from '@src/containers/catalog-confirmation';
+import StoreModal from '@src/app/store-modal';
 
 /**
  * Компонент отрисовывает нужное модальное окно без контекста применения
@@ -11,6 +12,7 @@ const Modal = props => {
   switch (props.name) {
     case "basket": return <Basket/>
     case "confirm": return <CatalogConfirmation onAccept={confirmedValue => props.resultCallback(confirmedValue)}/>
+    case "separateStore": return <StoreModal/>
     default: return <></>
   }
 };

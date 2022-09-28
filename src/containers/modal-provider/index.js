@@ -9,7 +9,7 @@ const ModalProvider = () => {
   const openedModals = useSelectorRedux(state => state.modals.opened);
   return (
     <>
-      {openedModals.map(modalInfo => <Modal name={modalInfo.name} resultCallback={modalInfo.resultCallback}/>)}
+      {openedModals.map(modalInfo => <Modal key={modalInfo.name} name={modalInfo.name} resultCallback={modalInfo.resultCallback}/>)}
     </>
   );
 };
