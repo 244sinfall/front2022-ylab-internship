@@ -1,7 +1,6 @@
 import React, {useCallback, useMemo} from "react";
-import {useStore as useStoreRedux, useSelector as useSelectorRedux} from 'react-redux';
+import {useStore as useStoreRedux} from 'react-redux';
 import useSelector from "@src/hooks/use-selector";
-import useStore from "@src/hooks/use-store";
 import useTranslate from "@src/hooks/use-translate";
 import Menu from "@src/components/navigation/menu";
 import BasketSimple from "@src/components/catalog/basket-simple";

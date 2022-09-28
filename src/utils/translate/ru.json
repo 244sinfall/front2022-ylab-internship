@@ -22,5 +22,9 @@
   "auth.password": "Пароль",
   "auth.signIn": "Войти",
   "session.signIn": "Вход",
-  "session.signOut": "Выход"
+  "session.signOut": "Выход",
+  "confirmation.title": "Подтверждение",
+  "confirmation.label": "Выберите количество товара, которое желаете добавить в корзину",
+  "confirmation.close": "Отменить",
+  "confirmation.add": "Добавить"
 }

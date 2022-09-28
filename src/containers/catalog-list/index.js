@@ -7,10 +7,14 @@ import Pagination from "@src/components/navigation/pagination";
 import Spinner from "@src/components/elements/spinner";
 import Item from "@src/components/catalog/item";
 import InfiniteScroller from '@src/containers/infinite-scroller';
+import actionsModals from "@src/store-redux/modals/actions";
+import {useStore as useStoreRedux} from 'react-redux';
 
 function CatalogList() {
 
   const store = useStore();
+
+  const storeRedux = useStoreRedux();
 
   const select = useSelector(state => ({
     items: state.catalog.items,
@@ -24,7 +28,14 @@ function CatalogList() {
 
   const callbacks = {
     // Добавление в корзину
-    addToBasket: useCallback(_id => store.get('basket').addToBasket(_id), []),
+    addToBasket: useCallback((_id, count) => store.get('basket').addToBasket(_id, count), []),
+    // Открытие модалки добавления в корзину
+    addConfirmation: useCallback(_id => {
+      storeRedux.dispatch(actionsModals.open('confirm', (count) => {
+        if(!isNaN(count) && count >= 1) callbacks.addToBasket(_id, count)
+        storeRedux.dispatch(actionsModals.close())
+      }))
+    }, []),
     //Пагианция
     onPaginate: useCallback(page => store.get('catalog').setParams({page}), []),
     //Бесконечный скролл. Отказался от useCallback, поскольку в нем замыкается select limit
@@ -32,7 +43,7 @@ function CatalogList() {
   };
   const renders = {
     item: useCallback(item => (
-      <Item item={item} onAdd={callbacks.addToBasket} link={`/articles/${item._id}`} labelAdd={t('article.add')}/>
+      <Item item={item} onAdd={callbacks.addConfirmation} link={`/articles/${item._id}`} labelAdd={t('article.add')}/>
     ), [t]),
   }
 

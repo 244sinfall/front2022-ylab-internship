@@ -20,8 +20,9 @@ class BasketState extends StateModule{
   /**
    * Добавление товара в корзину
    * @param _id Код товара
+   * @param count Количество товара для добавления в корзину
    */
-  async addToBasket(_id) {
+  async addToBasket(_id, count = 1) {
     let sum = 0;
     // Ищем товар в корзие, чтобы увеличить его количество. Заодно получаем новый массив items
     let exists = false;
@@ -30,7 +31,7 @@ class BasketState extends StateModule{
       // Искомый товар для увеличения его количества
       if (item._id === _id) {
         exists = true;
-        result = {...item, amount: item.amount + 1};
+        result = {...item, amount: item.amount + count};
       }
       // Добавляея в общую сумму
       sum += result.price * result.amount;
@@ -43,7 +44,7 @@ class BasketState extends StateModule{
       const json = await this.services.api.request({url: `/api/v1/articles/${_id}`});
 
       const item = json.result;
-      items.push({...item, amount: 1});
+      items.push({...item, amount: count});
       // Досчитываем сумму
       sum += item.price;
     }
