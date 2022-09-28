@@ -48,12 +48,12 @@ function CatalogList() {
   }
 
   return (
-    <InfiniteScroller onIntersection={callbacks.onIntersect}>
+    // <InfiniteScroller onIntersection={callbacks.onIntersect}>
       <Spinner active={select.waiting}>
         <List items={select.items} renderItem={renders.item}/>
         <Pagination count={select.count} page={select.page} limit={select.limit} onChange={callbacks.onPaginate}/>
       </Spinner>
-    </InfiniteScroller>
+    // </InfiniteScroller>
   );
 }
 
