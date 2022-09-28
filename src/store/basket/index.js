@@ -46,7 +46,7 @@ class BasketState extends StateModule{
       const item = json.result;
       items.push({...item, amount: count});
       // Досчитываем сумму
-      sum += item.price;
+      sum += item.price * count;
     }
 
     // Установка состояние, basket тоже нужно сделать новым
