@@ -25,7 +25,8 @@ function CatalogList() {
   }));
 
   const {t} = useTranslate();
-
+  // Вместо коллбека сделать промисы. Переписать модалки на обычный стор. Пофиксить инфинит скролл
+  // В корзине кнопку добавление товара. При нажатии на эту кнопку открывается модалка с каталогом, где можно добавить новый товар для корзины
   const callbacks = {
     // Добавление в корзину
     addToBasket: useCallback((_id, count) => store.get('basket').addToBasket(_id, count), []),
@@ -48,12 +49,12 @@ function CatalogList() {
   }
 
   return (
-    // <InfiniteScroller onIntersection={callbacks.onIntersect}>
+    <InfiniteScroller onIntersection={callbacks.onIntersect}>
       <Spinner active={select.waiting}>
-        <List items={select.items} renderItem={renders.item}/>
         <Pagination count={select.count} page={select.page} limit={select.limit} onChange={callbacks.onPaginate}/>
+        <List items={select.items} renderItem={renders.item}/>
       </Spinner>
-    // </InfiniteScroller>
+    </InfiniteScroller>
   );
 }
 

@@ -29,7 +29,7 @@ const StoreModal = () => {
   }
   return (
     <LayoutModal onClose={callbacks.onClose} title={t('separateStore.title')} labelClose={t('separateStore.close')}>
-      <ToolsContainer/>
+      <ToolsContainer showMenu={false}/>
       <CatalogFilter/>
       <CatalogList/>
     </LayoutModal>

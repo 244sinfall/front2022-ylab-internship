@@ -7,7 +7,7 @@ import BasketSimple from "@src/components/catalog/basket-simple";
 import LayoutFlex from "@src/components/layouts/layout-flex";
 import actionsModals from '@src/store-redux/modals/actions';
 
-function ToolsContainer() {
+function ToolsContainer({showMenu = true}) {
 
   //const store = useStore();
   const storeRedux = useStoreRedux();
@@ -35,8 +35,8 @@ function ToolsContainer() {
   }
 
   return (
-    <LayoutFlex flex="between" indent="big">
-      <Menu items={options.menu}/>
+    <LayoutFlex flex={showMenu ? "between" : "end"} indent="big">
+      {showMenu && <Menu items={options.menu}/>}
       <BasketSimple onOpen={callbacks.openModalBasket} amount={select.amount} sum={select.sum}
                     t={t}/>
     </LayoutFlex>
