@@ -69,7 +69,7 @@ class CatalogState extends StateModule {
    */
   async loadMoreItems() {
     // Берем от текуего состояния страницы + свойства loaded, которое отражает количество загруженных предметов
-    const newSkip = (this.getState().params.page-1) * 10 + this.getState().loaded
+    const newSkip = (this.getState().params.page-1 || 1) * 10 + this.getState().loaded
     // Проверяем, что в АПИ есть ее товар, который мы можем получить догрузкой. Если нет - сразу выходим.
     if(newSkip - this.getState().params.limit >= this.getState().count) return
     // Установка новых параметров и признака загрузки

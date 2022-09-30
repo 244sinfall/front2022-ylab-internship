@@ -5,10 +5,9 @@ import './style.css';
 
 function List(props) {
   const cn = bem('List');
-
   return (
     <div className={cn()}>{props.items.map(item =>
-      <div key={`${item._id}-${props.idSpreader}`} className={cn('item')}>
+      <div key={`${item._id}-${props.idSpreader}-${Math.random()*10000}`} className={cn('item')}>
         {props.renderItem(item)}
       </div>
     )}
