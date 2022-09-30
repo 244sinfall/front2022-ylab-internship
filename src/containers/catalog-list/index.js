@@ -7,14 +7,10 @@ import Pagination from "@src/components/navigation/pagination";
 import Spinner from "@src/components/elements/spinner";
 import Item from "@src/components/catalog/item";
 import InfiniteScroller from '@src/containers/infinite-scroller';
-import actionsModals from "@src/store-redux/modals/actions";
-import {useStore as useStoreRedux} from 'react-redux';
 
 function CatalogList() {
 
   const store = useStore();
-
-  const storeRedux = useStoreRedux();
 
   const select = useSelector(state => ({
     items: state.catalog.items,
@@ -32,10 +28,10 @@ function CatalogList() {
     addToBasket: useCallback((_id, count) => store.get('basket').addToBasket(_id, count), []),
     // Открытие модалки добавления в корзину
     addConfirmation: useCallback(_id => {
-      storeRedux.dispatch(actionsModals.open('confirm', (count) => {
+      store.get('modals').open('confirm', (count) => {
         if(!isNaN(count) && count >= 1) callbacks.addToBasket(_id, count)
-        storeRedux.dispatch(actionsModals.close())
-      }))
+        store.get('modals').close()
+      })
     }, []),
     //Пагианция
     onPaginate: useCallback(page => store.get('catalog').setParams({page}), []),

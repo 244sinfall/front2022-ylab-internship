@@ -7,27 +7,24 @@ class ModalsState extends StateModule{
 
   initState() {
     return {
-      name: null
+      opened: []
     };
   }
 
   /**
    * Открытие модального окна по названию
    * @param name {String} Название модалки
+   * @param resultCallback {Function} Колбек на закрытие модалки
    */
-  open(name){
-    this.setState({
-      name
-    }, `Открытие модалки ${name}`);
+  open(name, resultCallback = () => {}){
+    this.setState({opened: [...this.getState().opened, { name, resultCallback }]}, `Открытие модалки ${name}`);
   }
 
   /**
    * Закрытие модального окна
    */
   close(){
-    this.setState({
-      name: false
-    }, `Закрытие модалки`);
+    this.setState({opened: this.getState().opened.slice(0, -1) }, `Закрытие модалки`);
   }
 }
 

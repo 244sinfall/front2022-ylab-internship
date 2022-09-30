@@ -2,17 +2,16 @@ import React, {useState} from 'react';
 import LayoutModal from '@src/components/layouts/layout-modal';
 import AddConfirmation from '@src/components/catalog/add-item-confirmation';
 import propTypes from 'prop-types';
-import {useStore as useStoreRedux} from 'react-redux';
-import actionsModals from "@src/store-redux/modals/actions";
 import useTranslate from '@src/hooks/use-translate';
+import useStore from '@src/hooks/use-store';
 
 const CatalogConfirmation = (props) => {
   const [currentAmount, setCurrentAmount] = useState(1)
 
-  const storeRedux = useStoreRedux();
+  const store = useStore();
 
   const callbacks = {
-    close: () => storeRedux.dispatch(actionsModals.close()),
+    close: () => store.get('modals').close(),
     valueChange: (newValue) => {
       let newValueInt = parseInt(newValue)
       if(isNaN(newValueInt) || newValueInt < 0) newValueInt = 0
