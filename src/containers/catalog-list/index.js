@@ -35,9 +35,9 @@ function CatalogList(props) {
       })
     }, []),
     //Пагианция
-    onPaginate: useCallback(page => store.get('catalog').setParams({page}), []),
+    onPaginate: useCallback(page => store.get(props.catalogName).setParams({page}), []),
     //Бесконечный скролл. Отказался от useCallback, поскольку в нем замыкается select limit
-    onIntersect: () => store.get('catalog').setParams({page: select.page + 1}, false, true)
+    onIntersect: () => store.get(props.catalogName).setParams({page: select.page + 1}, false, true)
   };
   const renders = {
     item: useCallback(item => (
