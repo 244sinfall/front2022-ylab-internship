@@ -22,7 +22,7 @@ function LayoutModal(props) {
 
   return (
     <div className={cn()}>
-      <div className={cn('frame')} ref={frame}>
+      <div className={cn('frame', {theme: props.theme})} ref={frame}>
         <div className={cn('head')}>
           <h1 className={cn('title')}>
             {props.title}
@@ -41,12 +41,14 @@ LayoutModal.propTypes = {
   title: PropTypes.string,
   onClose: PropTypes.func,
   children: PropTypes.node,
+  theme: PropTypes.string,
   labelClose: PropTypes.string
 };
 
 LayoutModal.defaultProps = {
   title: 'Модалка',
   labelClose: 'Закрыть',
+  theme: "normal",
   onClose: () => {}
 };
 

@@ -1,7 +1,7 @@
 export default {
 
-  open: (name) => {
-    return {type: 'modal/open', payload: {name}};
+  open: (name, resultCallback = () => {}) => {
+    return {type: 'modal/open', payload: { name, resultCallback }};
   },
 
   close: () => {

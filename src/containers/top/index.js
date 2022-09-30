@@ -12,7 +12,6 @@ function TopContainer() {
   const navigate = useNavigate();
   const location = useLocation();
   const store = useStore();
-
   const select = useSelector(state => ({
     user: state.session.user,
     exists: state.session.exists
@@ -28,10 +27,14 @@ function TopContainer() {
     onSignOut: useCallback(() => {
       store.get('session').signOut();
     }, [location.pathname]),
+
+    // Открыть магазин в модальном окне
+    openCatalogModal: useCallback(() => store.get('modals').open('separateStore'), [])
   };
 
   return (
     <LayoutFlex flex="end" indent="small">
+      <button onClick={callbacks.openCatalogModal}>{t('catalog.openInModal')}</button>
       {select.exists && <Link to="/profile">{select.user.profile.name}</Link>}
       {select.exists
         ? <button onClick={callbacks.onSignOut}>{t('session.signOut')}</button>

@@ -7,28 +7,29 @@ import LayoutFlex from "@src/components/layouts/layout-flex";
 import listToTree from "@src/utils/list-to-tree";
 import treeToList from "@src/utils/tree-to-list";
 import CustomSelect from '@src/components/elements/custom-select';
+import propTypes from 'prop-types';
 
-function CatalogFilter() {
+function CatalogFilter(props) {
 
   const store = useStore();
 
   const select = useSelector(state => ({
-    sort: state.catalog.params.sort,
-    query: state.catalog.params.query,
-    category: state.catalog.params.category,
+    sort: state[props.catalogName].params.sort,
+    query: state[props.catalogName].params.query,
+    category: state[props.catalogName].params.category,
     categories: state.categories.items,
   }));
   const {t} = useTranslate();
 
   const callbacks = {
     // Сортировка
-    onSort: useCallback(sort => store.get('catalog').setParams({sort}), []),
+    onSort: useCallback(sort => store.get(props.catalogName).setParams({sort}), []),
     // Поиск
-    onSearch: useCallback(query => store.get('catalog').setParams({query, page: 1}), []),
+    onSearch: useCallback(query => store.get(props.catalogName).setParams({query, page: 1}), []),
     // Сброс
-    onReset: useCallback(() => store.get('catalog').resetParams(), []),
+    onReset: useCallback(() => store.get(props.catalogName).resetParams(), []),
     // Фильтр по категории
-    onCategory: useCallback(category => store.get('catalog').setParams({category}), []),
+    onCategory: useCallback(category => store.get(props.catalogName).setParams({category}), []),
   };
 
   // Опции для полей
@@ -56,6 +57,14 @@ function CatalogFilter() {
       <button onClick={callbacks.onReset}>{t('filter.reset')}</button>
     </LayoutFlex>
   );
+}
+
+CatalogFilter.propTypes = {
+  catalogName: propTypes.string,
+}
+
+CatalogFilter.defaultProps = {
+  catalogName: "catalog",
 }
 
 export default React.memo(CatalogFilter);

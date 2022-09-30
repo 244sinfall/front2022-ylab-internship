@@ -13,6 +13,7 @@
   "basket.total": "Total",
   "basket.unit": "pcs",
   "basket.delete": "Delete",
+  "basket.addMore": "Add more items",
   "article.add": "Add",
   "filter.reset": "Reset",
   "auth.title": "Sign In",
@@ -20,5 +21,14 @@
   "auth.password": "Password",
   "auth.signIn": "Sign in",
   "session.signIn": "Sign In",
-  "session.signOut": "Sign Out"
+  "session.signOut": "Sign Out",
+  "confirmation.title": "Add Confirmation",
+  "confirmation.label": "Select the number of goods you want to add to basket",
+  "confirmation.close": "Cancel",
+  "confirmation.add": "Add to basket",
+  "catalog.openInModal": "Open in modal window",
+  "separateStore.title": "Store in 'window'",
+  "separateStore.close": "Back to main",
+  "addExtraItems.title": "Click on items to add",
+  "addExtraItems.close": "Return to basket"
 }

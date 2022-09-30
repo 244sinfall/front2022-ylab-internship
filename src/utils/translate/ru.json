@@ -15,6 +15,7 @@
   "basket.total": "Итого",
   "basket.unit": "шт",
   "basket.delete": "Удалть",
+  "basket.addMore": "Добавить еще",
   "article.add": "Добавить",
   "filter.reset": "Сбросить",
   "auth.title": "Вход",
@@ -22,5 +23,14 @@
   "auth.password": "Пароль",
   "auth.signIn": "Войти",
   "session.signIn": "Вход",
-  "session.signOut": "Выход"
+  "session.signOut": "Выход",
+  "confirmation.title": "Подтверждение",
+  "confirmation.label": "Выберите количество товара, которое желаете добавить в корзину",
+  "confirmation.close": "Отменить",
+  "confirmation.add": "Добавить",
+  "catalog.openInModal": "Открыть в модальном окне",
+  "separateStore.title": "Магазин 'в окне'",
+  "separateStore.close": "На главную",
+  "addExtraItems.title": "Кликните, чтобы добавить",
+  "addExtraItems.close": "Вернуться в корзину"
 }

@@ -9,12 +9,14 @@ function BasketTotal(props) {
       <span className="BasketTotal-cell">{props.t('basket.total')}</span>
       <span className="BasketTotal-cell"> {numberFormat(props.sum)} ₽</span>
       <span className="BasketTotal-cell"></span>
+      <button onClick={props.onAddMore}>{props.t('basket.addMore')}</button>
     </div>
   )
 }
 
 BasketTotal.propTypes = {
   sum: propTypes.number,
+  onAddMore: propTypes.func,
   t: propTypes.func
 }
 
