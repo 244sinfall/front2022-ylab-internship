@@ -30,7 +30,7 @@ const AddExtraItemsModal = () => {
     }, [selected])
   }
   const renderFunction = useCallback(item => (
-      <ItemSelect item={item} onClick={callbacks.onItemClick}/>
+      <ItemSelect item={item} selected={selected.includes(item)} onClick={callbacks.onItemClick}/>
     ), [])
   return (
     <LayoutModal onClose={callbacks.onClose} title={t('addExtraItems.title')} labelClose={t('addExtraItems.close')}>
