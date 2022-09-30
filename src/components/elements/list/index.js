@@ -8,7 +8,7 @@ function List(props) {
 
   return (
     <div className={cn()}>{props.items.map(item =>
-      <div key={item._id} className={cn('item')}>
+      <div key={`${item._id}-${props.idSpreader}`} className={cn('item')}>
         {props.renderItem(item)}
       </div>
     )}
@@ -18,11 +18,14 @@ function List(props) {
 
 List.propTypes = {
   items: propTypes.arrayOf(propTypes.object).isRequired,
+  // Для избежания конфликтов ключей, когда открыто несколько каталогов
+  idSpreader: propTypes.string,
   renderItem: propTypes.func
 }
 
 List.defaultProps = {
   items: [],
+  idSpreader: "catalog",
   renderItem: (item) => {
     return item.toString()
   }

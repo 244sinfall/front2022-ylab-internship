@@ -16,7 +16,31 @@ class BasketState extends StateModule{
         amount: 0
     };
   }
-
+  async addItemToBasket(item) {
+    let sum = 0
+    let exists = false;
+    const items = this.getState().items.map(i => {
+      let result = i;
+      // Искомый товар для увеличения его количества
+      if (result._id ===  item._id) {
+        exists = true;
+        result = {...result, amount: result.amount + 1};
+      }
+      // Добавляея в общую сумму
+      sum += result.price * result.amount;
+      return result
+    });
+    if (!exists) {
+      items.push({...item, amount: 1})
+      sum += item.price
+    }
+    // Установка состояние, basket тоже нужно сделать новым
+    this.setState({
+      items,
+      sum,
+      amount: items.length
+    }, 'Добавление в корзину');
+  }
   /**
    * Добавление товара в корзину
    * @param _id Код товара

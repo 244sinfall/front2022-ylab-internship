@@ -24,7 +24,13 @@ function Basket() {
       store.get('modals').close()
     }, []),
     // Удаление из корзины
-    removeFromBasket: useCallback(_id => store.get('basket').removeFromBasket(_id), [])
+    removeFromBasket: useCallback(_id => store.get('basket').removeFromBasket(_id), []),
+    // Открытие модального окна для добавления новых товаров. Возвраается промис с массивом объектов товаров, которые
+    // выбрал пользователь
+    onAddMore: useCallback(async() => {
+      const resultItems = await store.get('modals').open('addExtraItems')
+      resultItems.forEach(i => store.get('basket').addItemToBasket(i))
+    }, [])
   };
 
   const renders = {
@@ -44,7 +50,7 @@ function Basket() {
     <LayoutModal title={t('basket.title')} labelClose={t('basket.close')}
                  onClose={callbacks.closeModal}>
       <List items={select.items} renderItem={renders.itemBasket}/>
-      <BasketTotal sum={select.sum} t={t}/>
+      <BasketTotal sum={select.sum} t={t} onAddMore={callbacks.onAddMore}/>
     </LayoutModal>
   )
 }

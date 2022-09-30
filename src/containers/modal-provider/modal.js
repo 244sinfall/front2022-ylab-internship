@@ -3,6 +3,7 @@ import propTypes from 'prop-types';
 import Basket from '@src/app/basket';
 import CatalogConfirmation from '@src/containers/catalog-confirmation';
 import StoreModal from '@src/app/store-modal';
+import AddExtraItemsModal from '@src/app/add-extra-items-modal';
 
 /**
  * Компонент отрисовывает нужное модальное окно без контекста применения
@@ -13,6 +14,7 @@ const Modal = props => {
     case "basket": return <Basket/>
     case "confirm": return <CatalogConfirmation/>
     case "separateStore": return <StoreModal/>
+    case "addExtraItems": return <AddExtraItemsModal/>
     default: return <></>
   }
 };

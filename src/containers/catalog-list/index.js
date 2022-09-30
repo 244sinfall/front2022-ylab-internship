@@ -47,7 +47,7 @@ function CatalogList(props) {
     <InfiniteScroller onIntersection={callbacks.onIntersect}>
       <Spinner active={select.waiting}>
         <Pagination count={select.count} page={select.page} limit={select.limit} onChange={callbacks.onPaginate}/>
-        <List items={select.items} renderItem={renders.item}/>
+        <List idSpreader={props.catalogName} items={select.items} renderItem={props.renderFunction || renders.item}/>
       </Spinner>
     </InfiniteScroller>
   );
@@ -55,6 +55,7 @@ function CatalogList(props) {
 
 CatalogList.propTypes = {
   catalogName: propTypes.string,
+  renderFunction: propTypes.func
 }
 
 CatalogList.defaultProps = {
