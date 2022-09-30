@@ -11,7 +11,7 @@ import StoreModal from '@src/app/store-modal';
 const Modal = props => {
   switch (props.name) {
     case "basket": return <Basket/>
-    case "confirm": return <CatalogConfirmation onAccept={confirmedValue => props.resultCallback(confirmedValue)}/>
+    case "confirm": return <CatalogConfirmation/>
     case "separateStore": return <StoreModal/>
     default: return <></>
   }

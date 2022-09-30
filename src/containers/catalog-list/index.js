@@ -28,11 +28,9 @@ function CatalogList(props) {
     // Добавление в корзину
     addToBasket: useCallback((_id, count) => store.get('basket').addToBasket(_id, count), []),
     // Открытие модалки добавления в корзину
-    addConfirmation: useCallback(_id => {
-      store.get('modals').open('confirm', (count) => {
-        if(!isNaN(count) && count >= 1) callbacks.addToBasket(_id, count)
-        store.get('modals').close()
-      })
+    addConfirmation: useCallback(async(_id) => {
+      const result = await store.get('modals').open('confirm')
+      if(!isNaN(result) && result >= 1) callbacks.addToBasket(_id, result)
     }, []),
     //Пагианция
     onPaginate: useCallback(page => store.get(props.catalogName).setParams({page}), []),
