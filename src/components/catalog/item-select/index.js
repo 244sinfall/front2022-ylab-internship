@@ -10,7 +10,7 @@ import './style.css';
  */
 function ItemSelect(props) {
   const cn = bem('ItemSelect');
-  const [clicked, setClicked] = useState(false)
+  const [clicked, setClicked] = useState(props.selected)
   const callbacks = {
     onClick: useCallback(() => {
       props.onClick(props.item)
@@ -31,12 +31,14 @@ function ItemSelect(props) {
 
 ItemSelect.propTypes = {
   item: propTypes.object.isRequired,
+  selected: propTypes.bool,
   onClick: propTypes.func,
   labelCurr: propTypes.string,
 }
 
 ItemSelect.defaultProps = {
   onClick: () => {},
+  selected: false,
   labelCurr: '₽',
 }
 
