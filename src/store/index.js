@@ -27,7 +27,14 @@ class Store {
       this.state[name] = this.modules[name].initState();
     }
   }
-
+  createSeparateCatalog(name) {
+    this.modules[name] = new modules['catalog'](this, {name: name, ...this.config.modules['catalog'] || {}})
+    this.state[name] = this.modules[name].initState();
+    return () => {
+      delete this.modules[name]
+      delete this.state[name]
+    }
+  }
   /**
    * Доступ к модулю состояния
    * @param name {String} Название модуля

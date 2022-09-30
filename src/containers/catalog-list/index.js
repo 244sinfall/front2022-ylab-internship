@@ -7,17 +7,18 @@ import Pagination from "@src/components/navigation/pagination";
 import Spinner from "@src/components/elements/spinner";
 import Item from "@src/components/catalog/item";
 import InfiniteScroller from '@src/containers/infinite-scroller';
+import propTypes from 'prop-types';
 
-function CatalogList() {
+function CatalogList(props) {
 
   const store = useStore();
 
   const select = useSelector(state => ({
-    items: state.catalog.items,
-    page: state.catalog.params.page,
-    limit: state.catalog.params.limit,
-    count: state.catalog.count,
-    waiting: state.catalog.waiting,
+    items: state[props.catalogName].items,
+    page: state[props.catalogName].params.page,
+    limit: state[props.catalogName].params.limit,
+    count: state[props.catalogName].count,
+    waiting: state[props.catalogName].waiting,
   }));
 
   const {t} = useTranslate();
@@ -52,6 +53,14 @@ function CatalogList() {
       </Spinner>
     </InfiniteScroller>
   );
+}
+
+CatalogList.propTypes = {
+  catalogName: propTypes.string,
+}
+
+CatalogList.defaultProps = {
+  catalogName: "catalog"
 }
 
 export default React.memo(CatalogList);

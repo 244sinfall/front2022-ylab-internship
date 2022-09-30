@@ -14,22 +14,9 @@ class Services {
    */
   get store(){
     if (!this._store) {
-      this._store = [new Store(this, this.config.store)];
+      this._store = new Store(this, this.config.store);
     }
-    return this._store[this._store.length-1];
-  }
-
-  /**
-   * Метод для создания отдельного экземпляра Store. Для хранения нескольких экземпляров используется структура
-   * данных стек. Метод возвращает функцию для уничтожения нового экземпляра.
-   * @returns {function(): T}
-   */
-  separateStore() {
-    if(!this._store) {
-      this._store = [new Store(this, this.config.store)];
-    }
-    this._store.push(new Store(this, this.config.store))
-    return () => this._store.pop()
+    return this._store;
   }
 
   /**
