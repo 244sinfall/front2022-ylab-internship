@@ -28,7 +28,7 @@ function CatalogList() {
     //Пагианция
     onPaginate: useCallback(page => store.get('catalog').setParams({page}), []),
     //Бесконечный скролл. Отказался от useCallback, поскольку в нем замыкается select limit
-    onIntersect: () => store.get('catalog').setParams({page: select.page + 1}, false, true)
+    onIntersect: useCallback(() => store.get('catalog').loadMoreItems(), [])
   };
   const renders = {
     item: useCallback(item => (
@@ -39,8 +39,8 @@ function CatalogList() {
   return (
     <InfiniteScroller onIntersection={callbacks.onIntersect}>
       <Spinner active={select.waiting}>
-        <List items={select.items} renderItem={renders.item}/>
         <Pagination count={select.count} page={select.page} limit={select.limit} onChange={callbacks.onPaginate}/>
+        <List items={select.items} renderItem={renders.item}/>
       </Spinner>
     </InfiniteScroller>
   );
