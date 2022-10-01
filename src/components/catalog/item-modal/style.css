@@ -1,40 +1,32 @@
 /* Пункт списка */
-.Item {
+.ItemModal {
   display: flex;
   justify-content: flex-start;
   transition: background-color 1s;
   padding-left: 10px;
 }
 
-.Item-id {
-  padding: 20px 10px 20px 20px;
-}
-
-.Item-title {
+.ItemModal-title {
   width: 100%;
   padding: 20px 10px;
   color: #000;
 }
 
-.Item-title {
-  color: #000;
-}
-
-.Item-title:hover{
+.ItemModal-title:hover{
   color: #000;
   cursor: pointer;
   text-decoration: underline;
 }
 
 
-.Item-right {
+.ItemModal-right {
   padding: 20px 20px 20px 10px;
   display: flex;
   justify-content: flex-end;
   align-items: center;
 }
 
-.Item-price {
+.ItemModal-price {
   padding: 0 10px;
   white-space: nowrap;
 }

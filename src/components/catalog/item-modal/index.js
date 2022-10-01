@@ -5,7 +5,7 @@ import numberFormat from "@src/utils/number-format";
 import './style.css';
 
 function ItemModal(props) {
-  const cn = bem('Item');
+  const cn = bem('ItemModal');
 
   const callbacks = {
     onAdd: useCallback(() => props.onAdd(props.item._id), [props.onAdd, props.item])
