@@ -14,11 +14,12 @@ class ModalsState extends StateModule{
   /**
    * Открытие модального окна по названию
    * @param name {String} Название модалки
+   * @param params {Object} Параметры, которые передадуться модальному окну
    */
-  async open(name){
+  async open(name, params = {}){
     return new Promise(resolve => {
       this.setState({
-        opened: [...this.getState().opened, { name: name, resolve, result: null }]
+        opened: [...this.getState().opened, { name: name, params, resolve, result: null }]
       }, `Открытие модалки ${name}`)
     })
   }

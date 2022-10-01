@@ -30,5 +30,6 @@
   "separateStore.title": "Store in 'window'",
   "separateStore.close": "Back to main",
   "addExtraItems.title": "Click on items to add",
-  "addExtraItems.close": "Return to basket"
+  "addExtraItems.close": "Return to basket",
+  "articleModal.close": "Return to basket"
 }
