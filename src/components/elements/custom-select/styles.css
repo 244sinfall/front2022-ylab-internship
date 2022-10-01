@@ -2,6 +2,7 @@
   width: 240px;
   padding: 5px;
   user-select: none;
+
 }
 
 .CustomSelect-selector p {
@@ -64,6 +65,7 @@
 .CustomSelect-dropdown-items {
   max-height: 120px;
   overflow-y: scroll;
+  overflow: overlay;
   scrollbar-gutter: stable;
 }
 
