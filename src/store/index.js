@@ -27,8 +27,15 @@ class Store {
       this.state[name] = this.modules[name].initState();
     }
   }
-  createSeparateCatalog(name) {
-    this.modules[name] = new modules['catalog'](this, {name: name, ...this.config.modules['catalog'] || {}})
+
+  /**
+   * Создает новый модуль состояния из базового. Может использоваться для дублирования логики, но разделения значений
+   * @param name Имя нового состояния
+   * @param base Имя состояния, которое клонируется
+   * @returns {(function(): void)|*} Функция для уничтожения созданного состояния
+   */
+  createSeparateState(name, base) {
+    this.modules[name] = new modules[base](this, {name: name, ...this.config.modules[base] || {}})
     this.state[name] = this.modules[name].initState();
     return () => {
       delete this.modules[name]

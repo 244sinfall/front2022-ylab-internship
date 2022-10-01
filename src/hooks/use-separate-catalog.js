@@ -8,7 +8,7 @@ import useStore from '@src/hooks/use-store';
 export default function useSeparateCatalog(){
   const store = useStore();
   const separateCatalogName = `catalog-${Math.floor(Math.random() * 100)}`
-  const destroySeparateCatalog = store.createSeparateCatalog(separateCatalogName)
+  const destroySeparateCatalog = store.createSeparateState(separateCatalogName, 'catalog')
   const prevParamsState = window.location.search
   useEffect(() => {
     window.history.replaceState({}, document.title, '/')
