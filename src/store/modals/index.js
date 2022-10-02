@@ -34,6 +34,15 @@ class ModalsState extends StateModule{
     }
     this.setState({opened: this.getState().opened.slice(0, -1) }, `Закрытие модалки`);
   }
+
+  /**
+   * Закрытие всех модальных окон с внешней стороны без сохранения результата
+   */
+  async closeAll() {
+    while(this.getState().opened.length !== 0) {
+      await this.close()
+    }
+  }
 }
 
 export default ModalsState;

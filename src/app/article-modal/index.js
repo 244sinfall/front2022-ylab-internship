@@ -7,10 +7,11 @@ import Spinner from "@src/components/elements/spinner";
 import propTypes from 'prop-types';
 import useSelector from '@src/hooks/use-selector';
 import LayoutModal from '@src/components/layouts/layout-modal';
+import {useNavigate} from 'react-router-dom';
 
 function ArticleModal(props){
   const store = useStore();
-
+  const nav = useNavigate()
   useInit(async () => {
     await store.get('article').load(props.params.id);
   }, [props.params.id]);
@@ -25,22 +26,28 @@ function ArticleModal(props){
   const callbacks = {
     // Добавление в корзину
     addToBasket: useCallback(_id => store.get('basket').addToBasket(_id), []),
-    onClose: useCallback(() => store.get('modals').close(), [])
+    // Закрытие модалки
+    onClose: useCallback(() => store.get('modals').close(), []),
+    // Переход к странице товара
+    onGotoPage: useCallback(_id => {
+      store.get('modals').closeAll()
+      nav(`/articles/${_id}`)
+    }, [])
   };
 
   return (
     <LayoutModal title={select.article.title || ''} onClose={callbacks.onClose} labelClose={t('articleModal.close')}>
       <Spinner active={select.waiting}>
-        <ArticleCard article={select.article} onAdd={callbacks.addToBasket} t={t}/>
+        <ArticleCard onGotoPage={callbacks.onGotoPage} article={select.article} onAdd={callbacks.addToBasket} t={t}/>
       </Spinner>
     </LayoutModal>
   )
 }
 
 ArticleModal.propTypes = {
-  params: {
+  params: propTypes.shape({
     id: propTypes.string.isRequired
-  }
+  })
 }
 
 export default React.memo(ArticleModal);

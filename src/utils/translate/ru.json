@@ -16,7 +16,6 @@
   "basket.unit": "шт",
   "basket.delete": "Удалть",
   "basket.addMore": "Добавить еще",
-  "article.add": "Добавить",
   "filter.reset": "Сбросить",
   "auth.title": "Вход",
   "auth.login": "Логин",
@@ -33,5 +32,11 @@
   "separateStore.close": "На главную",
   "addExtraItems.title": "Кликните, чтобы добавить",
   "addExtraItems.close": "Вернуться в корзину",
-  "articleModal.close": "Вернуться"
+  "articleModal.close": "Вернуться",
+  "article.manufacturer": "Страна изготовитель",
+  "article.category": "Категория",
+  "article.productionYear": "Год выпуска",
+  "article.price": "Цена",
+  "article.add": "Добавить",
+  "article.goTo": "Перейти на страницу товара"
 }
