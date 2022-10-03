@@ -29,7 +29,7 @@ function CatalogFilter(props) {
     // Сброс
     onReset: useCallback(() => store.get(props.catalogName).resetParams(), []),
     // Фильтр по категории
-    onCategory: useCallback(category => store.get(props.catalogName).setParams({category}), []),
+    onCategory: useCallback(category => store.get(props.catalogName).setParams({category, page: 1}), []),
   };
 
   // Опции для полей
