@@ -14,6 +14,7 @@ const CatalogConfirmation = () => {
     valueChange: (newValue) => {
       let newValueInt = parseInt(newValue)
       if(isNaN(newValueInt) || newValueInt < 0) newValueInt = 0
+      if(newValueInt > 1000) newValueInt = 1000
       setCurrentAmount(newValueInt)
     },
     increment: () => setCurrentAmount(prev => prev + 1),

@@ -23,7 +23,7 @@
   "session.signIn": "Sign In",
   "session.signOut": "Sign Out",
   "confirmation.title": "Add Confirmation",
-  "confirmation.label": "Select the number of goods you want to add to basket",
+  "confirmation.label": "Select the number of goods you want to add to basket (1000 max)",
   "confirmation.close": "Cancel",
   "confirmation.add": "Add to basket",
   "catalog.openInModal": "Open in modal window",
