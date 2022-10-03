@@ -16,7 +16,7 @@ const CustomSelectListItem = React.forwardRef((props, ref) => {
           }}
           role="option" tabIndex={props.tabIndex}>
       <p aria-hidden="true" className={cn('code')}>{props.code?.substring(0, 2) ?? props.name?.substring(0, 2).toUpperCase() ?? " "}</p>
-      <p className={cn('name')}><abbr title={props.name}>{props.name.length > 20 ? props.name.substring(0, 19).trimEnd()+"..." : props.name}</abbr></p>
+      <p className={cn('name')}><abbr title={props.name}>{props.name}</abbr></p>
     </span>
   )
 })
