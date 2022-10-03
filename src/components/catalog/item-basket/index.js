@@ -2,26 +2,25 @@ import React, {useCallback} from 'react';
 import propTypes from 'prop-types';
 import numberFormat from "@src/utils/number-format";
 import {cn as bem} from "@bem-react/classname";
-import {Link} from "react-router-dom";
 import './styles.css';
 
-function ItemBasket({item, link, onRemove, onLink, labelDelete, labelUnit, labelCurr}) {
+function ItemBasket(props) {
   const cn = bem('ItemBasket');
 
   const callbacks = {
-    onRemove: useCallback((e) => onRemove(item._id), [onRemove, item])
+    onRemove: useCallback(() => props.onRemove(props.item._id), [props.onRemove, props.item])
   };
 
   return (
     <div className={cn()}>
-      <div className={cn('title')}>
-        {link ? <Link onClick={onLink} to={link}>{item.title}</Link> : item.title}
+      <div className={cn('title')} onClick={() => props.onClick(props.item._id)}>
+        {props.item.title}
       </div>
       <div className={cn('right')}>
-        <div className={cn('cell')}>{numberFormat(item.price)} {labelCurr}</div>
-        <div className={cn('cell')}>{numberFormat(item.amount || 0)} {labelUnit}</div>
+        <div className={cn('cell')}>{numberFormat(props.item.price)} {props.labelCurr}</div>
+        <div className={cn('cell')}>{numberFormat(props.item.amount || 0)} {props.labelUnit}</div>
         <div className={cn('cell')}>
-          <button onClick={callbacks.onRemove}>{labelDelete}</button>
+          <button onClick={callbacks.onRemove}>{props.labelDelete}</button>
         </div>
       </div>
     </div>
@@ -31,15 +30,14 @@ function ItemBasket({item, link, onRemove, onLink, labelDelete, labelUnit, label
 ItemBasket.propTypes = {
   item: propTypes.object.isRequired,
   onRemove: propTypes.func,
-  link: propTypes.string,
-  onLink: propTypes.func,
+  onClick: propTypes.func,
   labelCurr: propTypes.string,
   labelDelete: propTypes.string,
   labelUnit: propTypes.string,
 }
 
 ItemBasket.defaultProps = {
-  onLink: () => {},
+  onClick: () => {},
   labelCurr: '₽',
   labelUnit: 'шт',
   labelDelete: 'Удалить',

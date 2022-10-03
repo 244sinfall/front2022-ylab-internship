@@ -1,0 +1,32 @@
+/* Пункт списка */
+.ItemModal {
+  display: flex;
+  justify-content: flex-start;
+  transition: background-color 1s;
+  padding-left: 10px;
+}
+
+.ItemModal-title {
+  width: 100%;
+  padding: 20px 10px;
+  color: #000;
+}
+
+.ItemModal-title:hover{
+  color: #000;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+
+.ItemModal-right {
+  padding: 20px 20px 20px 10px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.ItemModal-price {
+  padding: 0 10px;
+  white-space: nowrap;
+}

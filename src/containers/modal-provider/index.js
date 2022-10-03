@@ -9,7 +9,7 @@ const ModalProvider = () => {
   const openedModals = useSelector(state => state.modals.opened);
   return (
     <>
-      {openedModals.map(modalInfo => <Modal key={modalInfo.name} name={modalInfo.name}/>)}
+      {openedModals.map(modalInfo => <Modal key={modalInfo.name} name={modalInfo.name} params={modalInfo.params}/>)}
     </>
   );
 };

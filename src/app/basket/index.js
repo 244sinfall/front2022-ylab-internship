@@ -23,6 +23,8 @@ function Basket() {
     closeModal: useCallback(() => {
       store.get('modals').close()
     }, []),
+    // Открывает информацию о товаре в модальном окне
+    onItemInspect: useCallback(_id => store.get('modals').open('article', { id: _id }), []),
     // Удаление из корзины
     removeFromBasket: useCallback(_id => store.get('basket').removeFromBasket(_id), []),
     // Открытие модального окна для добавления новых товаров. Возвраается промис с массивом объектов товаров, которые
@@ -37,9 +39,8 @@ function Basket() {
     itemBasket: useCallback(item => (
       <ItemBasket
         item={item}
-        link={`/articles/${item._id}`}
         onRemove={callbacks.removeFromBasket}
-        onLink={callbacks.closeModal}
+        onClick={callbacks.onItemInspect}
         labelUnit={t('basket.unit')}
         labelDelete={t('basket.delete')}
       />

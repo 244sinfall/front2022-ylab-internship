@@ -23,3 +23,9 @@
 .ArticleCard-value{
     font-weight: bold;
 }
+
+.ArticleCard-controls {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+}
