@@ -98,6 +98,30 @@ class CatalogState extends StateModule {
   }
 
   /**
+   * Изменяет страницу без обновления списка товаров, прибавляя к текущей строке.
+   * реализуется в бесконечном скролле для вычисления страницы текущего скролла
+   * @param offset Относительная страница верхушки списка
+   */
+  mutatePage(offset) {
+    const currentPage = this.getState().params.page
+    const newParams = {...this.getState().params, page: currentPage + offset}
+    this.updateQueryParams(newParams, false)
+  }
+  /**
+   * Обновляет url параметры строки
+   * @param params
+   * @param historyReplace {Boolean} Заменить адрес (true) или сделаит новую запис в истории браузера (false)
+   */
+  updateQueryParams(params = {}, historyReplace = false) {
+    let queryString = qs.stringify(diff(params, this.initState().params));
+    const url = window.location.pathname + queryString + window.location.hash;
+    if (historyReplace) {
+      window.history.replaceState({}, '', url);
+    } else {
+      window.history.pushState({}, '', url);
+    }
+  }
+  /**
    * Устанвока параметров и загрузка списка товаров
    * @param params
    * @param historyReplace {Boolean} Заменить адрес (true) или сделаит новую запис в истории браузера (false)
@@ -137,13 +161,7 @@ class CatalogState extends StateModule {
     }, 'Обновление списка товара');
     await this.loadMoreItems()
     // Запоминаем параметры в URL, которые отличаются от начальных
-    let queryString = qs.stringify(diff(newParams, this.initState().params));
-    const url = window.location.pathname + queryString + window.location.hash;
-    if (historyReplace) {
-      window.history.replaceState({}, '', url);
-    } else {
-      window.history.pushState({}, '', url);
-    }
+    this.updateQueryParams(newParams, historyReplace)
   }
 }
 

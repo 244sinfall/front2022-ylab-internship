@@ -5,7 +5,7 @@ import {Link} from "react-router-dom";
 import numberFormat from "@src/utils/number-format";
 import './style.css';
 
-function Item(props) {
+const Item = React.forwardRef((props, ref) => {
   const cn = bem('Item');
 
   const callbacks = {
@@ -13,7 +13,7 @@ function Item(props) {
   };
 
   return (
-    <div className={cn()}>
+    <div className={cn()} ref={ref}>
       <div className={cn('title')}>
         {props.link ? <Link to={props.link}>{props.item.title}</Link> : props.item.title}
       </div>
@@ -23,7 +23,7 @@ function Item(props) {
       </div>
     </div>
   )
-}
+})
 
 Item.propTypes = {
   item: propTypes.object.isRequired,
@@ -39,4 +39,4 @@ Item.defaultProps = {
   labelAdd: 'Добавить'
 }
 
-export default React.memo(Item);
+export default Item;

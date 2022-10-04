@@ -1,4 +1,4 @@
-import React, {useCallback} from "react";
+import React, {useCallback, useEffect, useRef} from "react";
 import useSelector from "@src/hooks/use-selector";
 import useStore from "@src/hooks/use-store";
 import useTranslate from "@src/hooks/use-translate";
@@ -19,7 +19,25 @@ function CatalogList(props) {
     limit: state[props.catalogName].params.limit,
     count: state[props.catalogName].count,
     waiting: state[props.catalogName].waiting,
+    params: state[props.catalogName].params
   }));
+  // Массив координат крайни элементов текущего списка товара
+  const prevThresholds = useRef([])
+  // Сброс координат для вычита параметра страницы при смене любых параметров
+  useEffect(() => {
+    prevThresholds.current = []
+  }, [select.params])
+  // Событие на скролл страницы. Поиск последней координаты, которая ниже текущего положения скролла
+  // Последующая тихая установка параметра url
+  const onRollOverLastElement = useCallback(() => {
+    const currentViewportPage = prevThresholds.current.filter(coordinates => coordinates < window.scrollY).length
+    store.get(props.catalogName).mutatePage(currentViewportPage)
+  }, [])
+  // Событие для отслеживания глобального скролла
+  useEffect(() => {
+    document.addEventListener("scroll", onRollOverLastElement)
+    return () => document.removeEventListener('scroll', onRollOverLastElement)
+  }, [])
 
   const {t} = useTranslate();
   // Вместо коллбека сделать промисы. Переписать модалки на обычный стор. Пофиксить инфинит скролл
@@ -38,9 +56,15 @@ function CatalogList(props) {
     onIntersect: useCallback(() => store.get(props.catalogName).loadMoreItems(), [])
   };
   const renders = {
-    item: useCallback(item => (
-      <Item item={item} onAdd={callbacks.addConfirmation} link={`/articles/${item._id}`} labelAdd={t('article.add')}/>
-    ), [t]),
+    item: useCallback((item, idx) => (
+      <Item ref={element => {
+        // Форвард реф используется для нахождения координат элемента на лету
+        // Нас интересуют только крайние элементы списка, и так же интересуют только не во время загрузки
+        if(select.items.length - select.limit === idx && element !== null && !select.waiting) {
+          prevThresholds.current = [...prevThresholds.current, element.offsetTop]
+        }
+      }} item={item} onAdd={callbacks.addConfirmation} link={`/articles/${item._id}`} labelAdd={t('article.add')}/>
+    ), [t, select.items, select.waiting, select.limit]),
   }
 
   return (

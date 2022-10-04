@@ -6,9 +6,9 @@ import './style.css';
 function List(props) {
   const cn = bem('List');
   return (
-    <div className={cn()}>{props.items.map(item =>
+    <div className={cn()}>{props.items.map((item, idx) =>
       <div key={`${item._id}-${props.idSpreader}-${Math.random()*10000}`} className={cn('item')}>
-        {props.renderItem(item)}
+        {props.renderItem(item, idx)}
       </div>
     )}
     </div>
