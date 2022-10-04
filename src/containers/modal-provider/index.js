@@ -1,6 +1,6 @@
 import React from 'react';
 import useSelector from "@src/hooks/use-selector";
-import Modal from '@src/containers/modal-provider/modal';
+import * as modals from './exports'
 
 /**
  * Отдельный компонент для верхнего уровня приложений, который инкапсулирует логику каскадного показа модалок
@@ -9,8 +9,11 @@ const ModalProvider = () => {
   const openedModals = useSelector(state => state.modals.opened);
   return (
     <>
-      {openedModals.map(modalInfo => <Modal key={modalInfo.name} name={modalInfo.name} params={modalInfo.params}/>)}
-    </>
+      {openedModals.map(modalInfo => {
+        const Component = modals[modalInfo.name]
+        return <Component key={modalInfo.name} {...modalInfo.params}/>
+      })}
+      </>
   );
 };
 
