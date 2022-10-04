@@ -68,10 +68,11 @@ class CatalogState extends StateModule {
    * @returns {Promise<void>}
    */
   async loadMoreItems() {
+    const params = this.getState().params
     // Берем от текуего состояния страницы + свойства loaded, которое отражает количество загруженных предметов
-    const newSkip = this.getState().params.page * 10 + (this.getState().loaded - 10)
+    const newSkip = params.page * 10 + (this.getState().loaded - 10)
     // Проверяем, что в АПИ есть ее товар, который мы можем получить догрузкой. Если нет - сразу выходим.
-    if(newSkip - this.getState().params.limit >= this.getState().count) return
+    if(newSkip - params.limit >= this.getState().count) return
     // Установка новых параметров и признака загрузки
     this.setState({
       ...this.getState(),
@@ -79,10 +80,16 @@ class CatalogState extends StateModule {
     }, 'Смена параметров каталога');
     // ?search[query]=text&search[category]=id
 
-    const apiParams = {
-      ...diff(this.getState().params, this.initState().params),
-      skip: newSkip,
-    }
+    const apiParams = diff({
+      limit: params.limit,
+      skip:  newSkip,
+      fields: 'items(*),count',
+      sort: params.sort,
+      search: {
+        query: params.query, // search[query]=text
+        category: params.category  // -> search[category]=id
+      }
+    }, {skip: 0, search: {query: '', category: ''}});
 
     // ?search[query]=text&search[category]=id
     const json = await this.services.api.request({url: `/api/v1/articles${qs.stringify(apiParams)}`});
