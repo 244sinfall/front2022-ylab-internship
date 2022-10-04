@@ -69,7 +69,7 @@ class CatalogState extends StateModule {
    */
   async loadMoreItems() {
     // Берем от текуего состояния страницы + свойства loaded, которое отражает количество загруженных предметов
-    const newSkip = (this.getState().params.page-1 || 1) * 10 + this.getState().loaded
+    const newSkip = (this.getState().params.page-1) * 10 + this.getState().loaded || this.getState().params.limit
     // Проверяем, что в АПИ есть ее товар, который мы можем получить догрузкой. Если нет - сразу выходим.
     if(newSkip - this.getState().params.limit >= this.getState().count) return
     // Установка новых параметров и признака загрузки
@@ -80,7 +80,7 @@ class CatalogState extends StateModule {
     // ?search[query]=text&search[category]=id
 
     const apiParams = {
-      ...this.getState().params,
+      ...diff(this.getState().params, this.initState().params),
       skip: newSkip,
     }
 
@@ -152,7 +152,7 @@ class CatalogState extends StateModule {
     const json = await this.services.api.request({url: `/api/v1/articles${qs.stringify(apiParams)}`});
 
     // Установка полученных данных и сброс признака загрузки
-    this.setState({
+    await this.setState({
       ...this.getState(),
       items: json.result.items,
       loaded: json.result.items.length,
