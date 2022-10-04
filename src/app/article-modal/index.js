@@ -13,8 +13,8 @@ function ArticleModal(props){
   const store = useStore();
   const nav = useNavigate()
   useInit(async () => {
-    await store.get('article').load(props.params.id);
-  }, [props.params.id]);
+    await store.get('article').load(props.id);
+  }, [props.id]);
 
   const select = useSelector(state => ({
     article: state.article.data,
@@ -45,9 +45,7 @@ function ArticleModal(props){
 }
 
 ArticleModal.propTypes = {
-  params: propTypes.shape({
-    id: propTypes.string.isRequired
-  })
+  id: propTypes.string.isRequired
 }
 
 export default React.memo(ArticleModal);

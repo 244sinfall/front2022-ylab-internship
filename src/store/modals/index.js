@@ -19,7 +19,7 @@ class ModalsState extends StateModule{
   async open(name, params = {}){
     return new Promise(resolve => {
       this.setState({
-        opened: [...this.getState().opened, { name: name, params, resolve, result: null }]
+        opened: [...this.getState().opened, { name: name, params, resolve }]
       }, `Открытие модалки ${name}`)
     })
   }

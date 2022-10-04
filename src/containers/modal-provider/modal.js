@@ -16,7 +16,7 @@ const Modal = props => {
     case "confirm": return <CatalogConfirmation/>
     case "separateStore": return <StoreModal/>
     case "addExtraItems": return <AddExtraItemsModal/>
-    case "article": return <ArticleModal params={props.params}/>
+    case "article": return <ArticleModal {...props.params}/>
     default: return <></>
   }
 };

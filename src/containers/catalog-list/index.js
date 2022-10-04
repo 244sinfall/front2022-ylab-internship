@@ -30,9 +30,13 @@ function CatalogList(props) {
   }, [select.params])
   // Событие на скролл страницы. Поиск последней координаты, которая ниже текущего положения скролла
   // Последующая тихая установка параметра url
+  let rollOverThrottleTimeout
   const onRollOverLastElement = useCallback(() => {
-    const currentViewportPage = prevThresholds.current.filter(coordinates => coordinates < window.scrollY).length
-    store.get(props.catalogName).mutatePage(currentViewportPage)
+    clearTimeout(rollOverThrottleTimeout)
+    rollOverThrottleTimeout = setTimeout(() => {
+      const currentViewportPage = prevThresholds.current.filter(coordinates => coordinates < window.scrollY).length
+      store.get(props.catalogName).mutatePage(currentViewportPage)
+    }, 300)
   }, [])
   // Событие для отслеживания глобального скролла
   useEffect(() => {
@@ -53,7 +57,7 @@ function CatalogList(props) {
     }, []),
     //Пагианция
     onPaginate: useCallback(page => store.get(props.catalogName).setParams({page}), []),
-    //Бесконечный скролл. Отказался от useCallback, поскольку в нем замыкается select limit
+    //Бесконечный скролл.
     onIntersect: useCallback(() => {
       if(select.loaded > 0) store.get(props.catalogName).loadMoreItems()
     }, [select.loaded])
