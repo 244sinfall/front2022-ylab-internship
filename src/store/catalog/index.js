@@ -69,7 +69,7 @@ class CatalogState extends StateModule {
    */
   async loadMoreItems() {
     // Берем от текуего состояния страницы + свойства loaded, которое отражает количество загруженных предметов
-    const newSkip = (this.getState().params.page-1) * 10 + this.getState().loaded || this.getState().params.limit
+    const newSkip = this.getState().params.page * 10 + (this.getState().loaded - 10)
     // Проверяем, что в АПИ есть ее товар, который мы можем получить догрузкой. Если нет - сразу выходим.
     if(newSkip - this.getState().params.limit >= this.getState().count) return
     // Установка новых параметров и признака загрузки
@@ -104,6 +104,7 @@ class CatalogState extends StateModule {
    */
   mutatePage(offset) {
     const currentPage = this.getState().params.page
+    if(qs.parse(window.location.search).page === currentPage + offset) return;
     const newParams = {...this.getState().params, page: currentPage + offset}
     this.updateQueryParams(newParams, false)
   }
@@ -161,7 +162,7 @@ class CatalogState extends StateModule {
     }, 'Обновление списка товара');
     await this.loadMoreItems()
     // Запоминаем параметры в URL, которые отличаются от начальных
-    this.updateQueryParams(newParams, historyReplace)
+    await this.updateQueryParams(newParams, historyReplace)
   }
 }
 

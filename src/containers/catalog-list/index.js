@@ -19,7 +19,8 @@ function CatalogList(props) {
     limit: state[props.catalogName].params.limit,
     count: state[props.catalogName].count,
     waiting: state[props.catalogName].waiting,
-    params: state[props.catalogName].params
+    params: state[props.catalogName].params,
+    loaded: state[props.catalogName].loaded
   }));
   // Массив координат крайни элементов текущего списка товара
   const prevThresholds = useRef([])
@@ -53,7 +54,9 @@ function CatalogList(props) {
     //Пагианция
     onPaginate: useCallback(page => store.get(props.catalogName).setParams({page}), []),
     //Бесконечный скролл. Отказался от useCallback, поскольку в нем замыкается select limit
-    onIntersect: useCallback(() => store.get(props.catalogName).loadMoreItems(), [])
+    onIntersect: useCallback(() => {
+      if(select.loaded > 0) store.get(props.catalogName).loadMoreItems()
+    }, [select.loaded])
   };
   const renders = {
     item: useCallback((item, idx) => (
