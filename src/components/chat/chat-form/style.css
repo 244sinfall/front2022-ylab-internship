@@ -1,0 +1,14 @@
+.ChatForm {
+  padding-top: 10px;
+  display: flex;
+  justify-content: center;
+}
+.ChatForm-form {
+  width: 100%;
+  padding-left: 20px;
+}
+
+.ChatForm-textarea {
+  width: 95%;
+  resize: vertical;
+}

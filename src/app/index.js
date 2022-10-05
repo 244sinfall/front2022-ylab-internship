@@ -8,6 +8,7 @@ import Article from "./article";
 import Login from "./login";
 import Profile from "./profile";
 import ModalProvider from '@src/containers/modal-provider';
+import Chat from '@src/app/chat';
 
 /**
  * Приложение
@@ -31,6 +32,7 @@ function App() {
         <Route path={"/articles/:id"} element={<Article/>}/>
         <Route path={"/login"} element={<Login/>}/>
         <Route path={"/profile"} element={<Protected redirect={'/login'}><Profile/></Protected>}/>
+        <Route path={'/chat'} element={<Protected redirect={'/login'}><Chat/></Protected>}/>
       </Routes>
       <ModalProvider/>
     </>

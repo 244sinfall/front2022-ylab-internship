@@ -38,5 +38,10 @@
   "article.productionYear": "Год выпуска",
   "article.price": "Цена",
   "article.add": "Добавить",
-  "article.goTo": "Перейти на страницу товара"
+  "article.goTo": "Перейти на страницу товара",
+  "chat.title": "Чат",
+  "chat.placeholder": "Наберите новое сообщение и нажмите Отправить...",
+  "chat.submitMessage": "Отправить",
+  "chat.you": "Вы",
+  "chat.messageAt": "в"
 }

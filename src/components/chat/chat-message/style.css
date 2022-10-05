@@ -1,0 +1,25 @@
+.ChatMessage {
+  max-width: 600px;
+  padding: 20px;
+  display: flex;
+  align-self: start;
+  justify-content: start;
+  background-color: rgba(206,0,255,0.28);
+  border-radius: 10px;
+}
+.ChatMessage-content {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.ChatMessage-credentials {
+  font-weight: 700;
+}
+
+.ChatMessage_isAuthor {
+  align-self: end;
+  justify-content: end;
+  background-color: rgba(216,255,13,0.28);
+}
+

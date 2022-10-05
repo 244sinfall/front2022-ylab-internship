@@ -36,5 +36,10 @@
   "article.productionYear": "Year of production",
   "article.price": "Price",
   "article.add": "Add",
-  "article.goTo": "Go to the article page"
+  "article.goTo": "Go to the article page",
+  "chat.title": "Chat",
+  "chat.placeholder": "Type new message and press Send...",
+  "chat.submitMessage": "Send",
+  "chat.you": "You",
+  "chat.messageAt": "at"
 }

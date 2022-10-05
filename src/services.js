@@ -1,6 +1,7 @@
 import Store from "./store";
 import APIService from "./api";
 import createStoreRedux from "./store-redux";
+import ChatService from '@src/chat';
 
 class Services {
 
@@ -30,6 +31,16 @@ class Services {
     return this._api;
   }
 
+  /**
+   * Сервис чата
+   * @returns {ChatService}
+   */
+  get chat(){
+    if(!this._chat) {
+      this._chat = new ChatService(this, this.config.chat)
+    }
+    return this._chat
+  }
   /**
    * Redux store
    */
