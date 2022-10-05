@@ -4,7 +4,6 @@ import useStore from "@src/hooks/use-store";
 import useTranslate from "@src/hooks/use-translate";
 import ChatBox from '@src/components/chat/chat-box';
 import ChatForm from '@src/components/chat/chat-form';
-import useInit from '@src/hooks/use-init';
 import ChatMessage from '@src/components/chat/chat-message';
 import {convertDateToChatFormat} from '@src/utils/chat-date';
 
@@ -27,8 +26,9 @@ function ChatContainer() {
   const store = useStore()
   const chatBoxRef = useRef()
 
-  useInit(async () => {
-    await store.get('chat').init(select.token)
+  useEffect(() => {
+    const destroy = store.get('chat').init(select.token)
+    return () => destroy.then(destroy => destroy())
   }, []);
   // Эффект для мягкого скролла, когда меняется высота контейнера из-за загрузки сверху
   useEffect(() => {

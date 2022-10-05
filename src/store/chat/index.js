@@ -64,9 +64,8 @@ class ChatState extends StateModule{
    * @returns {Promise<*>}
    */
   async loadOlderMessages(id) {
-    if(!this.getState().maxOut) return this.services.chat.getOlderMessage(id)
+    if (!this.getState().maxOut) return this.services.chat.getOlderMessage(id)
   }
-
   /**
    * Инициализация чата
    * @param token Токен пользователя. Не работает без авторизации
@@ -75,9 +74,11 @@ class ChatState extends StateModule{
   async init(token){
     const authResponse = await this.services.chat.establish();
     if(!authResponse) throw new Error('Соединение не может быть установлено')
+
     // Поскольку события связаны с состоянием, биндим контекст состояния для доступа к нему
     await this.services.chat.listen('onmessage', this._onMessageReceived.bind(this))
     await this.services.chat.auth(token)
+    return this.services.chat.keepAlive()
   }
 }
 

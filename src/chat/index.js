@@ -35,6 +35,23 @@ class ChatService {
   }
 
   /**
+   * Пингует сервер каждые 30 секунд
+   * @returns {Promise<function(): void>} функция для уничтожения интервала
+   */
+  async keepAlive() {
+    const socket = await this.establish()
+    const intervalId = setInterval(() => {
+      socket.send(JSON.stringify({
+        method: "ping",
+        payload: {}
+      }))
+    }, 30000)
+    return () => {
+      clearInterval(intervalId)
+      socket.close()
+    }
+  }
+  /**
    * Устанавливает слушатель для WebSocket
    * @param event {string} (onmessage, onclose, onopen и.т.д.)
    * @param callback {function} колбек для события.
