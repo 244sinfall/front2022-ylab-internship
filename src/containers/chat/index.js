@@ -8,6 +8,7 @@ import ChatMessage from '@src/components/chat/chat-message';
 import {convertDateToChatFormat} from '@src/utils/chat-date';
 
 function ChatContainer() {
+  // ДОДЕЛАТЬ - статус отправлено/доставлено, переподключение при разрыве
   const select = useSelector(state => ({
     userId: state.session.user._id,
     token: state.session.token,
