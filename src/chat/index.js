@@ -24,12 +24,12 @@ class ChatService {
       const interval = setInterval(() => {
         if(attempt > 3) {
           clearTimeout(interval)
-          attempt++
           reject()
         } else if (this._persistence.readyState === this._persistence.OPEN) {
           clearInterval(interval)
           resolve(this._persistence)
         }
+        attempt++
       }, 200)
     })
   }
