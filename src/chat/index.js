@@ -33,10 +33,20 @@ class ChatService {
       }, 200)
     })
   }
+
+  /**
+   * Закрытие сокета
+   * @returns {Promise<void>}
+   */
   async close() {
     const socket = await this.establish()
     socket.close()
   }
+
+  /**
+   * Закрытие пингов каждые 30 секунд, нужно в том числе при реконнекте
+   * @returns {Promise<void>}
+   */
   async stopKeepAlive() {
     this._pingCanceller()
   }
@@ -52,6 +62,7 @@ class ChatService {
         payload: {}
       }))
     }, 30000)
+    // Для доступа из сервиса
     this._pingCanceller = () => {
       clearInterval(intervalId)
       socket.close()

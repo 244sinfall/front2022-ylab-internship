@@ -58,6 +58,14 @@ class ChatState extends StateModule{
         console.log(response)
     }
   }
+
+  /**
+   * Слушатель события для реконнекта. Не для прямого обращения
+   * @param token токен пользователя
+   * @param e событие закрытия соединения
+   * @returns {Promise<void>}
+   * @private
+   */
   async _onDisconnect(token, e) {
     if(e.wasClean) return
     await this.services.chat.stopKeepAlive()
@@ -67,8 +75,14 @@ class ChatState extends StateModule{
         .then((persistence) => persistence && clearInterval(timeout))
         .then(() => this._getConnected(token))
     }, 5000)
-
   }
+
+  /**
+   * Логика усатновки соединения под ключ
+   * @param token Токен пользователя
+   * @returns {Promise<void>}
+   * @private
+   */
   async _getConnected(token) {
     const connectionResponse = await this.services.chat.establish();
     if(!connectionResponse) throw new Error('Соединение не может быть установлено')
@@ -76,6 +90,12 @@ class ChatState extends StateModule{
     await this.services.chat.listen('onmessage', this._onMessageReceived.bind(this))
     await this.services.chat.listen('onclose', this._onDisconnect.bind(this, token))
     await this.services.chat.auth(token)
+  }
+  /**
+   * Очистка закешированных сообщений
+   */
+  clearChat() {
+    this.setState({...this.getState(), messages: []})
   }
   /**
    * Отправка сообщения

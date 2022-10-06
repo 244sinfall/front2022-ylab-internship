@@ -28,7 +28,10 @@ function ChatContainer() {
   // Инициализация чата + уничтожение при демонтировании
   useEffect(() => {
     const destroy = store.get('chat').init(select.token)
-    return () => destroy.then(destroy => destroy())
+    return () => destroy.then(destroy => {
+      destroy()
+      store.get('chat').clearChat()
+    })
   }, []);
   // Эффект для мягкого скролла, когда меняется высота контейнера из-за загрузки сверху
   useEffect(() => {
