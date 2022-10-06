@@ -16,6 +16,9 @@ const ChatMessage = (props) => {
         <span className={cn('body')}>
           {props.text}
         </span>
+        <span className={cn('status')}>
+          {props.isAuthor && (props.isDelivering ? props.t('chat.sent') : props.t('chat.delivered'))}
+        </span>
       </div>
     </span>
   );
@@ -23,6 +26,7 @@ const ChatMessage = (props) => {
 
 ChatMessage.propTypes = {
   isAuthor: propTypes.bool,
+  isDelivering: propTypes.bool,
   userName: propTypes.string.isRequired,
   messageDate: propTypes.string.isRequired,
   text: propTypes.string.isRequired,
@@ -30,7 +34,8 @@ ChatMessage.propTypes = {
 }
 
 ChatMessage.defaultProps = {
-  isAuthor: false
+  isAuthor: false,
+  isDelivered: false
 }
 
 export default React.memo(ChatMessage);

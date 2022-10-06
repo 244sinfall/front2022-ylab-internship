@@ -43,5 +43,7 @@
   "chat.placeholder": "Наберите новое сообщение и нажмите Отправить...",
   "chat.submitMessage": "Отправить",
   "chat.you": "Вы",
-  "chat.messageAt": "в"
+  "chat.messageAt": "в",
+  "chat.delivered": "Доставлено",
+  "chat.sent": "Отправлено"
 }

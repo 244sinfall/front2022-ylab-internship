@@ -41,5 +41,7 @@
   "chat.placeholder": "Type new message and press Send...",
   "chat.submitMessage": "Send",
   "chat.you": "You",
-  "chat.messageAt": "at"
+  "chat.messageAt": "at",
+  "chat.delivered": "Delivered",
+  "chat.sent": "Sent"
 }

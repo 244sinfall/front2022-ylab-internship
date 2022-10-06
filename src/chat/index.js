@@ -33,7 +33,13 @@ class ChatService {
       }, 200)
     })
   }
-
+  async close() {
+    const socket = await this.establish()
+    socket.close()
+  }
+  async stopKeepAlive() {
+    this._pingCanceller()
+  }
   /**
    * Пингует сервер каждые 30 секунд
    * @returns {Promise<function(): void>} функция для уничтожения интервала
@@ -46,10 +52,11 @@ class ChatService {
         payload: {}
       }))
     }, 30000)
-    return () => {
+    this._pingCanceller = () => {
       clearInterval(intervalId)
       socket.close()
     }
+    return this._pingCanceller
   }
   /**
    * Устанавливает слушатель для WebSocket
@@ -80,17 +87,19 @@ class ChatService {
   /**
    * Передает сообщение серверу
    * @param message {string} Сообщение
-   * @returns {Promise<*>}
+   * @returns {Promise<*>} Ключ отправленного сообщения
    */
   async sendMessage(message) {
     const socket = await this.establish()
-    return socket.send(JSON.stringify({
+    const key = uuidv4()
+    await socket.send(JSON.stringify({
       method: "post",
       payload: {
-        _key: uuidv4(),
+        _key: key,
         text: message
       }
     }))
+    return key
   }
 
   /**
