@@ -100,7 +100,7 @@ class ChatState extends StateModule{
    * Очистка закешированных сообщений
    */
   clearChat() {
-    this.setState({...this.getState(), messages: []})
+    this.setState({...this.getState(), messages: [], maxOut: false})
   }
   /**
    * Отправка сообщения
