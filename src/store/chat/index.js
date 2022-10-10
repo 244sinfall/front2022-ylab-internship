@@ -37,7 +37,13 @@ class ChatState extends StateModule{
       const existingMessageIndex = this.getState().messages.findIndex(i => i._key === message._key)
       const newMessages = [...this.getState().messages]
       newMessages[existingMessageIndex] = message
-      this.setState({...this.getState(), messages: newMessages, lastSubmittedKeys: this.getState().lastSubmittedKeys.filter(i => i._key !== message._key)})
+      this.setState({...this.getState(), messages: newMessages.sort((m1, m2) => {
+          const d1 = new Date(m1)
+          const d2 = new Date(m2)
+          if (d1 === d2) return 0
+          if (d1 < d2) return -1
+          return 1
+        }), lastSubmittedKeys: this.getState().lastSubmittedKeys.filter(i => i._key !== message._key)})
       return
     }
     this.setState({...this.getState(), messages: [...this.getState().messages, message]}, "Получено новое сообщение")

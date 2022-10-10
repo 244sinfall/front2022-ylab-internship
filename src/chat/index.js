@@ -20,17 +20,12 @@ class ChatService {
     if(this._persistence && this._persistence.readyState === this._persistence.OPEN) return this._persistence
     return new Promise((resolve, reject) => {
       this._persistence = new WebSocket(this.config.websocketServer)
-      let attempt = 0
-      const interval = setInterval(() => {
-        if(attempt > 3) {
-          clearTimeout(interval)
-          reject()
-        } else if (this._persistence.readyState === this._persistence.OPEN) {
-          clearInterval(interval)
-          resolve(this._persistence)
-        }
-        attempt++
-      }, 200)
+      this._persistence.onopen = () => {
+        resolve(this._persistence)
+      }
+      this._persistence.onerror = e => {
+        reject(e)
+      }
     })
   }
 

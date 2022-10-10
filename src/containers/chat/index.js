@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useRef, useState} from "react";
+import React, {useCallback, useEffect, useLayoutEffect, useRef, useState} from "react";
 import useSelector from "@src/hooks/use-selector";
 import useStore from "@src/hooks/use-store";
 import useTranslate from "@src/hooks/use-translate";
@@ -36,7 +36,7 @@ function ChatContainer() {
     })
   }, []);
   // Эффект для мягкого скролла, когда меняется высота контейнера из-за загрузки сверху
-  useEffect(() => {
+  useLayoutEffect(() => {
     if(chatBoxRef.current?.scrollHeight > currentTopPoint && select.messages[0] !== oldestLoaded) {
       setCurrentTopPoint((prev) => {
         if(prev) {
@@ -47,9 +47,10 @@ function ChatContainer() {
     }
   }, [currentTopPoint, chatBoxRef.current?.scrollHeight, select.messages, oldestLoaded])
   // Эффект для переноса скролла к нижнему сообщению, если клиент находится не далеко
-  useEffect(() => {
+  useLayoutEffect(() => {
     if(chatBoxRef.current &&
-      chatBoxRef.current.scrollHeight - chatBoxRef.current.scrollTop - chatBoxRef.current.clientHeight < 400) {
+      chatBoxRef.current.scrollHeight - chatBoxRef.current.scrollTop - chatBoxRef.current.clientHeight < 400
+      || select.messages.at(-1).author._id === select.userId) {
       chatBoxRef.current.scrollTo({top: chatBoxRef.current.scrollHeight, behavior: 'smooth'})
     }
   }, [select.messages])
