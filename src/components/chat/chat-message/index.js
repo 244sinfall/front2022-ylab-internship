@@ -35,7 +35,7 @@ ChatMessage.propTypes = {
 
 ChatMessage.defaultProps = {
   isAuthor: false,
-  isDelivered: false
+  isDelivering: false
 }
 
 export default React.memo(ChatMessage);
