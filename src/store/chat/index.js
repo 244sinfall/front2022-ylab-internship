@@ -17,7 +17,38 @@ class ChatState extends StateModule{
       authorized: false,
     };
   }
-
+  async _onAuthResponseReceived(result) {
+    if (!result) return await this.services.chat.stopKeepAlive()
+    this.setState({...this.getState(), authorized: true, waiting: false})
+    await this.services.chat.getNewMessages(this.getState().lastMessageDate)
+  }
+  async _onLastResponseReceived(items) {
+    if(this.getState().messages.length === 0) {
+      this.setState({...this.getState(), messages: items},
+        "Новые сообщения загружены")
+      return
+    }
+    this.setState({...this.getState(), messages: [...this.getState().messages,
+        ...items.filter(payloadItem => this.getState().messages.findIndex(existedItem => existedItem._key === payloadItem._key) === -1)]})
+  }
+  async _onPostResponseReceived(message) {
+    if(this.getState().lastSubmittedKeys.includes(message._key)) {
+      // Заменяем нужное сообщение тем, что пришло. Флага isDelivering там нет, поэтому статус заменится
+      const existingMessageIndex = this.getState().messages.findIndex(i => i._key === message._key)
+      const newMessages = [...this.getState().messages]
+      newMessages[existingMessageIndex] = message
+      this.setState({...this.getState(), messages: newMessages, lastSubmittedKeys: this.getState().lastSubmittedKeys.filter(i => i._key !== message._key)})
+      return
+    }
+    this.setState({...this.getState(), messages: [...this.getState().messages, message]}, "Получено новое сообщение")
+  }
+  async _onOldResponseReceived(items) {
+    if(items.length === 1 || this.getState().maxOut) {
+      this.setState({...this.getState(), maxOut: true, waiting: false})
+      return
+    }
+    this.setState({...this.getState(), messages: [...items.slice(0, -1), ...this.getState().messages], waiting: false}, "Загрузка старых сообщений")
+  }
   /**
    * Слушатель события сообщений. Не для прямого обращения
    * @param e
@@ -27,40 +58,10 @@ class ChatState extends StateModule{
   async _onMessageReceived(e) {
     const response = JSON.parse(e.data)
     switch (response.method) {
-      case "auth":
-        if(!response.payload.result) return await this.services.chat.stopKeepAlive()
-        this.setState({...this.getState(), authorized: true, waiting: false})
-        await this.services.chat.getNewMessages(this.getState().lastMessageDate)
-        break;
-      case "last":
-        if(this.getState().messages.length === 0) {
-          this.setState({...this.getState(), messages: response.payload.items},
-            "Новые сообщения загружены")
-          break
-        }
-        this.setState({...this.getState(), messages: [...this.getState().messages,
-            ...response.payload.items.filter(payloadItem => this.getState().messages.findIndex(existedItem => existedItem._key === payloadItem._key) === -1)]})
-        break;
-      case "post":
-        if(this.getState().lastSubmittedKeys.includes(response.payload._key)) {
-          // Заменяем нужное сообщение тем, что пришло. Флага isDelivering там нет, поэтому статус заменится
-          const existingMessageIndex = this.getState().messages.findIndex(i => i._key === response.payload._key)
-          const newMessages = [...this.getState().messages]
-          newMessages[existingMessageIndex] = response.payload
-          this.setState({...this.getState(), messages: newMessages, lastSubmittedKeys: this.getState().lastSubmittedKeys.filter(i => i._key !== response.payload._key)})
-          break
-        }
-        this.setState({...this.getState(), messages: [...this.getState().messages, response.payload]}, "Получено новое сообщение")
-        break;
-      case "old":
-        if(response.payload.items.length === 1 || this.getState().maxOut) {
-          this.setState({...this.getState(), maxOut: true, waiting: false})
-          break
-        }
-        this.setState({...this.getState(), messages: [...response.payload.items.slice(0, -1), ...this.getState().messages], waiting: false}, "Загрузка старых сообщений")
-        break
-      default:
-        console.log(response)
+      case "auth": return this._onAuthResponseReceived(response.payload.result)
+      case "last": return this._onLastResponseReceived(response.payload.items)
+      case "post": return this._onPostResponseReceived(response.payload)
+      case "old": return this._onOldResponseReceived(response.payload.items)
     }
   }
 
