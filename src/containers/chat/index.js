@@ -6,6 +6,7 @@ import ChatBox from '@src/components/chat/chat-box';
 import ChatForm from '@src/components/chat/chat-form';
 import ChatMessage from '@src/components/chat/chat-message';
 import {convertDateToChatFormat} from '@src/utils/chat-date';
+import Spinner from '@src/components/elements/spinner';
 
 function ChatContainer() {
   const select = useSelector(state => ({
@@ -13,6 +14,7 @@ function ChatContainer() {
     userName: state.session.user.profile.name,
     token: state.session.token,
     messages: state.chat.messages,
+    waiting: state.chat.waiting,
     maxOut: state.chat.maxOut
   }))
   // Для загрузки более старых сообщений
@@ -38,7 +40,7 @@ function ChatContainer() {
     if(chatBoxRef.current?.scrollHeight > currentTopPoint && select.messages[0] !== oldestLoaded) {
       setCurrentTopPoint((prev) => {
         if(prev) {
-          chatBoxRef.current.scrollTo({ top: chatBoxRef.current.scrollHeight - prev, behavior: 'smooth' })
+          chatBoxRef.current.scrollTop = chatBoxRef.current.scrollHeight - prev
         }
         return chatBoxRef.current.scrollHeight
       })
@@ -58,7 +60,7 @@ function ChatContainer() {
   const callbacks = {
     // Если доскроленно до верху, пробуем подгрузить новые.
     onItemsScroll: useCallback(async e => {
-      if (e.target.scrollTop === 0 && !select.maxOut) {
+      if (e.target.scrollTop === 0 && !select.maxOut && !select.waiting) {
         setCurrentTopPoint(chatBoxRef.current.scrollHeight)
         await store.get('chat').loadOlderMessages(oldestLoaded._id)
       }
@@ -79,10 +81,10 @@ function ChatContainer() {
   }, [t, select.userId])
 
   return (
-    <>
+    <Spinner active={select.waiting}>
       <ChatBox ref={chatBoxRef} messages={select.messages} renderFunction={renderMessage} onScroll={callbacks.onItemsScroll}/>
       <ChatForm t={t} onChange={callbacks.onMessageTextChange} onSubmit={callbacks.onMessageSubmit} value={message}/>
-    </>
+    </Spinner>
   );
 }
 

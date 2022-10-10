@@ -13,6 +13,7 @@ class ChatState extends StateModule{
       messages: [],
       lastSubmittedKeys: [],
       maxOut: false,
+      waiting: false,
       authorized: false,
     };
   }
@@ -28,7 +29,7 @@ class ChatState extends StateModule{
     switch (response.method) {
       case "auth":
         if(!response.payload.result) return await this.services.chat.stopKeepAlive()
-        this.setState({...this.getState(), authorized: true})
+        this.setState({...this.getState(), authorized: true, waiting: false})
         await this.services.chat.getNewMessages(this.getState().lastMessageDate)
         break;
       case "last":
@@ -52,12 +53,11 @@ class ChatState extends StateModule{
         this.setState({...this.getState(), messages: [...this.getState().messages, response.payload]}, "Получено новое сообщение")
         break;
       case "old":
-        if(this.getState().maxOut) return
-        if(response.payload.items.length === 1) {
-          this.setState({...this.getState(), maxOut: true})
-          return
+        if(response.payload.items.length === 1 || this.getState().maxOut) {
+          this.setState({...this.getState(), maxOut: true, waiting: false})
+          break
         }
-        this.setState({...this.getState(), messages: [...response.payload.items.slice(0, -1), ...this.getState().messages]}, "Загрузка старых сообщений")
+        this.setState({...this.getState(), messages: [...response.payload.items.slice(0, -1), ...this.getState().messages], waiting: false}, "Загрузка старых сообщений")
         break
       default:
         console.log(response)
@@ -112,7 +112,8 @@ class ChatState extends StateModule{
   async sendMessage(message, userId, userName) {
     const key = await this.services.chat.sendMessage(message)
     this.setState({...this.getState(), lastSubmittedKeys: [...this.getState().lastSubmittedKeys, key],
-      messages: [...this.getState().messages, {_key: key, text: message, author: {_id: userId, profile: {name: userName}}, dateCreate: new Date().toString(), isDelivering: true}]})
+      messages: [...this.getState().messages,
+        {_key: key, text: message, author: {_id: userId, profile: {name: userName}}, dateCreate: new Date().toString(), isDelivering: true}]})
   }
 
   /**
@@ -121,7 +122,10 @@ class ChatState extends StateModule{
    * @returns {Promise<*>}
    */
   async loadOlderMessages(id) {
-    if (!this.getState().maxOut) return this.services.chat.getOlderMessage(id)
+    if (!this.getState().maxOut) {
+      this.setState({...this.getState(), waiting: true})
+      return this.services.chat.getOlderMessage(id)
+    }
   }
   /**
    * Инициализация чата
@@ -129,6 +133,7 @@ class ChatState extends StateModule{
    * @returns {Promise<void>}
    */
   async init(token){
+    this.setState({...this.getState(), waiting: true})
     await this._getConnected(token)
     return this.services.chat.keepAlive()
   }
