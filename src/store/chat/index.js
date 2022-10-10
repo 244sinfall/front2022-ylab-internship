@@ -13,6 +13,7 @@ class ChatState extends StateModule{
       messages: [],
       lastSubmittedKeys: [],
       maxOut: false,
+      authorized: false,
     };
   }
 
@@ -27,13 +28,17 @@ class ChatState extends StateModule{
     switch (response.method) {
       case "auth":
         if(!response.payload.result) return await this.services.chat.stopKeepAlive()
+        this.setState({...this.getState(), authorized: true})
         await this.services.chat.getNewMessages(this.getState().lastMessageDate)
         break;
       case "last":
         if(this.getState().messages.length === 0) {
-          this.setState({...this.getState(), messages: [...this.getState().messages, ...response.payload.items]},
+          this.setState({...this.getState(), messages: response.payload.items},
             "Новые сообщения загружены")
+          break
         }
+        this.setState({...this.getState(), messages: [...this.getState().messages,
+            ...response.payload.items.filter(payloadItem => this.getState().messages.findIndex(existedItem => existedItem._key === payloadItem._key) === -1)]})
         break;
       case "post":
         if(this.getState().lastSubmittedKeys.includes(response.payload._key)) {
@@ -69,7 +74,7 @@ class ChatState extends StateModule{
   async _onDisconnect(token, e) {
     if(e.wasClean) return
     await this.services.chat.stopKeepAlive()
-    this.setState({...this.getState(), lastMessageDate: this.getState().messages.at(-1).dateCreate})
+    this.setState({...this.getState(), authorized: false, lastMessageDate: this.getState().messages.at(-1).dateCreate})
     const timeout = setInterval(() => {
       this.services.chat.establish()
         .then((persistence) => persistence && clearInterval(timeout))

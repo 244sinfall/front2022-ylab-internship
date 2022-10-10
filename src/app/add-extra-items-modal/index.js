@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react';
+import React, {useCallback, useMemo} from 'react';
 import LayoutModal from '@src/components/layouts/layout-modal';
 import useTranslate from '@src/hooks/use-translate';
 import CatalogFilter from '@src/containers/catalog-filter';
@@ -7,6 +7,7 @@ import useStore from '@src/hooks/use-store';
 import useInit from '@src/hooks/use-init';
 import useSeparateCatalog from '@src/hooks/use-separate-catalog';
 import ItemSelect from '@src/components/catalog/item-select';
+import CatalogModalControls from '@src/components/catalog/catalog-modal-controls';
 
 /**
  * Модальное окно для добавления товаров из корзины. Компонент позволяет выделять товары кликом.
@@ -23,18 +24,25 @@ const AddExtraItemsModal = () => {
     ]);
   }, [], {backForward: true});
   const callbacks = {
-    onClose: useCallback(() => store.get('modals').close(selected), [selected]),
+    onClose: useCallback(() => store.get('modals').close(), []),
     onItemClick: useCallback(item => {
         const existId = selected.findIndex(i => i._id === item._id)
         existId !== -1 ? selected.splice(existId, 1) : selected.push(item)
-    }, [selected])
+    }, [selected]),
+    onCloseAdd: useCallback(() => store.get('modals').close(selected), [selected]),
   }
   const renderFunction = useCallback(item => (
       <ItemSelect item={item} selected={selected.findIndex(i => i._id === item._id) !== -1} onClick={callbacks.onItemClick}/>
     ), [])
+  const controls = useMemo(() => {
+    return [
+      {labelName: t("addExtraItems.add"), labelCallback: callbacks.onCloseAdd}
+    ]
+  }, [t])
   return (
     <LayoutModal onClose={callbacks.onClose} title={t('addExtraItems.title')} labelClose={t('addExtraItems.close')}>
       <CatalogFilter catalogName={catalogName}/>
+      <CatalogModalControls controls={controls}/>
       <CatalogList catalogName={catalogName} renderFunction={renderFunction}/>
     </LayoutModal>
   );
