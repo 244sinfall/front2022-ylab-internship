@@ -53,7 +53,8 @@ class ChatState extends StateModule{
       this.setState({...this.getState(), maxOut: true, waiting: false})
       return
     }
-    this.setState({...this.getState(), messages: [...items.slice(0, -1), ...this.getState().messages], waiting: false}, "Загрузка старых сообщений")
+    this.setState({...this.getState(), messages: [...items.filter(m => !this.getState().messages.find(has => has._key === m._key)),
+        ...this.getState().messages], waiting: false}, "Загрузка старых сообщений")
   }
   /**
    * Слушатель события сообщений. Не для прямого обращения
@@ -130,7 +131,7 @@ class ChatState extends StateModule{
    */
   async loadOlderMessages(id) {
     if (!this.getState().maxOut) {
-      this.setState({...this.getState(), waiting: true})
+      this.setState({...this.getState(), oldestMessage: id ,waiting: true})
       return this.services.chat.getOlderMessage(id)
     }
   }
