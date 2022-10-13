@@ -13,6 +13,7 @@ class CanvasState extends StateModule{
   initState() {
     return {
       coordinates: {x: 0, y: 0},
+      scale: 1,
       // Shape: Уникальный ID, координаты: { начала (верх-лево), конец (низ-право) }, тип шейпа, другие параметры
       shapes: [],
     };
@@ -29,8 +30,8 @@ class CanvasState extends StateModule{
       type: shapeType,
       size: params.size ?? Math.ceil(Math.random() * 100),
       startCoordinates: params.startCoordinates ?? {
-        x: this.getState().coordinates.x + Math.ceil(Math.random() * 400),
-        y: this.getState().coordinates.y + Math.ceil(Math.random() * 400),
+        x: this.getState().coordinates.x + Math.ceil(Math.random() * (400 / this.getState().scale)),
+        y: this.getState().coordinates.y + Math.ceil(Math.random() * (400 / this.getState().scale)),
       },
       color: params.color ?? "#000000",
       fill: params.fill ?? false
@@ -49,6 +50,10 @@ class CanvasState extends StateModule{
         break
     }
     this.setState({...this.getState(), coordinates: newCords})
+  }
+  setScale(direction) {
+    if(this.getState().scale <= 0.05 || this.getState().scale > 10) return
+    this.setState({...this.getState(), scale: direction === "up" ? this.getState().scale - 0.05 : this.getState().scale + 0.05})
   }
   /**
    * Удаляет все фигуры из внешнего состояния

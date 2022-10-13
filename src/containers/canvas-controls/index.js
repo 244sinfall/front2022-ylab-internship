@@ -7,18 +7,22 @@ const CanvasControls = props => {
   const {t} = useTranslate()
   const store = useStore();
   const [selectedShape, setSelectedShape] = useState("")
+  const [isFilling, setIsFilling] = useState(false)
+  const [color, setColor] = useState("#000000")
   const callbacks = {
     onShapeSelectionChange: useCallback((value) => setSelectedShape(value), []),
-    onDraw: useCallback(() => store.get('canvas').addShape(selectedShape), [selectedShape]),
+    onDraw: useCallback(() => store.get('canvas').addShape(selectedShape, { fill: isFilling, color: color }), [selectedShape, isFilling, color]),
     onRemoveAll: useCallback(() => store.get('canvas').removeAll(), []),
-    onAnimate: useCallback(() => {console.log('onAnimate')}, [])
-
+    onAnimate: useCallback(() => {console.log('onAnimate')}, []),
+    onColorChange: useCallback((color) => setColor(color.hex), []),
+    onFillCheck: useCallback((e) => setIsFilling(e.target.checked), [])
   }
   return (
     <CanvasOptions drawOptions={props.drawOptions} onDraw={callbacks.onDraw}
                    onShapeSelectionChange={callbacks.onShapeSelectionChange} t={t}
                    onRemoveAll={callbacks.onRemoveAll} onAnimate={callbacks.onAnimate}
-                   selectedShape={selectedShape} drawDisabled={!selectedShape}/>
+                   selectedShape={selectedShape} drawDisabled={!selectedShape}
+                   color={color} onColorChange={callbacks.onColorChange} onFillCheck={callbacks.onFillCheck}/>
   );
 };
 

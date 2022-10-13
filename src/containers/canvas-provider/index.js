@@ -8,6 +8,7 @@ const CanvasProvider = () => {
   const store = useStore();
   const select = useSelector(state => ({
     coords: state.canvas.coordinates,
+    scale: state.canvas.scale,
     shapes: state.canvas.shapes
   }));
 
@@ -25,9 +26,9 @@ const CanvasProvider = () => {
     const context = canvas.current.getContext("2d")
     if(canvas) {
       context.clearRect(0, 0, 600, 600)
-      drawnItems.forEach(shape => draw(shape, select.coords, context))
+      drawnItems.forEach(shape => draw(shape, select.coords, select.scale, context))
     }
-  }, [drawnItems, canvas, select.coords])
+  }, [drawnItems, canvas, select.coords, select.scale])
 
   const callbacks = {
     onWheel: useCallback((e) => {
@@ -35,7 +36,8 @@ const CanvasProvider = () => {
         const amount = e.nativeEvent.wheelDeltaY > 0 ? 2 : -2
         store.get('canvas').moveCoordinates("vertical", amount)
       } else {
-        console.log("scale")
+        const direction = e.nativeEvent.wheelDeltaY > 0 ? "down" : "up"
+        store.get('canvas').setScale(direction)
       }
     }, []),
     onDrag: useCallback((delta) => {
