@@ -52,7 +52,7 @@ class CanvasState extends StateModule{
     this.setState({...this.getState(), coordinates: newCords})
   }
   setScale(direction) {
-    if(this.getState().scale <= 0.05 || this.getState().scale > 10) return
+    if(this.getState().scale <= 0.05 && direction === "up" || this.getState().scale > 10 && direction === "down") return
     this.setState({...this.getState(), scale: direction === "up" ? this.getState().scale - 0.05 : this.getState().scale + 0.05})
   }
   /**

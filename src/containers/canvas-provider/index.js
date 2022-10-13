@@ -18,9 +18,9 @@ const CanvasProvider = () => {
 
     setDrawnItems(select.shapes.filter(shape => {
       return (shape.startCoordinates.x >= select.coords.x && shape.startCoordinates.y >= select.coords.y &&
-        shape.startCoordinates.x + shape.size <= select.coords.x + 600 && shape.startCoordinates.y + shape.size <= select.coords.y + 600)
+        shape.startCoordinates.x + shape.size <= select.coords.x + (600 / select.scale) && shape.startCoordinates.y + shape.size <= select.coords.y + (600 / select.scale))
     }))
-  }, [select.shapes, select.coords])
+  }, [select.shapes, select.coords, select.scale])
 
   useEffect(() => {
     const context = canvas.current.getContext("2d")
