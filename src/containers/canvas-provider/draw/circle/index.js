@@ -1,3 +1,8 @@
+/**
+ * Рисует круг
+ * @param context Контекст канваса
+ * @param shape Объект шейпа
+ */
 export default function circle(context, shape) {
   context.fillStyle = shape.color
   context.strokeStyle = shape.color
