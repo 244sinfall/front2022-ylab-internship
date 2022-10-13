@@ -16,6 +16,7 @@ class CanvasState extends StateModule{
       scale: 1,
       // Shape: Уникальный ID, координаты: { начала (верх-лево), конец (низ-право) }, тип шейпа, другие параметры
       shapes: [],
+      freeFall: false,
     };
   }
 
@@ -38,6 +39,12 @@ class CanvasState extends StateModule{
 
     }
     this.setState({...this.getState(), shapes: [...this.getState().shapes, newShape]})
+  }
+  stopFreeFall() {
+    this.setState({...this.getState(), freeFall: false})
+  }
+  triggerFreeFall() {
+    this.setState({...this.getState(), freeFall: true})
   }
   moveCoordinates(direction, amount = 2) {
     const newCords = {...this.getState().coordinates}

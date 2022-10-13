@@ -3,19 +3,20 @@ import CanvasWindow from '@src/components/canvas/canvas-window';
 import useSelector from '@src/hooks/use-selector';
 import draw from '@src/containers/canvas-provider/draw';
 import useStore from '@src/hooks/use-store';
+import animateFreeFall from '@src/containers/canvas-provider/animate-freefall';
 const CanvasProvider = () => {
   const canvas = useRef()
   const store = useStore();
   const select = useSelector(state => ({
     coords: state.canvas.coordinates,
     scale: state.canvas.scale,
-    shapes: state.canvas.shapes
+    shapes: state.canvas.shapes,
+    freeFall: state.canvas.freeFall
   }));
 
   const [drawnItems, setDrawnItems] = useState([])
 
   useEffect(() => {
-
     setDrawnItems(select.shapes.filter(shape => {
       return (shape.startCoordinates.x >= select.coords.x && shape.startCoordinates.y >= select.coords.y &&
         shape.startCoordinates.x + shape.size <= select.coords.x + (600 / select.scale) && shape.startCoordinates.y + shape.size <= select.coords.y + (600 / select.scale))
@@ -43,8 +44,16 @@ const CanvasProvider = () => {
     onDrag: useCallback((delta) => {
       store.get('canvas').moveCoordinates("horizontal", delta.x)
       store.get('canvas').moveCoordinates("vertical", delta.y)
-    }, [])
+    }, []),
+    onAnimationFinish: useCallback(() => store.get('canvas').stopFreeFall(), [])
   }
+  useEffect(() => {
+    const context = canvas.current.getContext("2d")
+    if(select.freeFall) {
+      const animatable = drawnItems.filter(shape => shape.startCoordinates.y + shape.size < ((600 / select.scale) * 0.9))
+      window.requestAnimationFrame(() => animateFreeFall(animatable, select.coords, select.scale, performance.now(), callbacks.onAnimationFinish, context))
+    }
+  }, [select.freeFall, select.coords, select.scale, canvas, drawnItems])
 
   return (
     <CanvasWindow size={600} ref={canvas} onWheel={callbacks.onWheel} onDrag={callbacks.onDrag}/>
