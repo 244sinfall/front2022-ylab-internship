@@ -5,7 +5,7 @@ export default function animateFreeFall(shapes, coords, scale, startTime, onFini
   shapes.map((shape) => {
     if(!shape.finishedAnimation) {
       const timeNow = performance.now()
-      shape.startCoordinates.y =  shape.startCoordinates.y += (0.005 * timeNow)
+      shape.startCoordinates.y =  shape.startCoordinates.y += (0.0025 * timeNow)
       if(shape.startCoordinates.y + shape.size > 600 / scale) {
         shape.startCoordinates.y = (600 / scale) - shape.size - coords.y
         shape.finishedAnimation = true
