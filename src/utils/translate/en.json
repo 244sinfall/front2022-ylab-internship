@@ -44,5 +44,10 @@
   "chat.you": "You",
   "chat.messageAt": "at",
   "chat.delivered": "Delivered",
-  "chat.sent": "Sent"
+  "chat.sent": "Sent",
+  "canvas.menuItem": "Let's draw",
+  "canvas.title": "Canvas",
+  "canvas.draw": "Draw shape",
+  "canvas.animate": "Animate it",
+  "canvas.removeAll": "Remove all"
 }

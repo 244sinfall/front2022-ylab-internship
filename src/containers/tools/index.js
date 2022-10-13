@@ -28,7 +28,8 @@ function ToolsContainer({showMenu = true}) {
   const options = {
     menu: useMemo(() => ([
       {key: 1, title: t('menu.main'), link: '/'},
-      {key: 2, title: t('chat.title'), link: '/chat'}
+      {key: 2, title: t('chat.title'), link: '/chat'},
+      {key: 3, title: t('canvas.menuItem'), link: '/canvas'}
     ]), [t]),
   }
 

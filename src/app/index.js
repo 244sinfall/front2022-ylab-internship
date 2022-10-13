@@ -9,6 +9,7 @@ import Login from "./login";
 import Profile from "./profile";
 import ModalProvider from '@src/containers/modal-provider';
 import Chat from '@src/app/chat';
+import Canvas from '@src/app/canvas';
 
 /**
  * Приложение
@@ -33,6 +34,7 @@ function App() {
         <Route path={"/login"} element={<Login/>}/>
         <Route path={"/profile"} element={<Protected redirect={'/login'}><Profile/></Protected>}/>
         <Route path={'/chat'} element={<Protected redirect={'/login'}><Chat/></Protected>}/>
+        <Route path={'/canvas'} element={<Canvas/>}/>
       </Routes>
       <ModalProvider/>
     </>

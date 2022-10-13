@@ -46,5 +46,10 @@
   "chat.you": "Вы",
   "chat.messageAt": "в",
   "chat.delivered": "Доставлено",
-  "chat.sent": "Отправлено"
+  "chat.sent": "Отправлено",
+  "canvas.menuItem": "Порисовать",
+  "canvas.title": "Холст",
+  "canvas.draw": "Нарисовать",
+  "canvas.animate": "Анимировать",
+  "canvas.removeAll": "Удалить все"
 }
