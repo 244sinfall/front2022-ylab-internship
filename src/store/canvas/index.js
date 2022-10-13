@@ -38,20 +38,14 @@ class CanvasState extends StateModule{
     }
     this.setState({...this.getState(), shapes: [...this.getState().shapes, newShape]})
   }
-  moveCoordinates(direction) {
+  moveCoordinates(direction, amount = 2) {
     const newCords = {...this.getState().coordinates}
     switch(direction) {
-      case "up":
-        newCords.y += 2
+      case "vertical":
+        newCords.y += amount
         break
-      case "down":
-        newCords.y -= 2
-        break
-      case "left":
-        newCords.x -= 2
-        break
-      case "right":
-        newCords.x += 2
+      case "horizontal":
+        newCords.x += amount
         break
     }
     this.setState({...this.getState(), coordinates: newCords})

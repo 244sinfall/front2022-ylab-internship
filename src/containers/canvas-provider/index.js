@@ -4,9 +4,7 @@ import useSelector from '@src/hooks/use-selector';
 import draw from '@src/containers/canvas-provider/draw';
 import useStore from '@src/hooks/use-store';
 const CanvasProvider = () => {
-
   const canvas = useRef()
-  // draw()
   const store = useStore();
   const select = useSelector(state => ({
     coords: state.canvas.coordinates,
@@ -33,17 +31,21 @@ const CanvasProvider = () => {
 
   const callbacks = {
     onWheel: useCallback((e) => {
-      const direction = e.nativeEvent.wheelDeltaY > 0 ? "up" : "down"
       if(!e.nativeEvent.shiftKey) {
-        store.get('canvas').moveCoordinates(direction)
+        const amount = e.nativeEvent.wheelDeltaY > 0 ? 2 : -2
+        store.get('canvas').moveCoordinates("vertical", amount)
       } else {
         console.log("scale")
       }
+    }, []),
+    onDrag: useCallback((delta) => {
+      store.get('canvas').moveCoordinates("horizontal", delta.x)
+      store.get('canvas').moveCoordinates("vertical", delta.y)
     }, [])
   }
 
   return (
-    <CanvasWindow size={600} ref={canvas} onWheel={callbacks.onWheel}/>
+    <CanvasWindow size={600} ref={canvas} onWheel={callbacks.onWheel} onDrag={callbacks.onDrag}/>
   );
 };
 
