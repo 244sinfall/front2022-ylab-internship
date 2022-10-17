@@ -13,6 +13,9 @@ function Canvas(){
     {code: " ", title: "Выберите фигуру", value: ""},
     {code: "■", title: "Квадрат", value: "square"},
     {code: "●", title: "Круг", value: "circle"},
+    {code: "▸", title: "Прямоугольный треугольник", value: "rectTriangle"},
+    {code: '▸', title: "Острый треугольник", value: "sharpTriangle"},
+    {code: '▸', title: "Тупой треугольник", value: "bluntTriangle"}
   ]
   return (
     <Layout>

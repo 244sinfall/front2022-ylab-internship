@@ -17,6 +17,8 @@ export default function draw(shape, coords, scale, context) {
     },
     size: shape.size * scale
   }
+  context.fillStyle = shape.color
+  context.strokeStyle = shape.color
   // Для управления шейпами используется реэкспорт
   return shapes[shape.type](context, newShape)
 }

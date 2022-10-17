@@ -4,10 +4,10 @@
  * @param shape Объект шейпа
  */
 export default function circle(context, shape) {
-  context.fillStyle = shape.color
-  context.strokeStyle = shape.color
   context.beginPath()
-  context.arc(shape.startCoordinates.x + shape.size, shape.startCoordinates.y + shape.size, shape.size, 0, Math.PI * 2)
+  const radius = shape.size / 2
+  context.arc(shape.startCoordinates.x + radius, shape.startCoordinates.y + radius, radius, 0, Math.PI * 2)
+  context.closePath()
   shape.fill ? context.fill() : context.stroke()
 }
 

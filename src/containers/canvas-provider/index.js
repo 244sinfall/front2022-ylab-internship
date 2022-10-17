@@ -55,8 +55,9 @@ const CanvasProvider = () => {
   useEffect(() => {
     const context = canvas.current.getContext("2d")
     if(select.freeFall && context) {
+      const currentTime = performance.now()
       window.requestAnimationFrame(() => animateFreeFall(drawnItems, select.coords,
-        select.scale, performance.now(), callbacks.onAnimationFinish, context))
+        select.scale, currentTime, callbacks.onAnimationFinish, context))
     }
   }, [select.freeFall, select.coords, select.scale, canvas, drawnItems])
 
