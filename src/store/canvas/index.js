@@ -16,7 +16,7 @@ class CanvasState extends StateModule{
       scale: 1,
       // Shape: Уникальный ID, координаты: { начала (верх-лево), конец (низ-право) }, тип шейпа, другие параметры
       shapes: [],
-      freeFall: false,
+      animationFinished: false,
     };
   }
 
@@ -42,20 +42,6 @@ class CanvasState extends StateModule{
   }
 
   /**
-   * Останавливает анимацию свободного падения
-   */
-  stopFreeFall() {
-    this.setState({...this.getState(), freeFall: false})
-  }
-
-  /**
-   * Начинает анимацию свободного падения
-   */
-  triggerFreeFall() {
-    this.setState({...this.getState(), freeFall: true})
-  }
-
-  /**
    * Передвигает координаты канваса
    * @param direction Направление "vertical" | "horizontal"
    * @param amount Количество пикселей сдвига (по умолчанию 2)
@@ -72,15 +58,24 @@ class CanvasState extends StateModule{
     }
     this.setState({...this.getState(), coordinates: newCords})
   }
-
+  setAnimationFinished(state) {
+    this.setState({...this.getState(), animationFinished: state})
+  }
   /**
    * Устанавливает масштаб
    * @param direction Направление "up" - уменьшение, "down" - увеличение
+   * @param anchor Точка центровки при зумировании
    * Минимальный масштаб 0.05, максимальный - 10
    */
-  setScale(direction) {
+  setScale(direction, anchor = {x: 0, y: 0}) {
     if(this.getState().scale <= 0.05 && direction === "up" || this.getState().scale > 10 && direction === "down") return
-    this.setState({...this.getState(), scale: direction === "up" ? this.getState().scale - 0.05 : this.getState().scale + 0.05})
+    const newScale = direction === "up" ? this.getState().scale - 0.05 : this.getState().scale + 0.05
+    const newStartCoordinates = {
+      x: anchor.x / newScale - ((600 / newScale) / 2),
+      y: anchor.y / newScale - ((600 / newScale) / 2)
+    }
+    this.setState({...this.getState(), scale: newScale,
+    coordinates: newStartCoordinates})
   }
 
   /**
