@@ -29,7 +29,7 @@ const CanvasProvider = () => {
     const context = canvas.current.getContext("2d")
     if(context && select.animationFinished) {
       context.clearRect(0, 0, 600, 600)
-      drawnItems.forEach(shape => draw(shape, select.coords, select.scale, context))
+      if(drawnItems) drawnItems.forEach(shape => draw(shape, select.coords, select.scale, context))
     }
   }, [drawnItems, canvas, select.coords, select.scale, select.animationFinished])
   const callbacks = {
@@ -54,10 +54,10 @@ const CanvasProvider = () => {
     }, []),
     onAnimationFinish: useCallback(() => store.get('canvas').setAnimationFinished(true),[])
   }
-  // Эффект для обработки анимации, когда она включена. Вызывается при переключении свойства freefall
+  // Эффект для обработки анимации, когда она включена
   useEffect(() => {
     const context = canvas.current.getContext("2d")
-    if(context && drawnItems.filter(shape => shape.startCoordinates.y !== (600 / select.scale) - shape.size + select.coords.y)) {
+    if(context && drawnItems.filter(shape => shape.startCoordinates.y !== (600 / select.scale) - shape.size + select.coords.y).length > 0) {
       store.get('canvas').setAnimationFinished(false)
       const currentTime = performance.now()
       window.requestAnimationFrame(() => animateFreeFall(drawnItems, select.coords,

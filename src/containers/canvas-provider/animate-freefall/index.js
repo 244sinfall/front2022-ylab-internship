@@ -12,8 +12,7 @@ import draw from '@src/containers/canvas-provider/draw';
  */
 export default function animateFreeFall(shapes, coords, scale, startTime, onFinish, context) {
   context.clearRect(0, 0, 600, 600)
-  let newShapes = shapes.filter(shape => shape.startCoordinates.y !== (600 / scale) - shape.size + coords.y)
-  shapes.map((shape) => {
+  shapes.forEach((shape) => {
     const timeNow = performance.now()
     shape.startCoordinates.y =  shape.startCoordinates.y += (0.0000981 * ((timeNow - startTime) ** 2))
     if(shape.startCoordinates.y + shape.size > (600 / scale) + coords.y) {
@@ -21,6 +20,6 @@ export default function animateFreeFall(shapes, coords, scale, startTime, onFini
     }
     draw(shape, coords, scale, context)
   })
-  if(newShapes.length === 0) return onFinish()
+  if(shapes.every(shape => shape.startCoordinates.y === (600 / scale) - shape.size + coords.y)) return onFinish()
   window.requestAnimationFrame(() => animateFreeFall(shapes, coords, scale, startTime, onFinish, context))
 }
