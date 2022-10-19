@@ -29,29 +29,32 @@ export class CanvasDrawer {
       }
     })
     this._canvas.addEventListener("wheel", this._onWheel)
-    this._canvas.addEventListener("mousedown", e => {
-      this._mouseDownPos = {x: e.clientX, y: e.clientY}
-      this._mouseMoving = true
-    })
-    this._canvas.addEventListener("mousemove", e => {
-      if(this._mouseMoving) {
-        this._onDrag({
-          x: e.clientX - this._mouseDownPos.x,
-          y: e.clientY - this._mouseDownPos.y
-        })
-        this._mouseDownPos = {
-          x: e.clientX,
-          y: e.clientY
-        }
-      }
-    })
-    this._canvas.addEventListener("mouseup", () => this._mouseMoving = false)
+    this._canvas.addEventListener("mousedown", this._onMouseDown)
+    this._canvas.addEventListener("mousemove", this._onMouseMove)
+    this._canvas.addEventListener("mouseup", this._onMouseUp)
   }
   drawItems() {
     this._context.clearRect(0, 0, 600, 600)
     const coords = this._state.coordinates
     const scale = this._state.scale
     if(this._drawnItems) this._drawnItems.forEach(shape => draw(shape, coords, scale, this._context))
+  }
+  _onMouseDown = (e) => {
+    this._mouseDownPos = {x: e.clientX, y: e.clientY}
+    this._mouseMoving = true
+  }
+  _onMouseUp = () => this._mouseMoving = false
+  _onMouseMove = (e) => {
+    if(this._mouseMoving) {
+      this._onDrag({
+        x: e.clientX - this._mouseDownPos.x,
+        y: e.clientY - this._mouseDownPos.y
+      })
+      this._mouseDownPos = {
+        x: e.clientX,
+        y: e.clientY
+      }
+    }
   }
   _onWheel = (e) => {
      if(!e.shiftKey) {
