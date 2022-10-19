@@ -14,12 +14,14 @@ export default function animateFreeFall(shapes, coords, scale, startTime, onFini
   context.clearRect(0, 0, 600, 600)
   shapes.forEach((shape) => {
     const timeNow = performance.now()
-    shape.startCoordinates.y =  shape.startCoordinates.y += (0.0000981 * ((timeNow - startTime) ** 2))
-    if(shape.startCoordinates.y + shape.size > (600 / scale) + coords.y) {
-      shape.startCoordinates.y = (600 / scale) - shape.size + coords.y
+    if(shape.startCoordinates.y + shape.size < 400) {
+      shape.startCoordinates.y =  shape.startCoordinates.y += (0.0000981 * ((timeNow - startTime) ** 2))
+      if(shape.startCoordinates.y + shape.size > 400) {
+        shape.startCoordinates.y = 400 - shape.size
+      }
     }
     draw(shape, coords, scale, context)
   })
-  if(shapes.every(shape => shape.startCoordinates.y === (600 / scale) - shape.size + coords.y)) return onFinish()
+  if(shapes.every(shape => shape.startCoordinates.y >= 400 - shape.size)) return onFinish()
   window.requestAnimationFrame(() => animateFreeFall(shapes, coords, scale, startTime, onFinish, context))
 }
