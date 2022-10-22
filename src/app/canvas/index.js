@@ -12,10 +12,9 @@ function Canvas(){
   const drawOptions = [
     {code: " ", title: "Выберите фигуру", value: ""},
     {code: "■", title: "Квадрат", value: "square"},
+    {code: "■", title: "Прямоугольник", value: "rectangle"},
     {code: "●", title: "Круг", value: "circle"},
-    {code: "▸", title: "Прямоугольный треугольник", value: "rectTriangle"},
-    {code: '▸', title: "Острый треугольник", value: "sharpTriangle"},
-    {code: '▸', title: "Тупой треугольник", value: "bluntTriangle"}
+    {code: "▸", title: "Треугольник", value: "triangle"},
   ]
   return (
     <Layout>

@@ -1,6 +1,4 @@
-import draw from '@src/containers/canvas-provider/draw';
 import shallowequal from 'shallowequal';
-import animateFreeFall from '@src/containers/canvas-provider/animate-freefall';
 
 export class CanvasDrawer {
   constructor(ref, store) {
@@ -15,35 +13,74 @@ export class CanvasDrawer {
       if(!shallowequal(this._state, newState)) {
         this._state = newState
         this._drawnItems = this._state.shapes.filter(shape => {
-          // Нас интересуют только те шейпы, которые полностью входят в канвас с учетом текущего скейла и координат
-          return (shape.startCoordinates.x + shape.size >= this._state.coordinates.x && shape.startCoordinates.y + shape.size >= this._state.coordinates.y &&
-            shape.startCoordinates.x <= this._state.coordinates.x + (600 / this._state.scale) && shape.startCoordinates.y <= this._state.coordinates.y + (600 / this._state.scale))
+          //@todo Фильтр что рисовать
+          return true
         })
-        if(this._drawnItems.filter(shape => shape.startCoordinates.y !== 400 - shape.size).length > 0) {
-          store.get('canvas').setAnimationFinished(false)
+        if(this._drawnItems.filter(shape => shape.shouldFreeFall()).length > 0) {
           const currentTime = performance.now()
-          window.requestAnimationFrame(() => animateFreeFall(this._drawnItems, this._state.coordinates,
-            this._state.scale, currentTime, () => this._store.get('canvas').setAnimationFinished(false), this._context))
+          window.requestAnimationFrame(() => this._animateFreeFall(currentTime))
         }
-        this.drawItems()
+        this._drawItems()
       }
     })
     this._canvas.addEventListener("wheel", this._onWheel)
     this._canvas.addEventListener("mousedown", this._onMouseDown)
-    this._canvas.addEventListener("mousemove", this._onMouseMove)
-    this._canvas.addEventListener("mouseup", this._onMouseUp)
+    window.addEventListener("mousemove", this._onMouseMove)
+    window.addEventListener("mouseup", this._onMouseUp)
   }
-  drawItems() {
+
+  /**
+   * Управление анимацией свободного падения
+   * @param startTime Время начала анимации
+   * @private
+   */
+  _animateFreeFall(startTime) {
+    //@todo Разное стартовое время для каждой фигуры
+    this._context.clearRect(0, 0, 600, 600)
+    this._drawnItems.forEach((shape) => {
+      shape.freeFall(this._context, this._state.coordinates, this._state.scale, startTime)
+    })
+    if(this._drawnItems.every(shape => !shape.shouldFreeFall())) return
+    window.requestAnimationFrame(() => this._animateFreeFall(startTime))
+  }
+
+  /**
+   * Метод для одноразовой отрисовки примитивов
+   * @private
+   */
+  _drawItems() {
     this._context.clearRect(0, 0, 600, 600)
     const coords = this._state.coordinates
     const scale = this._state.scale
-    if(this._drawnItems) this._drawnItems.forEach(shape => draw(shape, coords, scale, this._context))
+    if(this._drawnItems) this._drawnItems.forEach(shape => shape.draw(this._context, coords, scale))
   }
+
+  /**
+   * Метод для обработки захвата нажатия мыши
+   * @param e
+   * @private
+   */
   _onMouseDown = (e) => {
+    document.documentElement.style.userSelect = "none"
     this._mouseDownPos = {x: e.clientX, y: e.clientY}
     this._mouseMoving = true
   }
-  _onMouseUp = () => this._mouseMoving = false
+  /**
+   * Метод для обработки захвата поднятия мыши
+   * @private
+   */
+  _onMouseUp = () => {
+    if(this._mouseMoving) {
+      document.documentElement.style.userSelect = ""
+      this._mouseMoving = false
+    }
+  }
+  /**
+   * Метод для обработки захвата перемещения мыши
+   * @param e
+   * @private
+   */
+  //@todo Отвязать от стейта и обновлять стейт раз в полсекунды
   _onMouseMove = (e) => {
     if(this._mouseMoving) {
       this._onDrag({
@@ -56,21 +93,28 @@ export class CanvasDrawer {
       }
     }
   }
+  /**
+   * Обработчик событий колесика мыши (скролл и скейл)
+   * @param e
+   * @private
+   */
   _onWheel = (e) => {
      if(!e.shiftKey) {
-       const amount = e.wheelDeltaY > 0 ? 2 : -2
-       this._store.get('canvas').moveCoordinates("vertical", amount)
+       const deltaY = 4 / this._state.scale
+       const amount = e.wheelDeltaY > 0 ? -deltaY : deltaY
+       this._store.get('canvas').moveCoordinates({x: 0, y: amount})
      } else {
        const direction = e.wheelDeltaY > 0 ? "down" : "up"
-       const offset = {
-         x: e.clientX - this._canvas.offsetLeft,
-         y: e.clientY - this._canvas.offsetTop
-       }
-       this._store.get('canvas').setScale(direction, offset)
+       this._store.get('canvas').setScale(direction, {x: e.offsetX, y: e.offsetY})
      }
   }
+
+  /**
+   * Обработчик перемещения канваса мышкой
+   * @param delta Разница координат
+   * @private
+   */
   _onDrag(delta) {
-     this._store.get('canvas').moveCoordinates("horizontal", delta.x)
-     this._store.get('canvas').moveCoordinates("vertical", delta.y)
+     this._store.get('canvas').moveCoordinates({x: delta.x, y: delta.y} )
   }
 }
