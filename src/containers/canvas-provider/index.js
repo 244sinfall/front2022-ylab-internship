@@ -1,7 +1,7 @@
 import React, {useEffect, useRef} from 'react';
 import CanvasWindow from '@src/components/canvas/canvas-window';
 import useStore from '@src/hooks/use-store';
-import {CanvasDrawer} from '@src/canvas/drawer';
+import {CanvasDrawer} from '@src/canvas';
 
 const CanvasProvider = () => {
   const canvas = useRef()

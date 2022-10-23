@@ -27,39 +27,63 @@ export default class Triangle extends Shape {
   constructor(id, color, fill, pointA, pointB, pointC) {
     super();
     this._id = id
-    this._color = color
-    this._fill = fill
-    this._pointA = pointA
-    this._pointB = pointB
-    this._pointC = pointC
-    this._height = Math.max(pointA.y, pointB.y, pointC.y) - Math.min(pointA.y, pointB.y, pointC.y)
+    this.color = color
+    this.fill = fill
+    this.pointA = pointA
+    this.pointB = pointB
+    this.pointC = pointC
+  }
+  get height() {
+    return Math.max(this.pointA.y, this.pointB.y, this.pointC.y) - Math.min(this.pointA.y, this.pointB.y, this.pointC.y)
+  }
+  getBoundingRect(scale, currentCoordinates) {
+    const minX = Math.min(this.pointA.x, this.pointB.x, this.pointC.x)
+    const minY = Math.min(this.pointA.y, this.pointB.y, this.pointC.y)
+    const maxX = Math.max(this.pointA.x, this.pointB.x, this.pointC.x)
+    const maxY = Math.max(this.pointA.y, this.pointB.y, this.pointC.y)
+    return ({
+      x1: (minX * scale) - currentCoordinates.x,
+      y1: (minY * scale)  - currentCoordinates.y,
+      x2: (maxX * scale) - currentCoordinates.x,
+      y2: (maxY * scale) - currentCoordinates.y
+    })
   }
 
+  /**
+   * Переопределено, т.к у треугольника нет однозначной верхней точки, плюс точки не зависят друг от друга
+   * @param delta {{x: number, y: number}}
+   */
+  move(delta) {
+    this.pointA.x += delta.x
+    this.pointA.y += delta.y
+    this.pointB.x += delta.x
+    this.pointB.y += delta.y
+    this.pointC.x += delta.x
+    this.pointC.y += delta.y
+  }
   /**
    * Для треугольника пересечение с гранью можно измерить максимальной точкой Y
    * @returns {boolean}
    */
   shouldFreeFall() {
-    const maxPoint = () => Math.max(this._pointA.y, this._pointB.y, this._pointC.y)
-    return maxPoint() < 400;
+    return Math.max(this.pointA.y, this.pointB.y, this.pointC.y) < 400;
   }
 
-  freeFall(context, currentCoordinates, scale, startTime) {
+  freeFall(context, currentCoordinates, scale) {
     const timeNow = performance.now()
-    const maxPoint = () => Math.max(this._pointA.y, this._pointB.y, this._pointC.y)
-    if(maxPoint() < 400) {
-      const delta = 0.0000981 * ((timeNow - startTime) ** 2)
-      this._pointA.y += delta
-      this._pointB.y += delta
-      this._pointC.y += delta
-      if(maxPoint() > 400) {
-        const minusDelta = maxPoint() - 400
-        this._pointA.y -= minusDelta
-        this._pointB.y -= minusDelta
-        this._pointC.y -= minusDelta
+    if(this.shouldFreeFall()) {
+      const delta = 0.0000981 * ((timeNow - this.startTime) ** 2)
+      this.pointA.y += delta
+      this.pointB.y += delta
+      this.pointC.y += delta
+      const maxPoint = Math.max(this.pointA.y, this.pointB.y, this.pointC.y)
+      if(maxPoint > 400) {
+        const minusDelta = maxPoint - 400
+        this.pointA.y -= minusDelta
+        this.pointB.y -= minusDelta
+        this.pointC.y -= minusDelta
       }
     }
-    this.draw(context, currentCoordinates, scale)
   }
   draw(context, currentCoordinates, scale) {
     context.save()
@@ -70,15 +94,15 @@ export default class Triangle extends Shape {
         y: (point.y * scale) - currentCoordinates.y
       })
     }
-    const realPointA = getRealPoint(this._pointA)
-    const realPointB = getRealPoint(this._pointB)
-    const realPointC = getRealPoint(this._pointC)
+    const realPointA = getRealPoint(this.pointA)
+    const realPointB = getRealPoint(this.pointB)
+    const realPointC = getRealPoint(this.pointC)
     context.beginPath()
     context.moveTo(realPointA.x, realPointA.y)
     context.lineTo(realPointB.x, realPointB.y)
     context.lineTo(realPointC.x, realPointC.y)
     context.closePath()
-    this._fill ? context.fill() : context.stroke()
+    this.fill ? context.fill() : context.stroke()
     context.restore()
   }
 }

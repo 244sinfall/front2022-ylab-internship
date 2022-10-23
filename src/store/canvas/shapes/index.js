@@ -9,40 +9,71 @@
 
 export default class Shape {
   _id = ""
-  _color = "#000000"
-  _fill = false
+  color = "#000000"
+  fill = false
+  selected = false
   static build() {
-    throw new Error("Метод не реализован")
+    return new Shape()
   }
   constructor() {
     if(this.constructor === Shape) {
       throw new Error("Невозможно создать экземпляр абстрактного класса")
     }
+    this.startTime = performance.now()
   }
-  get height() {
-    return this._height
-  }
+
+  /**
+   * Установка цвет (одинаково для всех наследников)
+   * @param context
+   */
   draw(context) {
-    context.fillStyle = this._color
-    context.strokeStyle = this._color
+    const color = this.selected ? "#7252F8" : this.color
+    context.fillStyle = color
+    context.strokeStyle = color
   }
+
+  /**
+   * Булевый флаг - стоит ли фигуре в данный момент падать, исходя из ее координат
+   * @returns {boolean}
+   */
   shouldFreeFall() {
-    return this._y1 + this.height < 400
+    return this.y1 + this.height < 400
   }
-  freeFall(context, currentCoordinates, scale, startTime) {
+
+  /**
+   * Общая механика свободного падения
+   * @param context Контекст канваса
+   * @param currentCoordinates Текущие координаты
+   * @param scale Текущий масштаб
+   */
+  freeFall(context, currentCoordinates, scale) {
     const timeNow = performance.now()
-    if(this._y1 + this.height < 400) {
-      this._y1 =  this._y1 + (0.0000981 * ((timeNow - startTime) ** 2))
-      if(this._y1 + this.height > 400) {
-        this._y1 = 400 - this.height
+    if(this.y1 + this.height < 400) {
+      this.y1 =  this.y1 + (0.0000981 * ((timeNow - this.startTime) ** 2))
+      if(this.y1 + this.height > 400) {
+        this.y1 = 400 - this.height
       }
     }
-    this.draw(context, currentCoordinates, scale)
   }
-  getBoundingRect() { throw new Error("Метод не реализован"); }
-  isIntersecting() {
-    //@todo
-    return true
+
+  /**
+   * Общая механика передвижения примитивов
+   * @param delta {{x: number, y: number}}
+   */
+  move(delta) {
+    this.y1 += delta.y
+    this.x1 += delta.x
+  }
+
+  getBoundingRect(scale, currentCoordinates) {
+    return {}
+  }
+  isIntersecting(scale, currentCoordinates, intersectionCoordinates) {
+    const rect = this.getBoundingRect(scale, currentCoordinates)
+    return (
+      rect.x1 <= intersectionCoordinates.x && rect.y1 <= intersectionCoordinates.y &&
+      rect.x2 >= intersectionCoordinates.x && rect.y2 >= intersectionCoordinates.y
+    )
   }
   equals(shape) {
     return this._id === shape._id

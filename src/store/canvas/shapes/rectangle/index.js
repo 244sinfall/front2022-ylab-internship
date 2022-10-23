@@ -17,21 +17,32 @@ export default class Rectangle extends Shape {
   constructor(id, color, fill, x1, y1, width, height) {
     super();
     this._id = id
-    this._color = color
-    this._fill = fill
-    this._x1 = x1
-    this._y1 = y1
-    this._width = width
-    this._height = height
+    this.color = color
+    this.fill = fill
+    this.x1 = x1
+    this.y1 = y1
+    this.width = width
+    this.height = height
   }
+  getBoundingRect(scale, currentCoordinates) {
+    const realX1 = (this.x1 * scale) - currentCoordinates.x
+    const realY1 = (this.y1 * scale) - currentCoordinates.y
+    return ({
+      x1: realX1,
+      y1: realY1,
+      x2: realX1 + (this.width * scale),
+      y2: realY1 + (this.height * scale)
+    })
+  }
+
   draw(context, currentCoordinates, scale) {
     context.save()
     super.draw(context)
-    const realX1 = (this._x1 * scale) - currentCoordinates.x
-    const realY1 = (this._y1 * scale) - currentCoordinates.y
-    const realWidth = this._width * scale
-    const realHeight = this._height * scale
-    this._fill ? context.fillRect(realX1, realY1, realWidth, realHeight) :
+    const realX1 = (this.x1 * scale) - currentCoordinates.x
+    const realY1 = (this.y1 * scale) - currentCoordinates.y
+    const realWidth = this.width * scale
+    const realHeight = this.height * scale
+    this.fill ? context.fillRect(realX1, realY1, realWidth, realHeight) :
       context.strokeRect(realX1, realY1, realWidth, realHeight)
     context.restore()
   }

@@ -6,9 +6,16 @@ import ToolsContainer from "@src/containers/tools";
 import useTranslate from '@src/hooks/use-translate';
 import CanvasControls from '@src/containers/canvas-controls';
 import CanvasProvider from '@src/containers/canvas-provider';
+import ShapeControls from '@src/containers/shape-controls';
+import useSelector from '@src/hooks/use-selector';
 
 function Canvas(){
   const {t} = useTranslate()
+  // Для обновления редактора примитива и его опций
+  const select = useSelector(state => ({
+    shape: state.canvas.selectedShape,
+    options: state.canvas.selectedShapeOptions
+  }))
   const drawOptions = [
     {code: " ", title: "Выберите фигуру", value: ""},
     {code: "■", title: "Квадрат", value: "square"},
@@ -23,6 +30,7 @@ function Canvas(){
       <ToolsContainer/>
       <CanvasControls drawOptions={drawOptions}/>
       <CanvasProvider/>
+      <ShapeControls shape={select.shape} options={select.options}/>
     </Layout>
   )
 }

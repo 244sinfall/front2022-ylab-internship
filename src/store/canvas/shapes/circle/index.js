@@ -14,33 +14,50 @@ export default class Circle extends Shape {
   }
 
   /**
+   * Переопределение для круга, границы находятся через радиус
+   * @param scale масштаб
+   * @param currentCoordinates текущие координаты канваса
+   * @returns {{y1: number, x1: number, y2: number, x2: number}}
+   */
+  getBoundingRect(scale, currentCoordinates) {
+    const realX1 = (this.x1 * scale) - currentCoordinates.x
+    const realY1 = (this.y1 * scale) - currentCoordinates.y
+    return ({
+      x1: realX1,
+      y1: realY1,
+      x2: realX1 + ((this.radius * 2) * scale),
+      y2: realY1 + ((this.radius * 2) * scale)
+    })
+  }
+
+  /**
    * Высота круга это два радиуса
    * @returns {number}
    */
   get height() {
-    return this._radius * 2
+    return this.radius * 2
   }
   constructor(id, color, fill, x1, y1, radius) {
     super();
     this._id = id
-    this._color = color
-    this._fill = fill
-    this._x1 = x1
-    this._y1 = y1
-    this._radius = radius
+    this.color = color
+    this.fill = fill
+    this.x1 = x1
+    this.y1 = y1
+    this.radius = radius
   }
   draw(context, currentCoordinates, scale) {
     context.save()
     super.draw(context)
     context.beginPath()
     const realCircle = {
-      x: (this._x1 * scale) - currentCoordinates.x,
-      y: (this._y1 * scale) - currentCoordinates.y,
-      radius: this._radius * scale
+      x: (this.x1 * scale) - currentCoordinates.x,
+      y: (this.y1 * scale) - currentCoordinates.y,
+      radius: this.radius * scale
     }
     context.arc(realCircle.x + realCircle.radius, realCircle.y + realCircle.radius, realCircle.radius, 0, Math.PI * 2)
     context.closePath()
-    this._fill ? context.fill() : context.stroke()
+    this.fill ? context.fill() : context.stroke()
     context.restore()
   }
 }

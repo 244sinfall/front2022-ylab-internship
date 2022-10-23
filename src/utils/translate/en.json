@@ -48,6 +48,13 @@
   "canvas.menuItem": "Let's draw",
   "canvas.title": "Canvas",
   "canvas.draw": "Draw shape",
-  "canvas.animate": "Animate it",
-  "canvas.removeAll": "Remove all"
+  "canvas.removeAll": "Remove all",
+  "canvas.point": "Point",
+  "canvas.color": "Color",
+  "canvas.fill": "Filled",
+  "canvas.radius": "Radius",
+  "canvas.startXCoordinate": "X start coordinate",
+  "canvas.startYCoordinate": "Y start coordinate",
+  "canvas.width": "Width",
+  "canvas.height": "Height"
 }
