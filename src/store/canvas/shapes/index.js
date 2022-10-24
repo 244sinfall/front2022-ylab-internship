@@ -27,9 +27,9 @@ export default class Shape {
    * @param context
    */
   draw(context) {
-    const color = this.selected ? "#7252F8" : this.color
-    context.fillStyle = color
-    context.strokeStyle = color
+    context.lineWidth = this.selected ? 2 : 1
+    context.fillStyle = this.color
+    context.strokeStyle = this.color
   }
 
   /**
@@ -49,7 +49,7 @@ export default class Shape {
   freeFall(context, currentCoordinates, scale) {
     const timeNow = performance.now()
     if(this.y1 + this.height < 400) {
-      this.y1 =  this.y1 + (0.0000981 * ((timeNow - this.startTime) ** 2))
+      this.y1 =  this.y1 + (0.0000001 * ((timeNow - this.startTime) ** 2))
       if(this.y1 + this.height > 400) {
         this.y1 = 400 - this.height
       }
@@ -59,10 +59,11 @@ export default class Shape {
   /**
    * Общая механика передвижения примитивов
    * @param delta {{x: number, y: number}}
+   * @param scale Масштаб канваса
    */
-  move(delta) {
-    this.y1 += delta.y
-    this.x1 += delta.x
+  move(delta, scale = 1) {
+    this.y1 += delta.y / scale
+    this.x1 += delta.x / scale
   }
 
   getBoundingRect(scale, currentCoordinates) {

@@ -1,16 +1,21 @@
-import React, {useEffect, useRef} from 'react';
+import React, {useEffect, useMemo, useRef} from 'react';
 import CanvasWindow from '@src/components/canvas/canvas-window';
 import useStore from '@src/hooks/use-store';
 import {CanvasDrawer} from '@src/canvas';
+import useSelector from '@src/hooks/use-selector';
 
 const CanvasProvider = () => {
   const canvas = useRef()
   const store = useStore();
-  useEffect(() => {
+  const canvasState = useSelector(state => state.canvas)
+  const drawer = useMemo(() => {
     if(canvas.current) {
-      new CanvasDrawer(canvas, store)
+      return new CanvasDrawer(canvas.current, store, state => store.get('canvas').updateState(state))
     }
-  }, [canvas])
+  }, [canvas.current])
+  useEffect(() => {
+    if(drawer) drawer.importState(canvasState)
+  }, [drawer, canvasState])
   return (
     <CanvasWindow size={600} ref={canvas}/>
   );

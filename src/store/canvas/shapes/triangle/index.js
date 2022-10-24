@@ -52,14 +52,17 @@ export default class Triangle extends Shape {
   /**
    * Переопределено, т.к у треугольника нет однозначной верхней точки, плюс точки не зависят друг от друга
    * @param delta {{x: number, y: number}}
+   * @param scale Масштаб канваса
    */
-  move(delta) {
-    this.pointA.x += delta.x
-    this.pointA.y += delta.y
-    this.pointB.x += delta.x
-    this.pointB.y += delta.y
-    this.pointC.x += delta.x
-    this.pointC.y += delta.y
+  move(delta, scale = 1) {
+    const deltaX = delta.x / scale
+    const deltaY = delta.y / scale
+    this.pointA.x += deltaX
+    this.pointA.y += deltaY
+    this.pointB.x += deltaX
+    this.pointB.y += deltaY
+    this.pointC.x += deltaX
+    this.pointC.y += deltaY
   }
   /**
    * Для треугольника пересечение с гранью можно измерить максимальной точкой Y
@@ -72,7 +75,7 @@ export default class Triangle extends Shape {
   freeFall(context, currentCoordinates, scale) {
     const timeNow = performance.now()
     if(this.shouldFreeFall()) {
-      const delta = 0.0000981 * ((timeNow - this.startTime) ** 2)
+      const delta = 0.0000001 * ((timeNow - this.startTime) ** 2)
       this.pointA.y += delta
       this.pointB.y += delta
       this.pointC.y += delta

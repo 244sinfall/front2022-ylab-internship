@@ -10,6 +10,7 @@ export default class Circle extends Shape {
       y1: params.y1 ?? coordinates.y + Math.ceil(Math.random() * (400 / scale)),
       radius: params.radius ?? Math.ceil(Math.random() * 50),
     }
+
     return new Circle(opts.id, opts.color, opts.fill, opts.x1, opts.y1, opts.radius)
   }
 

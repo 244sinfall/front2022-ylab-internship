@@ -5,24 +5,16 @@ import shallowequal from 'shallowequal';
  * синхронизируясь с внешним состоянием при необходимости
  */
 export class CanvasDrawer {
-  constructor(ref, store) {
-    this._canvas = ref.current
+  constructor(canvas, store, onExport) {
+    this._canvas = canvas
     this._context = this._canvas.getContext('2d')
     this._context.imageSmoothingEnabled = false
     // Сылка для синхронизации
-    this._store = store
+    this._onExport = onExport
     // Внутреннее состояние
     this._state = {}
     // Только отрисовываемые примитивы
     this._drawnItems = []
-    this._store.subscribe(() => {
-      // Обновление стейта и перерисовка при изменениях с внешней стороны
-      const newState = this._store.getState()['canvas']
-      if(!shallowequal(this._state, newState)) {
-        this._state = newState
-        this._updateItems()
-      }
-    })
     // Скейл / скролл
     this._canvas.addEventListener("wheel", this._onWheel)
     this._canvas.addEventListener("mousedown", this._onMouseDown)
@@ -42,27 +34,10 @@ export class CanvasDrawer {
       rect.x2 > 0 && rect.y2 > 0 && rect.y1 < 600 && rect.x1 < 600
     )
   }
-
-  /**
-   * Обработчик для клика. Выделение / снятие выделения для примитива
-   * @param e Ивент из mouseUp
-   * @private
-   */
-  _onClick = e => {
-    if(e.target === this._canvas && this._state.selectedShape) {
-      this._state.selectedShape.startTime = performance.now()
-      this._state.selectedShape.selected = false
-      this._state.selectedShape = null
+  importState(newState) {
+    if(!shallowequal(this._state, newState)) {
+      this._state = newState
       this._updateItems()
-      return
-    }
-    for (let i = this._drawnItems.length - 1; i >= 0; i--) {
-      if(this._drawnItems[i].isIntersecting(this._state.scale, this._state.coordinates, {x: e.offsetX, y: e.offsetY})) {
-        this._state.selectedShape = this._drawnItems[i]
-        this._state.selectedShape.selected = true
-        this._updateItems()
-        return
-      }
     }
   }
   /**
@@ -87,8 +62,8 @@ export class CanvasDrawer {
    * Метод для обновления локальных данных во внешнем состоянии
    * @private
    */
-  _updateStore() {
-    const newState = {...this._store.getState()['canvas']}
+  _updateState() {
+    const newState = {...this._state}
     newState.shapes.forEach((shape, index, array) => {
       const updatedShape = this._drawnItems.find(newShape => newShape.equals(shape))
       if(updatedShape) {
@@ -102,18 +77,23 @@ export class CanvasDrawer {
     if(!shallowequal(newState.selectedShapeOptions, {...this._state.selectedShape})) {
       newState.selectedShapeOptions = {...this._state.selectedShape}
     }
-    this._store.get('canvas').updateState(newState)
+    this._onExport(newState)
   }
 
   /**
    * Пересчитывает отображаемые примитивы
+   * @param immediately Мгновенное обновление
    * @private
    */
-  _updateItems() {
-    clearTimeout(this._updateTimeout)
-    this._updateTimeout = setTimeout(() => {
-      this._updateStore()
-    }, 100)
+  _updateItems(immediately = false) {
+    if(!immediately) {
+      clearTimeout(this._updateTimeout)
+      this._updateTimeout = setTimeout(() => {
+        this._updateState()
+      }, 100)
+    } else {
+      this._updateState()
+    }
     this._drawnItems = this._state.shapes.filter(shape => this._shouldDisplay(shape))
     if(this._drawnItems.filter(shape => shape.shouldFreeFall()).length > 0) {
       window.requestAnimationFrame(() => this._animateFreeFall())
@@ -140,17 +120,28 @@ export class CanvasDrawer {
     document.documentElement.style.userSelect = "none"
     this._mouseDownPos = {x: e.clientX, y: e.clientY}
     this._mouseDown = true
+    for (let i = this._drawnItems.length - 1; i >= 0; i--) {
+      if(this._drawnItems[i].isIntersecting(this._state.scale, this._state.coordinates, {x: e.offsetX, y: e.offsetY})) {
+        this._state.selectedShape = this._drawnItems[i]
+        this._state.selectedShape.selected = true
+        this._updateItems(true)
+        return
+      }
+    }
+    if(e.target === this._canvas && this._state.selectedShape) {
+      this._state.selectedShape.startTime = performance.now()
+      this._state.selectedShape.selected = false
+      this._state.selectedShape = null
+      this._updateItems(true)
+    }
+
   }
   /**
    * Метод для обработки захвата поднятия мыши. Если mouseMove не срабатывал, срабатывает Click
    * @private
    */
-  _onMouseUp = (e) => {
+  _onMouseUp = () => {
     document.documentElement.style.userSelect = ""
-    if(!this._mouseMoving) {
-      this._onClick(e)
-    }
-    this._mouseMoving = false
     this._mouseDown = false
   }
   /**
@@ -160,13 +151,12 @@ export class CanvasDrawer {
    */
   _onMouseMove = (e) => {
     if(this._mouseDown) {
-      this._mouseMoving = true
       const currentPos = {
         x: e.clientX - this._mouseDownPos.x,
         y: e.clientY - this._mouseDownPos.y
       }
       if(this._state.selectedShape) {
-        this._state.selectedShape.move(currentPos)
+        this._state.selectedShape.move(currentPos, this._state.scale)
         this._updateItems()
       } else {
         this._onDrag(currentPos)
