@@ -1,0 +1,5 @@
+export {default as leaf1} from './leave1.png'
+export {default as leaf2} from './leave2.png'
+export {default as leaf3} from './leave3.png'
+export {default as leaf4} from './leave4.png'
+export {default as leaf5} from './leave5.png'

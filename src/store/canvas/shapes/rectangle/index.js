@@ -24,16 +24,6 @@ export default class Rectangle extends Shape {
     this.width = width
     this.height = height
   }
-  getBoundingRect(scale, currentCoordinates) {
-    const realX1 = (this.x1 * scale) - currentCoordinates.x
-    const realY1 = (this.y1 * scale) - currentCoordinates.y
-    return ({
-      x1: realX1,
-      y1: realY1,
-      x2: realX1 + (this.width * scale),
-      y2: realY1 + (this.height * scale)
-    })
-  }
 
   draw(context, currentCoordinates, scale) {
     context.save()

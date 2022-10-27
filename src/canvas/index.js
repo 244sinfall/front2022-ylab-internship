@@ -63,6 +63,7 @@ export class CanvasDrawer {
    * @private
    */
   _updateState() {
+    this._updateTime = performance.now()
     const newState = {...this._state}
     newState.shapes.forEach((shape, index, array) => {
       const updatedShape = this._drawnItems.find(newShape => newShape.equals(shape))
@@ -86,13 +87,13 @@ export class CanvasDrawer {
    * @private
    */
   _updateItems(immediately = false) {
-    if(!immediately) {
+    if(immediately || performance.now() - this._updateTime > 1000) {
+      this._updateState()
+    } else {
       clearTimeout(this._updateTimeout)
       this._updateTimeout = setTimeout(() => {
         this._updateState()
       }, 100)
-    } else {
-      this._updateState()
     }
     this._drawnItems = this._state.shapes.filter(shape => this._shouldDisplay(shape))
     if(this._drawnItems.filter(shape => shape.shouldFreeFall()).length > 0) {
