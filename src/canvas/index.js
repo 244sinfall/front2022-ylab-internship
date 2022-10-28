@@ -48,7 +48,7 @@ export class CanvasDrawer {
     this._context.clearRect(0, 0, 600, 600)
     this._drawnItems.forEach((shape) => {
       // Выделенный приметив не падает
-      if(!this._state.selectedShape || !shape.equals(this._state.selectedShape)) {
+      if(!this._state.selectedShape || !(shape.equals(this._state.selectedShape) && this._state.selectedShape.selected)) {
         shape.freeFall(this._context, this._state.coordinates, this._state.scale)
       }
     })
@@ -87,13 +87,13 @@ export class CanvasDrawer {
    * @private
    */
   _updateItems(immediately = false) {
-    if(immediately || performance.now() - this._updateTime > 1000) {
+    if(immediately || performance.now() - this._updateTime > 200) {
       this._updateState()
     } else {
       clearTimeout(this._updateTimeout)
       this._updateTimeout = setTimeout(() => {
         this._updateState()
-      }, 100)
+      }, 30)
     }
     this._drawnItems = this._state.shapes.filter(shape => this._shouldDisplay(shape))
     if(this._drawnItems.filter(shape => shape.shouldFreeFall()).length > 0) {
@@ -123,6 +123,10 @@ export class CanvasDrawer {
     document.documentElement.style.userSelect = "none"
     this._mouseDownPos = {x: e.clientX, y: e.clientY}
     this._mouseDown = true
+    if(e.target === this._canvas && this._state.selectedShape) {
+      this._state.selectedShape = null
+      this._updateItems(true)
+    }
     for (let i = this._drawnItems.length - 1; i >= 0; i--) {
       if(this._drawnItems[i].isIntersecting(this._state.scale, this._state.coordinates, {x: e.offsetX, y: e.offsetY})) {
         this._state.selectedShape = this._drawnItems[i]
@@ -131,20 +135,18 @@ export class CanvasDrawer {
         return
       }
     }
-    if(e.target === this._canvas && this._state.selectedShape) {
-      this._state.selectedShape.startTime = performance.now()
-      this._state.selectedShape.selected = false
-      this._state.selectedShape = null
-      this._updateItems(true)
-    }
-
   }
   /**
    * Метод для обработки захвата поднятия мыши. Если mouseMove не срабатывал, срабатывает Click
    * @private
    */
-  _onMouseUp = () => {
+  _onMouseUp = (e) => {
     document.documentElement.style.userSelect = ""
+    if(e.target === this._canvas && this._state.selectedShape) {
+      this._state.selectedShape.startTime = performance.now()
+      this._state.selectedShape.selected = false
+      this._updateItems(true)
+    }
     this._mouseDown = false
   }
   /**
