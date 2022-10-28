@@ -55,7 +55,7 @@ export class CanvasDrawer {
     this._drawItems()
     // Анимацию останавливаем, если висячий только выделенный примитив
     if(this._drawnItems.every(shape => !shape.shouldFreeFall() || (this._state.selectedShape && shape.equals(this._state.selectedShape)))) return
-    window.requestAnimationFrame(() => this._animateFreeFall())
+    this._animationFrame = window.requestAnimationFrame(() => this._animateFreeFall())
   }
 
   /**
@@ -97,7 +97,9 @@ export class CanvasDrawer {
     }
     this._drawnItems = this._state.shapes.filter(shape => this._shouldDisplay(shape))
     if(this._drawnItems.filter(shape => shape.shouldFreeFall()).length > 0) {
-      window.requestAnimationFrame(() => this._animateFreeFall())
+      // Чтобы не допускать дублирующихся анимаций
+      cancelAnimationFrame(this._animationFrame)
+      this._animationFrame = window.requestAnimationFrame(() => this._animateFreeFall())
     }
     this._drawItems()
   }
