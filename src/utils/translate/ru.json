@@ -58,5 +58,6 @@
   "canvas.startXCoordinate": "Начало координат (х)",
   "canvas.startYCoordinate": "Начало координат (у)",
   "canvas.width": "Ширина",
-  "canvas.height": "Высота"
+  "canvas.height": "Высота",
+  "canvas.shouldFill": "Заполнить цветом?"
 }
