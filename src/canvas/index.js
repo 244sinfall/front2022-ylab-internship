@@ -52,7 +52,7 @@ export class CanvasDrawer {
         shape.freeFall(this._context, this._state.coordinates, this._state.scale)
       }
     })
-    this._drawItems()
+    this._updateItems()
     // Анимацию останавливаем, если висячий только выделенный примитив
     if(this._drawnItems.every(shape => !shape.shouldFreeFall() || (this._state.selectedShape && shape.equals(this._state.selectedShape)))) return
     this._animationFrame = window.requestAnimationFrame(() => this._animateFreeFall())
@@ -87,13 +87,13 @@ export class CanvasDrawer {
    * @private
    */
   _updateItems(immediately = false) {
-    if(immediately || performance.now() - this._updateTime > 200) {
+    if(immediately || performance.now() - this._updateTime > 500) {
       this._updateState()
     } else {
       clearTimeout(this._updateTimeout)
       this._updateTimeout = setTimeout(() => {
         this._updateState()
-      }, 30)
+      }, 100)
     }
     this._drawnItems = this._state.shapes.filter(shape => this._shouldDisplay(shape))
     if(this._drawnItems.filter(shape => shape.shouldFreeFall()).length > 0) {
