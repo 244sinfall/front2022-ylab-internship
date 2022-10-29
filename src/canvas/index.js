@@ -74,10 +74,8 @@ export class CanvasDrawer {
     newState.coordinates = this._state.coordinates
     newState.scale = this._state.scale
     newState.selectedShape = this._state.selectedShape
-    // Опции сохраняются отдельно, чтобы обеспечить иммутабельность. Проверяем, что они изменились прежде чем менять
-    if(!shallowequal(newState.selectedShapeOptions, {...this._state.selectedShape})) {
-      newState.selectedShapeOptions = {...this._state.selectedShape}
-    }
+    // Опции сохраняются отдельно, чтобы обеспечить иммутабельность
+    newState.selectedShapeOptions = {...this._state.selectedShape}
     this._onExport(newState)
   }
 
