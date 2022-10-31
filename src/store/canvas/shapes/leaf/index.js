@@ -11,7 +11,7 @@ export default class Leaf extends Shape {
     const opts = {
       id: id,
       x1: params.x1 ?? coordinates.x + Math.ceil(Math.random() * (600 / scale)),
-      y1: params.y1 ?? coordinates.y - (params.width ?? 50) + 5,
+      y1: params.y1 ?? coordinates.y - (params.size ?? size) + 5,
       width: params.size ?? size,
       height: params.size ?? size,
       image: img
@@ -51,6 +51,9 @@ export default class Leaf extends Shape {
     context.translate(realX1  + (realWidth / 2), realY1 + (realHeight / 2))
     context.rotate(this.angle)
     context.translate(-(realX1  + (realWidth / 2)), -(realY1 + (realHeight / 2)))
+    let opacity = this.y1 + this.height < 500 ? 1 : (600 - (this.y1 + this.height)) / 100
+    if (opacity < 0) opacity = 0
+    context.globalAlpha = opacity
     context.drawImage(this.image, realX1, realY1, realWidth, realHeight)
     context.restore()
   }
