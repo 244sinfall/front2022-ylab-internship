@@ -75,7 +75,7 @@ export default class Triangle extends Shape {
   freeFall(context, currentCoordinates, scale) {
     const timeNow = performance.now()
     if(this.shouldFreeFall()) {
-      const delta = 0.0000001 * ((timeNow - this.startTime) ** 2)
+      const delta = 0.0000981 * ((timeNow - this.startTime) ** 2)
       this.pointA.y += delta
       this.pointB.y += delta
       this.pointC.y += delta

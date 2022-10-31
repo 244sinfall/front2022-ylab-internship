@@ -49,7 +49,7 @@ export default class Shape {
   freeFall(context, currentCoordinates, scale) {
     const timeNow = performance.now()
     if(this.y1 + this.height < 400) {
-      this.y1 =  this.y1 + (0.0000001 * ((timeNow - this.startTime) ** 2))
+      this.y1 =  this.y1 + (0.0000981 * ((timeNow - this.startTime) ** 2))
       if(this.y1 + this.height > 400) {
         this.y1 = 400 - this.height
       }

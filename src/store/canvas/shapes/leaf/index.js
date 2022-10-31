@@ -5,12 +5,15 @@ export default class Leaf extends Shape {
   static build(id, color, fill, coordinates, scale, params = {}) {
     const img = new Image()
     img.src = images['leaf' + (Math.floor(Math.random() * 5) + 1)]
+    const size = params.size ?? 10 + Math.random() * 50
+    img.width = size
+    img.height = size
     const opts = {
       id: id,
       x1: params.x1 ?? coordinates.x + Math.ceil(Math.random() * (600 / scale)),
       y1: params.y1 ?? coordinates.y - (params.width ?? 50) + 5,
-      width: params.width ?? 50,
-      height: params.height ?? 50,
+      width: params.size ?? size,
+      height: params.size ?? size,
       image: img
     }
     return new Leaf(opts.id, opts.x1, opts.y1, opts.width, opts.height, opts.image)
@@ -96,10 +99,10 @@ export default class Leaf extends Shape {
     const offsetLimiter = (this._rotationForce * 10 * scale) * (this._rotationDirection ? 1 : -1)
     this.x1 += offsetLimiter
     // Рандомное смещение вниз по Y, чтобы в движении не было монотонности
-    this.y1 += Math.random() / 3
+    this.y1 += 0.2 + (this._rotationForce * 5)
     this.angle += rotation
     const rect = this.getBoundingRect(scale, currentCoordinates)
-    if(rect.x2 < -50 || rect.y2 < -50 || rect.y1 > 650 || rect.x1 > 650) {
+    if(rect.x2 < 0 || rect.y2 < 0 || rect.y1 > 600 || rect.x1 > 600) {
       this._updateLeaf(currentCoordinates, scale)
     }
   }
