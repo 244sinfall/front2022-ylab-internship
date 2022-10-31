@@ -6,8 +6,6 @@ export default class Leaf extends Shape {
     const img = new Image()
     img.src = images['leaf' + (Math.floor(Math.random() * 5) + 1)]
     const size = params.size ?? 10 + Math.random() * 50
-    img.width = size
-    img.height = size
     const opts = {
       id: id,
       x1: params.x1 ?? coordinates.x + Math.ceil(Math.random() * (600 / scale)),
@@ -16,7 +14,13 @@ export default class Leaf extends Shape {
       height: params.size ?? size,
       image: img
     }
-    return new Leaf(opts.id, opts.x1, opts.y1, opts.width, opts.height, opts.image)
+    const newLeaf = new Leaf(opts.id, opts.x1, opts.y1, opts.width, opts.height, opts.image)
+    img.onload = () => {
+      const aspectRatio = img.width / img.height
+      newLeaf.width = size * aspectRatio
+      newLeaf.height = size
+    }
+    return newLeaf
   }
   constructor(id, x1, y1, width, height, image) {
     super();
