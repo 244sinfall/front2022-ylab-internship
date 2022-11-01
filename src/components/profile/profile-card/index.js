@@ -4,7 +4,6 @@ import {cn as bem} from '@bem-react/classname';
 import './style.css';
 
 function ProfileCard({data}) {
-
   // CSS классы по БЭМ
   const cn = bem('ProfileCard');
 

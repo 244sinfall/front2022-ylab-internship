@@ -1,11 +1,19 @@
 import Store from "./store";
 import APIService from "./api";
-import createStoreRedux from "./store-redux";
 import ChatService from '@src/chat';
+// Конфигурация
+interface ServicesConfig {
+  store: Object,
+  api: Object,
+  chat: Object
+}
 
 class Services {
-
-  constructor(config) {
+  private _store: Store
+  private _api: APIService
+  private _chat: ChatService
+  config: ServicesConfig
+  constructor(config: ServicesConfig) {
     this.config = config;
   }
 
@@ -40,15 +48,6 @@ class Services {
       this._chat = new ChatService(this, this.config.chat)
     }
     return this._chat
-  }
-  /**
-   * Redux store
-   */
-  get storeRedux(){
-    if (!this._storeRedux) {
-      this._storeRedux = createStoreRedux(this, this.config.storeRedux);
-    }
-    return this._storeRedux;
   }
 }
 

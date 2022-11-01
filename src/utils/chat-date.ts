@@ -3,7 +3,7 @@
  * @param date дата в строковом виде
  * @returns {string} преобразованная строка
  */
-export const convertDateToChatFormat = (date) => {
+export const convertDateToChatFormat = (date: string) => {
   const dateObj = new Date(date)
   return dateObj.toLocaleTimeString('ru-RU', {hour: "numeric", minute: "numeric"}) + ` (${dateObj.toLocaleDateString()})`
 }

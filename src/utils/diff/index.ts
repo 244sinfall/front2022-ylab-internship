@@ -1,5 +1,4 @@
-import isPlainObject from '@src/utils/is-plain-object';
-
+import isPlainObject from "@src//utils/is-plain-object";
 /**
  * Вовзращает иммутабельный объект, в котором не будет совпадений со вторым объектом
  * @param object1 {Object} Исходный обеъект
