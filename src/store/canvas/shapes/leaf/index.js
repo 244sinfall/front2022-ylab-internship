@@ -84,6 +84,7 @@ export default class Leaf extends Shape {
     this._rotateChangeForceIn = Math.random() * 10000
   }
   freeFall(context, currentCoordinates, scale) {
+    // @todo Реалистичные движения
     const timeNow = performance.now()
     // Обновление направления полета
     if(timeNow - this._rotationTime > this._rotateIn) {
