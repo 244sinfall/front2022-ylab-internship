@@ -5,15 +5,15 @@ import isPlainObject from "@src//utils/is-plain-object";
  * @param object2 {Object} Объект-маска
  * @returns {undefined|*}
  */
-export default function diff(object1, object2) {
+export default function diff(object1: any, object2: any) {
   if (isPlainObject(object1) && isPlainObject(object2)) {
-    const result = {};
+    let result = {};
     const keys = Object.keys(object1);
     for (const key of keys) {
       if (object1[key] !== object2[key]) {
         const value = diff(object1[key], object2[key])
         if (typeof value !== "undefined") {
-          result[key] = value;
+          result = Object.assign(result, {[key]: value})
         }
       }
     }

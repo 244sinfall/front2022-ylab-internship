@@ -17,7 +17,7 @@ export default function useSelector(selector: (state: GlobalState) => any) {
       // Новая выборка
       const newState = selector(store.getState() as GlobalState);
       // Установка выбранных данных, если они изменились
-      setState(prevState => {
+      setState((prevState: any) => {
         // Сравнение с предыдущей выборкой
         return shallowequal(prevState, newState) ? prevState : newState
       });

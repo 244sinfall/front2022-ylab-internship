@@ -21,7 +21,7 @@ function ToolsContainer({showMenu = true}) {
   const callbacks = {
     // Открытие корзины
     openModalBasket: useCallback(() => {
-      store.get('modals').open('basket');
+      store.modules.modals.open('basket');
     }, []),
   };
 

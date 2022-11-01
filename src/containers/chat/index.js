@@ -7,6 +7,7 @@ import ChatForm from '@src/components/chat/chat-form';
 import ChatMessage from '@src/components/chat/chat-message';
 import {convertDateToChatFormat} from '@src/utils/chat-date';
 import Spinner from '@src/components/elements/spinner';
+import useInit from '@src/hooks/use-init';
 
 function ChatContainer() {
   const select = useSelector(state => ({
@@ -28,11 +29,11 @@ function ChatContainer() {
   const store = useStore()
   const chatBoxRef = useRef()
   // Инициализация чата + уничтожение при демонтировании
-  useEffect(() => {
-    const destroy = store.get('chat').init(select.token)
+  useInit(() => {
+    const destroy = store.modules.chat.init(select.token)
     return () => destroy.then(destroy => {
       destroy()
-      store.get('chat').clearChat()
+      store.modules.chat.clearChat()
     })
   }, []);
   // Эффект для мягкого скролла, когда меняется высота контейнера из-за загрузки сверху
@@ -63,7 +64,7 @@ function ChatContainer() {
     onItemsScroll: useCallback(async e => {
       if (e.target.scrollTop === 0 && !select.maxOut && !select.waiting) {
         setCurrentTopPoint(chatBoxRef.current.scrollHeight)
-        await store.get('chat').loadOlderMessages(oldestLoaded._id)
+        await store.modules.chat.loadOlderMessages(oldestLoaded._id)
       }
     }, [oldestLoaded, select.maxOut]),
     // Редактирование сообщения в чатбоксе
@@ -71,7 +72,7 @@ function ChatContainer() {
     // Отправка сообщения
     onMessageSubmit: useCallback(() => {
       const safeMessage = message.trim()
-      if(safeMessage) store.get('chat').sendMessage(message, select.userId, select.userName).then(() => setMessage(""))
+      if(safeMessage) store.modules.chat.sendMessage(message, select.userId, select.userName).then(() => setMessage(""))
     }, [message])
   }
 

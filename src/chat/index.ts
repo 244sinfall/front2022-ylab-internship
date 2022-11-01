@@ -1,12 +1,17 @@
 import {v4 as uuidv4} from 'uuid';
+import Services from "@src/services";
+import {ChatConfig} from "@src/config";
 
 class ChatService {
-
+  services: Services
+  config: ChatConfig
+  _persistence?: WebSocket
+  _pingCanceller?: () => void
   /**
    * @param services {Services} Менеджер сервисов
    * @param config {Object}
    */
-  constructor(services, config = {}) {
+  constructor(services: Services, config: ChatConfig) {
     this.services = services
     this.config = config
   }
@@ -28,13 +33,21 @@ class ChatService {
       }
     })
   }
+  private async _getSocket() {
+    const socket = await this.establish()
+    if(socket instanceof WebSocket) {
+      return socket
+    } else {
+      throw new Error("Ошибка подключения")
+    }
 
+  }
   /**
    * Закрытие сокета
    * @returns {Promise<void>}
    */
   async close() {
-    const socket = await this.establish()
+    const socket = await this._getSocket()
     socket.close()
   }
 
@@ -43,14 +56,16 @@ class ChatService {
    * @returns {Promise<void>}
    */
   async stopKeepAlive() {
-    this._pingCanceller()
+    if(this._pingCanceller) {
+      this._pingCanceller()
+    }
   }
   /**
    * Пингует сервер каждые 30 секунд
    * @returns {Promise<function(): void>} функция для уничтожения интервала
    */
   async keepAlive() {
-    const socket = await this.establish()
+    const socket = await this._getSocket()
     const intervalId = setInterval(() => {
       socket.send(JSON.stringify({
         method: "ping",
@@ -70,8 +85,8 @@ class ChatService {
    * @param callback {function} колбек для события.
    * @returns {Promise<void>}
    */
-  async listen(event, callback) {
-    const socket = await this.establish()
+  async listen(event: "onmessage" | "onclose", callback: (e: any) => void) {
+    const socket = await this._getSocket()
     socket[event] = callback
   }
 
@@ -80,8 +95,8 @@ class ChatService {
    * @param token {string} Токен пользователя для авторизации
    * @returns {Promise<*>}
    */
-  async auth(token) {
-    const socket = await this.establish()
+  async auth(token: string) {
+    const socket = await this._getSocket()
     return socket.send(JSON.stringify({
       method: "auth",
       payload: {
@@ -95,8 +110,8 @@ class ChatService {
    * @param message {string} Сообщение
    * @returns {Promise<*>} Ключ отправленного сообщения
    */
-  async sendMessage(message) {
-    const socket = await this.establish()
+  async sendMessage(message: string) {
+    const socket = await this._getSocket()
     const key = uuidv4()
     await socket.send(JSON.stringify({
       method: "post",
@@ -113,8 +128,8 @@ class ChatService {
    * @param fromDate {string | undefined} Дата, с которой необходимо вернуть новые сообщения
    * @returns {Promise<*>}
    */
-  async getNewMessages(fromDate = undefined) {
-    const socket = await this.establish()
+  async getNewMessages(fromDate: string | undefined) {
+    const socket = await this._getSocket()
     return socket.send(JSON.stringify({
       method: "last",
       payload: {
@@ -128,9 +143,9 @@ class ChatService {
    * @param fromId сообщение, старее которого нужно вернуть
    * @returns {Promise<*>}
    */
-  async getOlderMessage(fromId) {
+  async getOlderMessage(fromId: string) {
     if(!fromId) throw new Error("Не указан ID для загрузки старых сообщений")
-    const socket = await this.establish()
+    const socket = await this._getSocket()
     return socket.send(JSON.stringify({
       method: "old",
       payload: {
@@ -144,7 +159,7 @@ class ChatService {
    * @returns {Promise<*>}
    */
   async clearMessages() {
-    const socket = await this.establish()
+    const socket = await this._getSocket()
     return socket.send(JSON.stringify({
       method: "clear",
       payload: {}

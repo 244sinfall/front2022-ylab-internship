@@ -1,10 +1,7 @@
 import StateModule from "@src/store/module";
+import {ModalsValues, ModalWindow} from "@src/store/data-model/store/modals";
 
-export interface ModalWindow {
-  name: string,
-  params: any,
-  resolve: Promise<any>
-}
+
 /**
  * Управление модальными окнами
  */
@@ -13,15 +10,17 @@ class ModalsState extends StateModule{
     const modals: ModalWindow[] = []
     return {
       opened: modals
-    };
+    } as ModalsValues;
   }
-
+  getState() {
+    return super.getState() as ModalsValues
+  }
   /**
    * Открытие модального окна по названию
    * @param name {String} Название модалки
    * @param params {Object} Параметры, которые передадуться модальному окну
    */
-  async open(name, params = {}){
+  async open(name: string, params: any){
     return new Promise(resolve => {
       this.setState({
         opened: [...this.getState().opened, { name: name, params, resolve }] as ModalWindow[]
@@ -34,7 +33,7 @@ class ModalsState extends StateModule{
    */
   async close(result?: any){
     const lastOpenedModal = this.getState().opened.at(-1)
-    if(lastOpenedModal.resolve) {
+    if(lastOpenedModal && lastOpenedModal.resolve) {
       lastOpenedModal.resolve(result)
     }
     this.setState({opened: this.getState().opened.slice(0, -1) as ModalWindow[] }, `Закрытие модалки`);

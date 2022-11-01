@@ -15,17 +15,17 @@ const StoreModal = () => {
   const store = useStore();
   useInit(async () => {
     await Promise.all([
-      store.get(catalogName).initParams(),
-      store.get('categories').load()
+      store.modules[catalogName].initParams(),
+      store.modules.categories.load()
     ]);
   }, [], {backForward: true});
   const callbacks = {
-    onClose: useCallback(() => store.get('modals').close(), []),
-    onItemInspect: useCallback(_id => store.get('modals').open('article', { id: _id }), []),
+    onClose: useCallback(() => store.modules.modals.close(), []),
+    onItemInspect: useCallback(_id => store.modules.modals.open('article', { id: _id }), []),
     // Открытие модалки добавления в корзину
     addConfirmation: useCallback(async(_id) => {
-      const result = await store.get('modals').open('confirm')
-      if(!isNaN(result) && result >= 1) store.get('basket').addToBasket(_id, result)
+      const result = await store.modules.modals.open('confirm')
+      if(typeof result === 'number' && !isNaN(result) && result >= 1) await store.modules.basket.addToBasket(_id, result)
     }, []),
   }
   const renderFunction = useCallback(item => (

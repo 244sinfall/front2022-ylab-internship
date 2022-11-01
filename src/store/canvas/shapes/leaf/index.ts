@@ -1,5 +1,6 @@
 import Shape from '@src/store/canvas/shapes';
 import * as images from './images'
+import {ShapeCoordinate} from "@src/store/canvas";
 
 export default class Leaf extends Shape {
   image: HTMLImageElement
@@ -10,9 +11,9 @@ export default class Leaf extends Shape {
   private _rotationForce: number;
   private _rotationForceTime: number;
   private _rotateChangeForceIn: number;
-  static build(id, color, fill, coordinates, scale, params: any) {
+  static build(id: string, color: string, fill: boolean, coordinates: ShapeCoordinate, scale: number, params: any) {
     const img = new Image()
-    img.src = images['leaf' + (Math.floor(Math.random() * 5) + 1)]
+    img.src = images[('leaf' + (Math.floor(Math.random() * 5) + 1)) as keyof typeof images]
     const size = params.size ?? 10 + Math.random() * 50
     const opts = {
       id: id,
@@ -30,7 +31,7 @@ export default class Leaf extends Shape {
     }
     return newLeaf
   }
-  constructor(id, x1, y1, width, height, image) {
+  constructor(id: string, x1: number, y1: number, width: number, height: number, image: HTMLImageElement) {
     super();
     this._id = id
     this.x1 = x1
@@ -53,7 +54,7 @@ export default class Leaf extends Shape {
     // Время, через которое от this._rotationForceTime нужно пересчитать частоту смещения угла
     this._rotateChangeForceIn = Math.random() * 10000
   }
-  draw(context, currentCoordinates, scale) {
+  draw(context: CanvasRenderingContext2D, currentCoordinates: ShapeCoordinate, scale: number) {
     const realX1 = (this.x1 * scale) - currentCoordinates.x
     const realY1 = (this.y1 * scale) - currentCoordinates.y
     const realWidth = this.width * scale
@@ -80,7 +81,7 @@ export default class Leaf extends Shape {
    * @param scale Текущий масштаб канваса
    * @private
    */
-  _updateLeaf(currentCoordinates, scale) {
+  _updateLeaf(currentCoordinates: ShapeCoordinate, scale: number) {
     this.x1 = currentCoordinates.x + Math.ceil(Math.random() * (600 / scale))
     this.y1 = currentCoordinates.y - this.width + 5
     this.angle = ((Math.random() * 360) * Math.PI / 180) * scale
@@ -91,7 +92,7 @@ export default class Leaf extends Shape {
     this._rotationForceTime = performance.now()
     this._rotateChangeForceIn = Math.random() * 10000
   }
-  freeFall(context, currentCoordinates, scale) {
+  freeFall(context: CanvasRenderingContext2D, currentCoordinates: ShapeCoordinate, scale: number) {
     // @todo Реалистичные движения
     const timeNow = performance.now()
     // Обновление направления полета

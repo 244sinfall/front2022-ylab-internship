@@ -19,17 +19,17 @@ const AddExtraItemsModal = () => {
   const store = useStore();
   useInit(async () => {
     await Promise.all([
-      store.get(catalogName).initParams(),
-      store.get('categories').load()
+      store.modules[catalogName].initParams(),
+      store.modules.categories.load()
     ]);
   }, [], {backForward: true});
   const callbacks = {
-    onClose: useCallback(() => store.get('modals').close(), []),
+    onClose: useCallback(() => store.modules.modals.close(), []),
     onItemClick: useCallback(item => {
         const existId = selected.findIndex(i => i._id === item._id)
         existId !== -1 ? selected.splice(existId, 1) : selected.push(item)
     }, [selected]),
-    onCloseAdd: useCallback(() => store.get('modals').close(selected), [selected]),
+    onCloseAdd: useCallback(() => store.modules.modals.close(selected), [selected]),
   }
   const renderFunction = useCallback(item => (
       <ItemSelect item={item} selected={selected.findIndex(i => i._id === item._id) !== -1} onClick={callbacks.onItemClick}/>

@@ -2,6 +2,7 @@ import StateModule from "@src/store/module";
 import simplifyErrors from "@src/utils/simplify-errors";
 import {ModuleConfig} from "@src/store";
 import {UserInfo} from "@src/store/data-model/user";
+import {AuthData} from "@src/store/data-model/store/session";
 
 interface SessionStateConfig extends ModuleConfig {
   tokenHeader: string
@@ -33,7 +34,7 @@ class SessionState extends StateModule {
    * @param onSuccess
    * @returns {Promise<void>}
    */
-  async signIn(data, onSuccess) {
+  async signIn(data: AuthData, onSuccess: () => any) {
     this.setState(this.initState(), 'Авторизация (начало)');
     try {
       const json = await this.services.api.request({

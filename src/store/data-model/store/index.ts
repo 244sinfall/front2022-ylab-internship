@@ -1,9 +1,6 @@
-import {BasketItem, CatalogItem} from "@src/store/data-model/shop";
-import CanvasState, {ShapeCoordinate} from "@src/store/canvas";
-import Shape from "@src/store/canvas/shapes";
-import CategoriesState, {Category} from "@src/store/categories";
-import ModalsState, {ModalWindow} from "@src/store/modals";
-import {UserInfo} from "@src/store/data-model/user";
+import CanvasState from "@src/store/canvas";
+import CategoriesState from "@src/store/categories";
+import ModalsState from "@src/store/modals";
 import BasketState from "@src/store/basket";
 import CatalogState from "@src/store/catalog";
 import ArticleState from "@src/store/article";
@@ -11,6 +8,16 @@ import LocaleState from "@src/store/locale";
 import SessionState from "@src/store/session";
 import ProfileState from "@src/store/profile";
 import ChatState from "@src/store/chat";
+import {ArticleValues} from "@src/store/data-model/store/article";
+import {BasketValues} from "@src/store/data-model/store/basket";
+import {CanvasValues} from "@src/store/data-model/store/canvas";
+import {CategoriesValues} from "@src/store/data-model/store/categories";
+import {ChatValues} from "@src/store/data-model/store/chat";
+import {ModalsValues} from "@src/store/data-model/store/modals";
+import {LocaleValues} from "@src/store/data-model/store/locale";
+import {ProfileValues} from "@src/store/data-model/store/profile";
+import {SessionValues} from "@src/store/data-model/store/session";
+import {CatalogValues} from "@src/store/data-model/store/catalog";
 
 export interface StoreModules {
   basket: BasketState
@@ -25,51 +32,15 @@ export interface StoreModules {
   canvas: CanvasState
 }
 
-export type ModuleName = "basket" | "catalog" | "modals" | "article" | "locale" | "categories" | "session" | "profile" | "chat" | "canvas"
-
 export interface GlobalState {
-  article: {
-    data: CatalogItem | {}
-    waiting: boolean
-  },
-  basket: {
-    items: BasketItem[]
-    sum: number,
-    amount: number
-  }
-  canvas: {
-    coordinates: ShapeCoordinate,
-    scale: number,
-    selectedShape: Shape | null,
-    shapes: Shape[]
-  },
-  categories: {
-    items: Category[]
-    waiting: boolean
-  },
-  chat: {
-    messages: any[],
-    lastSubmittedKeys: string[],
-    maxOut: boolean,
-    authorized: boolean,
-    waiting: boolean
-  },
-  locale: {
-    lang: string
-  },
-  modals: {
-    opened: ModalWindow[]
-  }
-  profile: {
-    data: UserInfo | {},
-    waiting: boolean
-  }
-  session: {
-    user: UserInfo | {},
-    token: string,
-    exists: boolean,
-    errors: any[] | null
-    waiting: boolean
-  }
-
+  article: ArticleValues,
+  basket: BasketValues,
+  catalog: CatalogValues,
+  canvas: CanvasValues,
+  categories: CategoriesValues,
+  chat: ChatValues,
+  locale: LocaleValues,
+  modals: ModalsValues,
+  profile: ProfileValues,
+  session: SessionValues
 }

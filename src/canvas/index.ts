@@ -1,18 +1,33 @@
 import shallowequal from 'shallowequal';
+import Shape from "@src/store/canvas/shapes";
+import {CanvasValues} from "@src/store/data-model/store/canvas";
+import {ShapeCoordinate} from "@src/store/canvas";
 
 /**
  * Класс управляет канвасом и хранит его параметры во внетреннем состоянии,
  * синхронизируясь с внешним состоянием при необходимости
  */
 export class CanvasDrawer {
-  constructor(canvas, store, onExport) {
+  private readonly _canvas: HTMLCanvasElement
+  private readonly _context: CanvasRenderingContext2D
+  private readonly _onExport: (newState: any) => any
+  private _state: CanvasValues
+  private _drawnItems: Shape[]
+  private _animationFrame: number
+  private _updateTime: number
+  private _updateTimeout: NodeJS.Timeout
+  private _mouseDown: boolean
+  private _mouseDownPos: ShapeCoordinate
+  constructor(canvas: HTMLCanvasElement, initState: CanvasValues, onExport: (newState: CanvasValues) => any) {
     this._canvas = canvas
-    this._context = this._canvas.getContext('2d')
+    const context = this._canvas.getContext('2d')
+    if(context === null) throw new Error("Контект не найден")
+    this._context = context
     this._context.imageSmoothingEnabled = false
     // Сылка для синхронизации
     this._onExport = onExport
     // Внутреннее состояние
-    this._state = {}
+    this._state = initState
     // Только отрисовываемые примитивы
     this._drawnItems = []
     // Скейл / скролл
@@ -21,20 +36,19 @@ export class CanvasDrawer {
     window.addEventListener("mousemove", this._onMouseMove)
     window.addEventListener("mouseup", this._onMouseUp)
   }
-
   /**
    * Проверка на вхождение в канвас
    * @param shape Объект примитива
    * @returns {boolean} true - входит в канвас, false - нет
    * @private
    */
-  _shouldDisplay(shape) {
+  _shouldDisplay(shape: Shape) {
     const rect = shape.getBoundingRect(this._state.scale, this._state.coordinates)
     return (
       rect.x2 > 0 && rect.y2 > 0 && rect.y1 < 600 && rect.x1 < 600
     )
   }
-  importState(newState) {
+  importState(newState: CanvasValues) {
     if(!shallowequal(this._state, newState)) {
       this._state = newState
       this._updateItems()
@@ -74,8 +88,8 @@ export class CanvasDrawer {
     newState.coordinates = this._state.coordinates
     newState.scale = this._state.scale
     newState.selectedShape = this._state.selectedShape
+    if(newState.selectedShape !== null) newState.selectedShapeOptions = {...this._state.selectedShape}
     // Опции сохраняются отдельно, чтобы обеспечить иммутабельность
-    newState.selectedShapeOptions = {...this._state.selectedShape}
     this._onExport(newState)
   }
 
@@ -117,7 +131,7 @@ export class CanvasDrawer {
    * @param e
    * @private
    */
-  _onMouseDown = (e) => {
+  _onMouseDown = (e: MouseEvent) => {
     document.documentElement.style.userSelect = "none"
     this._mouseDownPos = {x: e.clientX, y: e.clientY}
     this._mouseDown = true
@@ -138,7 +152,7 @@ export class CanvasDrawer {
    * Метод для обработки захвата поднятия мыши. Если mouseMove не срабатывал, срабатывает Click
    * @private
    */
-  _onMouseUp = (e) => {
+  _onMouseUp = (e: MouseEvent) => {
     document.documentElement.style.userSelect = ""
     if(e.target === this._canvas && this._state.selectedShape) {
       this._state.selectedShape.startTime = performance.now()
@@ -152,7 +166,7 @@ export class CanvasDrawer {
    * @param e
    * @private
    */
-  _onMouseMove = (e) => {
+  _onMouseMove = (e: MouseEvent) => {
     if(this._mouseDown) {
       const currentPos = {
         x: e.clientX - this._mouseDownPos.x,
@@ -175,16 +189,16 @@ export class CanvasDrawer {
    * @param e
    * @private
    */
-  _onWheel = (e) => {
+  _onWheel = (e: WheelEvent) => {
      if(!e.shiftKey) {
        const deltaY = 4 / this._state.scale
-       const amount = e.wheelDeltaY > 0 ? -deltaY : deltaY
+       const amount = e.deltaY > 0 ? -deltaY : deltaY
        this._state.coordinates.y -= amount
        this._updateItems()
      } else {
-       if(this._state.scale <= 0.05 && e.wheelDeltaY < 0 || this._state.scale > 10 && e.wheelDeltaY > 0) return
+       if(this._state.scale <= 0.05 && e.deltaY < 0 || this._state.scale > 10 && e.deltaY > 0) return
        const modifier = this._state.scale * 0.05
-       const newScale = e.wheelDeltaY < 0 ? this._state.scale - modifier : this._state.scale + modifier
+       const newScale = e.deltaY < 0 ? this._state.scale - modifier : this._state.scale + modifier
        this._state.coordinates = {
          x: (((e.offsetX + this._state.coordinates.x) / this._state.scale) * newScale) - e.offsetX,
          y: (((e.offsetY + this._state.coordinates.y) / this._state.scale) * newScale) - e.offsetY
@@ -199,7 +213,7 @@ export class CanvasDrawer {
    * @param delta Разница координат
    * @private
    */
-  _onDrag(delta) {
+  _onDrag(delta: ShapeCoordinate) {
     this._state.coordinates.x -= delta.x
     this._state.coordinates.y -= delta.y
     this._updateItems()

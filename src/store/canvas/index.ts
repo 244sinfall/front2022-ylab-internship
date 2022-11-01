@@ -2,6 +2,7 @@ import StateModule from "@src/store/module";
 import * as shapes from "./shapes/exports"
 import {v4 as uuidv4} from 'uuid';
 import Shape from "@src/store/canvas/shapes";
+import {CanvasValues} from "@src/store/data-model/store/canvas";
 
 export interface ShapeCoordinate {
   x: number,
@@ -26,20 +27,23 @@ class CanvasState extends StateModule{
       selectedShape: selectedShape,
     };
   }
-
+  getState() {
+    return super.getState() as CanvasValues
+  }
   /**
    * Добавляет шейп во внешнее состояние. По умолчанию шейп рисуется в видимых канвасу координатах.
    * @param shapeType тип фигуры
    * @param color цвет фигуры
    * @param fill true - заливать фигуру, false - не заливать
    */
-  addShape(shapeType, color, fill) {
+  addShape(shapeType: string, color: string, fill: boolean) {
     const params: any = {}
     if(shapeType === "square") {
       shapeType = "rectangle"
       params.isSquare = true
     }
-    const newShape = shapes[shapeType].build(uuidv4(), color, fill, this.getState().coordinates, this.getState().scale, params) as Shape
+    const newShape = shapes[shapeType as keyof typeof shapes].build(uuidv4(), color, fill,
+      this.getState().coordinates, this.getState().scale, params) as Shape
     this.setState({...this.getState(), shapes: [...this.getState().shapes, newShape] as Shape[]})
   }
 
@@ -49,23 +53,26 @@ class CanvasState extends StateModule{
    * @param field Строка, поле для изменения (допускается точечная нотация)
    * @param value Значение для установки в свойство
    */
-  updateShape(shape, field, value) {
+  updateShape(shape: Shape, field: string, value: any) {
     const newShapes = [...this.getState().shapes]
     const selectedShape = newShapes.find(sh => sh.equals(shape))
     const fieldDirection = field.split('.')
-    let neededObject = selectedShape
-    while(fieldDirection.length !== 1) {
-      neededObject = neededObject[fieldDirection.shift()]
+    if(selectedShape) {
+      let neededObject: Shape | any = selectedShape
+      while(fieldDirection.length !== 1) {
+        neededObject = neededObject[fieldDirection.shift() as keyof unknown] as any
+      }
+      const lastLevelField = fieldDirection.at(-1) as string
+      neededObject[lastLevelField] = value
+      this.setState({...this.getState(), shapes: newShapes })
     }
-    neededObject[fieldDirection.at(-1)] = value
-    this.setState({...this.getState(), shapes: newShapes })
   }
 
   /**
    * Полностью перезаписывает состояние (для синхронизации со стейтом канваса)
    * @param newState Новое состояние целиком
    */
-  updateState(newState) {
+  updateState(newState: CanvasValues) {
     this.setState(newState)
   }
   /**

@@ -19,7 +19,7 @@ function Profile(){
   }));
 
   useInit(async () => {
-    await store.get('profile').load();
+    await store.modules.profile.load();
   }, []);
 
   return (

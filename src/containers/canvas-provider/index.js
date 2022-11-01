@@ -10,7 +10,7 @@ const CanvasProvider = () => {
   const canvasState = useSelector(state => state.canvas)
   const drawer = useMemo(() => {
     if(canvas.current) {
-      return new CanvasDrawer(canvas.current, store, state => store.get('canvas').updateState(state))
+      return new CanvasDrawer(canvas.current, canvasState,state => store.modules.canvas.updateState(state))
     }
   }, [canvas.current])
   useEffect(() => {

@@ -17,11 +17,10 @@ class ArticleState extends StateModule{
       waiting: false
     };
   }
-
   /**
    * Загрузка товаров по id
    */
-  async load(id){
+  async load(id: string){
     // Сброс текущего товара и установка признака ожидания загрузки
     this.setState({
       waiting: true,

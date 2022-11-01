@@ -35,7 +35,7 @@ function CatalogList(props) {
     clearTimeout(rollOverThrottleTimeout)
     rollOverThrottleTimeout = setTimeout(() => {
       const currentViewportPage = prevThresholds.current.filter(coordinates => coordinates < window.scrollY).length
-      store.get(props.catalogName).mutatePage(currentViewportPage)
+      store.modules[props.catalogName].mutatePage(currentViewportPage)
     }, 300)
   }, [])
   // Событие для отслеживания глобального скролла
@@ -49,17 +49,17 @@ function CatalogList(props) {
   // В корзине кнопку добавление товара. При нажатии на эту кнопку открывается модалка с каталогом, где можно добавить новый товар для корзины
   const callbacks = {
     // Добавление в корзину
-    addToBasket: useCallback((_id, count) => store.get('basket').addToBasket(_id, count), []),
+    addToBasket: useCallback((_id, count) => store.modules.basket.addToBasket(_id, count), []),
     // Открытие модалки добавления в корзину
     addConfirmation: useCallback(async(_id) => {
-      const result = await store.get('modals').open('confirm')
-      if(!isNaN(result) && result >= 1) callbacks.addToBasket(_id, result)
+      const result = await store.modules.modals.open('confirm')
+      if(typeof result === 'number' && !isNaN(result) && result >= 1) await callbacks.addToBasket(_id, result)
     }, []),
     //Пагианция
-    onPaginate: useCallback(page => store.get(props.catalogName).setParams({page}), []),
+    onPaginate: useCallback(page => store.modules[props.catalogName].setParams({page}), []),
     //Бесконечный скролл.
     onIntersect: useCallback(() => {
-      if(select.loaded > 0) store.get(props.catalogName).loadMoreItems()
+      if(select.loaded > 0) store.modules[props.catalogName].loadMoreItems()
     }, [select.loaded])
   };
   const renders = {

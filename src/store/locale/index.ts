@@ -14,7 +14,7 @@ class LocaleState extends StateModule{
     };
   }
 
-  async setLang(lang) {
+  async setLang(lang: string) {
     this.setState({
       lang
     }, 'Смена локали');

@@ -13,7 +13,7 @@ function ArticleModal(props){
   const store = useStore();
   const nav = useNavigate()
   useInit(async () => {
-    await store.get('article').load(props.id);
+    await store.modules.article.load(props.id);
   }, [props.id]);
 
   const select = useSelector(state => ({
@@ -25,12 +25,12 @@ function ArticleModal(props){
 
   const callbacks = {
     // Добавление в корзину
-    addToBasket: useCallback(_id => store.get('basket').addToBasket(_id), []),
+    addToBasket: useCallback(_id => store.modules.basket.addToBasket(_id), []),
     // Закрытие модалки
-    onClose: useCallback(() => store.get('modals').close(), []),
+    onClose: useCallback(() => store.modules.modals.close(), []),
     // Переход к странице товара
     onGotoPage: useCallback(_id => {
-      store.get('modals').closeAll()
+      store.modules.modals.closeAll()
       nav(`/articles/${_id}`)
     }, [])
   };

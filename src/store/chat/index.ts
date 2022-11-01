@@ -1,4 +1,5 @@
 import StateModule from "@src/store/module";
+import {ChatMessage, ChatValues} from "@src/store/data-model/store/chat";
 /**
  * Состояние чата
  */
@@ -15,14 +16,17 @@ class ChatState extends StateModule{
       maxOut: false,
       waiting: false,
       authorized: false,
-    };
+    } as ChatValues;
   }
-  async _onAuthResponseReceived(result) {
+  getState() {
+    return super.getState() as ChatValues
+  }
+  async _onAuthResponseReceived(result: boolean) {
     if (!result) return await this.services.chat.stopKeepAlive()
     this.setState({...this.getState(), authorized: true, waiting: false})
     await this.services.chat.getNewMessages(this.getState().lastMessageDate)
   }
-  async _onLastResponseReceived(items) {
+  async _onLastResponseReceived(items: ChatMessage[]) {
     if(this.getState().messages.length === 0) {
       this.setState({...this.getState(), messages: items},
         "Новые сообщения загружены")
@@ -31,24 +35,24 @@ class ChatState extends StateModule{
     this.setState({...this.getState(), messages: [...this.getState().messages,
         ...items.filter(payloadItem => this.getState().messages.findIndex(existedItem => existedItem._key === payloadItem._key) === -1)]})
   }
-  async _onPostResponseReceived(message) {
+  async _onPostResponseReceived(message: ChatMessage) {
     if(this.getState().lastSubmittedKeys.includes(message._key)) {
       // Заменяем нужное сообщение тем, что пришло. Флага isDelivering там нет, поэтому статус заменится
       const existingMessageIndex = this.getState().messages.findIndex(i => i._key === message._key)
       const newMessages = [...this.getState().messages]
       newMessages[existingMessageIndex] = message
       this.setState({...this.getState(), messages: newMessages.sort((m1, m2) => {
-          const d1 = new Date(m1)
-          const d2 = new Date(m2)
+          const d1 = new Date(m1.dateCreate)
+          const d2 = new Date(m2.dateCreate)
           if (d1 === d2) return 0
           if (d1 < d2) return -1
           return 1
-        }), lastSubmittedKeys: this.getState().lastSubmittedKeys.filter(i => i._key !== message._key)})
+        }), lastSubmittedKeys: this.getState().lastSubmittedKeys.filter(key => key !== message._key)})
       return
     }
     this.setState({...this.getState(), messages: [...this.getState().messages, message]}, "Получено новое сообщение")
   }
-  async _onOldResponseReceived(items) {
+  async _onOldResponseReceived(items: ChatMessage[]) {
     if(items.length === 1 || this.getState().maxOut) {
       this.setState({...this.getState(), maxOut: true, waiting: false})
       return
@@ -62,7 +66,7 @@ class ChatState extends StateModule{
    * @returns {Promise<void>}
    * @private
    */
-  async _onMessageReceived(e) {
+  async _onMessageReceived(e: any) {
     const response = JSON.parse(e.data)
     switch (response.method) {
       case "auth": return this._onAuthResponseReceived(response.payload.result)
@@ -79,10 +83,10 @@ class ChatState extends StateModule{
    * @returns {Promise<void>}
    * @private
    */
-  async _onDisconnect(token, e) {
+  async _onDisconnect(token: string, e: any) {
     if(e.wasClean) return
     await this.services.chat.stopKeepAlive()
-    this.setState({...this.getState(), authorized: false, lastMessageDate: this.getState().messages.at(-1).dateCreate})
+    this.setState({...this.getState(), authorized: false, lastMessageDate: this.getState().messages.at(-1)?.dateCreate})
     const timeout = setInterval(() => {
       this.services.chat.establish()
         .then((persistence) => persistence && clearInterval(timeout))
@@ -96,7 +100,7 @@ class ChatState extends StateModule{
    * @returns {Promise<void>}
    * @private
    */
-  async _getConnected(token) {
+  async _getConnected(token: string) {
     const connectionResponse = await this.services.chat.establish();
     if(!connectionResponse) throw new Error('Соединение не может быть установлено')
     // Поскольку события связаны с состоянием, биндим контекст состояния для доступа к нему
@@ -117,7 +121,7 @@ class ChatState extends StateModule{
    * @param userName Имя пользователя, для верификации сообщения до доставки
    * @returns {Promise<*>}
    */
-  async sendMessage(message, userId, userName) {
+  async sendMessage(message: string, userId: string, userName: string) {
     const key = await this.services.chat.sendMessage(message)
     this.setState({...this.getState(), lastSubmittedKeys: [...this.getState().lastSubmittedKeys, key],
       messages: [...this.getState().messages,
@@ -129,7 +133,7 @@ class ChatState extends StateModule{
    * @param id ID сообщения, которое будет последним в загруженных (самое новое из старых)
    * @returns {Promise<*>}
    */
-  async loadOlderMessages(id) {
+  async loadOlderMessages(id: string) {
     if (!this.getState().maxOut) {
       this.setState({...this.getState(), oldestMessage: id ,waiting: true})
       return this.services.chat.getOlderMessage(id)
@@ -140,7 +144,7 @@ class ChatState extends StateModule{
    * @param token Токен пользователя. Не работает без авторизации
    * @returns {Promise<void>}
    */
-  async init(token){
+  async init(token: string){
     this.setState({...this.getState(), waiting: true})
     await this._getConnected(token)
     return this.services.chat.keepAlive()

@@ -19,13 +19,16 @@
   "jest": {
     "preset": "ts-jest",
     "testEnvironment": "node",
-    "modulePaths": ["src", "<rootDir>"],
+    "modulePaths": [
+      "src",
+      "<rootDir>"
+    ],
     "moduleDirectories": [
       "node_modules",
       "src"
     ],
     "moduleNameMapper": {
-      "^@src(.*)$":"<rootDir>/src$1"
+      "^@src(.*)$": "<rootDir>/src$1"
     }
   },
   "author": "YLab",
@@ -35,6 +38,7 @@
     "@types/qs": "^6.9.7",
     "@types/react": "^18.0.24",
     "@types/react-dom": "^18.0.8",
+    "@types/shallowequal": "^1.1.1",
     "lodash.debounce": "^4.0.8",
     "lodash.throttle": "^4.1.1",
     "plural-ru": "^2.0.2",

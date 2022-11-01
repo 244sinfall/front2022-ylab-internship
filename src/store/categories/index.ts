@@ -1,13 +1,6 @@
 import StateModule from "@src/store/module";
 import qs from "@src/utils/search-params";
-
-export interface Category {
-  children: Category[]
-  parent: { _id: string } | null
-  title: string
-  _id: string
-}
-
+import {Category} from "@src/store/data-model/store/categories";
 /**
  * Состояние товара
  */

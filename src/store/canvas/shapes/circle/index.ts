@@ -1,8 +1,9 @@
 import Shape from '@src/store/canvas/shapes';
+import {ShapeCoordinate} from "@src/store/canvas";
 
 export default class Circle extends Shape {
   radius: number
-  static build(id, color, fill, coordinates, scale, params: any) {
+  static build(id: string, color: string, fill: boolean, coordinates: ShapeCoordinate, scale: number, params: any) {
     const opts = {
       id: id,
       color: color,
@@ -21,7 +22,7 @@ export default class Circle extends Shape {
    * @param currentCoordinates текущие координаты канваса
    * @returns {{y1: number, x1: number, y2: number, x2: number}}
    */
-  getBoundingRect(scale, currentCoordinates) {
+  getBoundingRect(scale: number, currentCoordinates: ShapeCoordinate) {
     const realX1 = (this.x1 * scale) - currentCoordinates.x
     const realY1 = (this.y1 * scale) - currentCoordinates.y
     return ({
@@ -39,7 +40,7 @@ export default class Circle extends Shape {
   get height() {
     return this.radius * 2
   }
-  constructor(id, color, fill, x1, y1, radius) {
+  constructor(id: string, color: string, fill: boolean, x1: number, y1: number, radius: number) {
     super();
     this._id = id
     this.color = color
@@ -48,7 +49,7 @@ export default class Circle extends Shape {
     this.y1 = y1
     this.radius = radius
   }
-  draw(context, currentCoordinates, scale) {
+  draw(context: CanvasRenderingContext2D, currentCoordinates: ShapeCoordinate, scale: number) {
     context.save()
     super.draw(context, currentCoordinates, scale)
     context.beginPath()

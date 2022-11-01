@@ -4,13 +4,13 @@ interface Issue {
 }
 
 export default function simplifyErrors(issues: Issue[]){
-  const result = {};
+  let result: any = {};
   for (const issue of issues){
     const key = issue.path.join('.') || 'other';
-    if (result[key]){
-      result[key].push(issue.message);
+    if(result && Array.isArray(result[key as keyof typeof result])) {
+      result[key as keyof typeof result].push(issue.message)
     } else {
-      result[key] = [issue.message]
+      result = Object.assign({}, { [key]: [issue.message] })
     }
   }
   return result;

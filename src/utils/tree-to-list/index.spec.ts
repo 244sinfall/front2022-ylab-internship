@@ -28,7 +28,7 @@ describe('treeToList', () => {
       }
     ]
 
-    const cb = (item, level) => ({value: item._id, title: '- '.repeat(level) + item.title});
+    const cb = (item: any, level: any) => ({value: item._id, title: '- '.repeat(level) + item.title});
 
     expect(treeToList(tree, cb)).toEqual([
       {value: 2, title: 'Электроника'},

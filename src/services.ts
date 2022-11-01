@@ -1,12 +1,8 @@
 import Store from "./store";
 import APIService from "./api";
 import ChatService from '@src/chat';
+import {ServicesConfig} from "@src/config";
 // Конфигурация
-interface ServicesConfig {
-  store: Object,
-  api: Object,
-  chat: Object
-}
 
 class Services {
   private _store: Store

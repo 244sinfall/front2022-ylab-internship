@@ -17,7 +17,7 @@ function Article(){
   const params = useParams();
 
   useInit(async () => {
-    await store.get('article').load(params.id);
+    await store.modules.article.load(params.id);
   }, [params.id]);
 
   const select = useSelector(state => ({
@@ -29,7 +29,7 @@ function Article(){
 
   const callbacks = {
     // Добавление в корзину
-    addToBasket: useCallback(_id => store.get('basket').addToBasket(_id), []),
+    addToBasket: useCallback(_id => store.modules.basket.addToBasket(_id), []),
   };
 
   return (

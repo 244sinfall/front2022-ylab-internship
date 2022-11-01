@@ -1,6 +1,6 @@
 import * as modules from './exports';
 import Services from "@src/services";
-import {GlobalState, ModuleName, StoreModules} from "@src/store/data-model/store";
+import {GlobalState, StoreModules} from "@src/store/data-model/store";
 
 export interface ModuleConfig {
   name: string
@@ -18,25 +18,22 @@ class Store {
    */
   services: Services
   config: StoreConfig
-  modules: StoreModules
+  readonly modules: StoreModules
   state: GlobalState
   listeners: (() => any)[]
-  constructor(services, config = {}) {
+  constructor(services: Services, config: StoreConfig) {
     // Менеджер сервисов
     this.services = services;
-    this.config = {
-      log: false,
-      ...config
-    }
+    this.config = config
     // Состояние приложения (данные)
     // Слушатели изменений state
     this.listeners = [];
-    let initializedModules = {}
-    let initializedState = {}
+    let initializedModules: any = {}
+    let initializedState: any = {}
     // Модули
     for (const name of Object.keys(modules)) {
       // Экземпляр модуля. Передаём ему ссылку на store и навзание модуля.
-      initializedModules[name] = new modules[name](this, this._getModuleConfig(name));
+      initializedModules[name] = new modules[name as keyof typeof modules](this, this._getModuleConfig(name));
       // По названию модля устанавливается свойство с анчальным состоянием от модуля
       initializedState[name] = initializedModules[name].initState();
     }
@@ -44,7 +41,8 @@ class Store {
     this.state = initializedState as GlobalState
   }
   private _getModuleConfig(name: string) {
-    const moduleConfig = this.config.modules ? this.config.modules[name] ? this.config.modules[name]: {} : {}
+    const moduleConfig = this.config.modules ? this.config.modules[name as keyof typeof this.config.modules] ?
+      this.config.modules[name as keyof typeof this.config.modules]: {} : {}
     return {name, ...moduleConfig}
   }
   /**
@@ -54,19 +52,14 @@ class Store {
    * @returns {(function(): void)|*} Функция для уничтожения созданного состояния
    */
   createSeparateState(name: string, base:string) {
-    this.modules[name] = new modules[base](this, this._getModuleConfig(name));
-    this.state[name] = this.modules[base].initState();
+    const baseModuleKey = base as keyof StoreModules
+    const module: any = new modules[baseModuleKey](this, this._getModuleConfig(base));
+    this.modules[name as keyof typeof this.modules] = module
+    this.state[name as keyof typeof this.state] = module.initState();
     return () => {
-      delete this.modules[name]
-      delete this.state[name]
+      delete this.modules[name as keyof typeof this.modules]
+      delete this.state[name as keyof typeof this.state]
     }
-  }
-  /**
-   * Доступ к модулю состояния
-   * @param name {String} Название модуля
-   */
-  get(name: ModuleName) {
-    return this.modules[name as keyof StoreModules]!
   }
 
   /**
@@ -82,7 +75,7 @@ class Store {
    * @param newState {Object}
    * @param [description] {String} Описание действия для логирования
    */
-  setState(newState, description = 'setState') {
+  setState(newState: any, description = 'setState') {
     if (this.config.log) {
       console.group(
         `%c${'store.setState'} %c${description}`,
@@ -105,7 +98,7 @@ class Store {
    * @param callback {Function}
    * @return {Function} Функция для отписки
    */
-  subscribe(callback) {
+  subscribe(callback: () => any) {
     this.listeners.push(callback);
     // Возвращаем функцию для удаления слушателя
     return () => {

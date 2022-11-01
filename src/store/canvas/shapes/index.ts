@@ -87,14 +87,14 @@ export default class Shape {
       y2: realY1 + (this.height * scale)
     })
   }
-  isIntersecting(scale, currentCoordinates, intersectionCoordinates) {
+  isIntersecting(scale: number, currentCoordinates: ShapeCoordinate, intersectionCoordinates: ShapeCoordinate) {
     const rect = this.getBoundingRect(scale, currentCoordinates)
     return (
       rect.x1 <= intersectionCoordinates.x && rect.y1 <= intersectionCoordinates.y &&
       rect.x2 >= intersectionCoordinates.x && rect.y2 >= intersectionCoordinates.y
     )
   }
-  equals(shape) {
+  equals(shape: Shape) {
     return this._id === shape._id
   }
 }

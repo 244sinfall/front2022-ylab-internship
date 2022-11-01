@@ -10,7 +10,6 @@ import TopContainer from "@src/containers/top";
 import HeadContainer from "@src/containers/head";
 import useStore from "@src/hooks/use-store";
 import useSelector from "@src/hooks/use-selector";
-import Spinner from "@src/components/elements/spinner";
 
 function Login() {
   const {t} = useTranslate();
@@ -35,7 +34,7 @@ function Login() {
 
     onSubmit: useCallback((e) => {
       e.preventDefault();
-      store.get('session').signIn(data, () => {
+      store.modules.session.signIn(data, () => {
         // Возврат на страницу, с которой пришли
         const back = location.state?.back && location.state?.back !== location.pathname
           ? location.state?.back

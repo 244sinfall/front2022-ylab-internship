@@ -1,8 +1,30 @@
 /**
  * Настройки сервисов
  */
+export interface StoreConfig {
+  log: boolean
+  modules: {
+    session: {
+      tokenHeader: string
+    }
+  }
+}
 
-const config ={
+export interface APIConfig {
+  baseUrl: string
+}
+
+export interface ChatConfig {
+  websocketServer: "ws://example.front.ylab.io/chat"
+}
+
+export interface ServicesConfig {
+  store: StoreConfig,
+  api: APIConfig,
+  chat: ChatConfig
+}
+
+const config: ServicesConfig ={
   store: {
     log: false,
 

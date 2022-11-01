@@ -11,7 +11,7 @@ export default class Triangle extends Shape {
   pointA: ShapeCoordinate = {x: 0, y: 0}
   pointB: ShapeCoordinate = {x: 0, y: 0}
   pointC: ShapeCoordinate = {x: 0, y: 0}
-  static build(id, color, fill, coordinates, scale, params: any) {
+  static build(id: string, color: string, fill: boolean, coordinates: ShapeCoordinate, scale: number, params: any) {
     const generatePoint = () => {
       return ({
         x: coordinates.x + Math.ceil(Math.random() * (400 / scale)),
@@ -28,7 +28,7 @@ export default class Triangle extends Shape {
     }
     return new Triangle(opts.id, opts.color, opts.fill, opts.pointA, opts.pointB, opts.pointC)
   }
-  constructor(id, color, fill, pointA, pointB, pointC) {
+  constructor(id: string, color: string, fill: boolean, pointA: ShapeCoordinate, pointB:ShapeCoordinate, pointC:ShapeCoordinate) {
     super();
     this._id = id
     this.color = color
@@ -40,7 +40,7 @@ export default class Triangle extends Shape {
   get height() {
     return Math.max(this.pointA.y, this.pointB.y, this.pointC.y) - Math.min(this.pointA.y, this.pointB.y, this.pointC.y)
   }
-  getBoundingRect(scale, currentCoordinates) {
+  getBoundingRect(scale: number, currentCoordinates: ShapeCoordinate) {
     const minX = Math.min(this.pointA.x, this.pointB.x, this.pointC.x)
     const minY = Math.min(this.pointA.y, this.pointB.y, this.pointC.y)
     const maxX = Math.max(this.pointA.x, this.pointB.x, this.pointC.x)
@@ -58,7 +58,7 @@ export default class Triangle extends Shape {
    * @param delta {{x: number, y: number}}
    * @param scale Масштаб канваса
    */
-  move(delta, scale = 1) {
+  move(delta: ShapeCoordinate, scale = 1) {
     const deltaX = delta.x / scale
     const deltaY = delta.y / scale
     this.pointA.x += deltaX
@@ -76,7 +76,7 @@ export default class Triangle extends Shape {
     return Math.max(this.pointA.y, this.pointB.y, this.pointC.y) < 400;
   }
 
-  freeFall(context, currentCoordinates, scale) {
+  freeFall(context: CanvasRenderingContext2D, currentCoordinates: ShapeCoordinate, scale: number) {
     const timeNow = performance.now()
     if(this.shouldFreeFall()) {
       const delta = 0.0000981 * ((timeNow - this.startTime) ** 2)
@@ -92,10 +92,10 @@ export default class Triangle extends Shape {
       }
     }
   }
-  draw(context, currentCoordinates, scale) {
+  draw(context: CanvasRenderingContext2D, currentCoordinates: ShapeCoordinate, scale: number) {
     context.save()
     super.draw(context, currentCoordinates, scale)
-    const getRealPoint = (point) => {
+    const getRealPoint = (point: ShapeCoordinate) => {
       return ({
         x: (point.x * scale) - currentCoordinates.x,
         y: (point.y * scale) - currentCoordinates.y

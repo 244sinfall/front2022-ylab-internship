@@ -25,11 +25,11 @@ function TopContainer() {
 
     // Отмена авторизации
     onSignOut: useCallback(() => {
-      store.get('session').signOut();
+      store.modules.session.signOut();
     }, [location.pathname]),
 
     // Открыть магазин в модальном окне
-    openCatalogModal: useCallback(() => store.get('modals').open('separateStore'), [])
+    openCatalogModal: useCallback(() => store.modules.modals.open('separateStore'), [])
   };
 
   return (

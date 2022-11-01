@@ -20,7 +20,7 @@ function App() {
   const store = useStore();
 
   useInit(async ()=>{
-    await store.get('session').remind();
+    await store.modules.session.remind();
   })
 
   //const modal = useSelector(state => state.modals.name);

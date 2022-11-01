@@ -15,7 +15,7 @@ const ShapeControls = props => {
   const callbacks = {
     onShapeChange: useCallback((name, value) => {
       if(!isNaN(parseInt(value))) value = parseInt(value)
-      store.get('canvas').updateShape(props.shape, name, value)
+      store.modules.canvas.updateShape(props.shape, name, value)
     }, [props.shape])
   }
   const {t} = useTranslate()

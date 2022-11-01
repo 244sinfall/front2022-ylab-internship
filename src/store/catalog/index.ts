@@ -2,15 +2,9 @@ import StateModule from "@src/store/module";
 import qs from '@src/utils/search-params';
 import diff from "@src/utils/diff";
 import {CatalogItem} from "@src/store/data-model/shop";
+import {CatalogURLParams, CatalogValues} from "@src/store/data-model/store/catalog";
 
-interface CatalogURLParams {
-  page: number,
-  skip: number,
-  limit: number,
-  sort: string,
-  query: string,
-  category: string
-}
+
 
 /**
  * Состояние каталога
@@ -37,7 +31,7 @@ class CatalogState extends StateModule {
       loaded: 0,
       params,
       waiting: false
-    };
+    } as CatalogValues;
   }
 
   /**
@@ -74,7 +68,9 @@ class CatalogState extends StateModule {
     // Установк параметров и подгрузка данных
     await this.setParams(newParams);
   }
-
+  getState() {
+    return super.getState() as CatalogValues
+  }
   /**
    * Метод для догрузки нового товара без изменения параметров. Используется свойство loaded, которое не сохраняется у
    * пользователя вне сессии (не записывается в параметры ссылки)
@@ -122,7 +118,7 @@ class CatalogState extends StateModule {
    * реализуется в бесконечном скролле для вычисления страницы текущего скролла
    * @param offset Относительная страница верхушки списка
    */
-  mutatePage(offset) {
+  mutatePage(offset: number) {
     const currentPage = this.getState().params.page
     if(qs.parse(window.location.search).page === currentPage + offset) return;
     const newParams = {...this.getState().params, page: currentPage + offset}

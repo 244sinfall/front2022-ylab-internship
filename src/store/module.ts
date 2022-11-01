@@ -1,5 +1,6 @@
 import Store from "@src/store/index";
 import Services from "@src/services";
+import {GlobalState} from "@src/store/data-model/store";
 
 export interface StateModuleConfig {
   name: string
@@ -13,7 +14,7 @@ class StateModule {
    * @param store {Store}
    * @param config {Object}
    */
-  constructor(store: Store, config) {
+  constructor(store: Store, config: StateModuleConfig) {
     this.store = store;
     this.config = config;
     this.services = store.services;
@@ -28,10 +29,10 @@ class StateModule {
   }
 
   getState() {
-    return this.store.getState()[this.config.name];
+    return this.store.getState()[this.config.name as keyof GlobalState];
   }
 
-  setState(newState, description = 'setState'){
+  setState(newState: any, description = 'setState'){
     this.store.setState({
       ...this.store.getState(),
       [this.config.name]: newState

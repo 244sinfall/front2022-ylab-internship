@@ -1,7 +1,8 @@
 import Shape from '@src/store/canvas/shapes';
+import {ShapeCoordinate} from "@src/store/canvas";
 
 export default class Rectangle extends Shape {
-  static build(id, color, fill, coordinates, scale, params: any) {
+  static build(id: string, color: string, fill: boolean, coordinates: ShapeCoordinate, scale: number, params: any) {
     const width = Math.ceil(Math.random() * 100)
     const opts = {
       id: id,
@@ -14,7 +15,7 @@ export default class Rectangle extends Shape {
     }
     return new Rectangle(opts.id, opts.color, opts.fill, opts.x1, opts.y1, opts.width, opts.height)
   }
-  constructor(id, color, fill, x1, y1, width, height) {
+  constructor(id: string, color: string, fill: boolean, x1: number, y1: number, width: number, height: number) {
     super();
     this._id = id
     this.color = color
@@ -25,7 +26,7 @@ export default class Rectangle extends Shape {
     this.height = height
   }
 
-  draw(context, currentCoordinates, scale) {
+  draw(context: CanvasRenderingContext2D, currentCoordinates: ShapeCoordinate, scale: number) {
     context.save()
     super.draw(context, currentCoordinates, scale)
     const realX1 = (this.x1 * scale) - currentCoordinates.x
