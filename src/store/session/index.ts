@@ -1,45 +1,12 @@
 import StateModule from "@src/store/module";
 import simplifyErrors from "@src/utils/simplify-errors";
 import {ModuleConfig} from "@src/store";
+import {UserInfo} from "@src/store/data-model/user";
 
 interface SessionStateConfig extends ModuleConfig {
   tokenHeader: string
 }
 
-interface UserRole {
-  _id: string,
-  _type: string
-}
-
-interface UserProfileInfo {
-  avatar: any,
-  birthday: string,
-  city: any,
-  country: any,
-  middlename: string,
-  name: string,
-  phone: string,
-  position: string,
-  street: string,
-  surname: string
-}
-
-export interface UserInfo {
-  dateCreate: string,
-  dateUpdate: string,
-  emaiL: string,
-  isDeleted: boolean,
-  isNew: boolean,
-  order: number,
-  profile: UserProfileInfo,
-  proto: any,
-  roles: UserRole[],
-  status: string,
-  username: string,
-  _id: string,
-  _key: string,
-  _type: string
-}
 /**
  * Сессия
  */

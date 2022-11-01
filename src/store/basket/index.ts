@@ -1,9 +1,6 @@
 import StateModule from "@src/store/module";
-import {CatalogItem} from "@src/store/catalog";
+import {BasketItem, CatalogItem} from "@src/store/data-model/shop";
 
-interface BasketItem extends CatalogItem {
-  amount?: number
-}
 
 /**
  * Состояние корзины

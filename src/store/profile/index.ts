@@ -1,5 +1,5 @@
 import StateModule from "@src/store/module";
-import {UserInfo} from "@src/store/session";
+import {UserInfo} from "@src/store/data-model/user";
 
 /**
  * Состояние профиля

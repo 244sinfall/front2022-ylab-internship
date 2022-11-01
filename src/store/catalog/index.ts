@@ -1,39 +1,15 @@
 import StateModule from "@src/store/module";
 import qs from '@src/utils/search-params';
 import diff from "@src/utils/diff";
+import {CatalogItem} from "@src/store/data-model/shop";
 
-interface Params {
+interface CatalogURLParams {
   page: number,
   skip: number,
   limit: number,
   sort: string,
   query: string,
   category: string
-}
-
-interface CatalogItemReference {
-  _id: string,
-  _type: string
-}
-
-export interface CatalogItem {
-  category: CatalogItemReference
-  dateCreate: string,
-  dateUpdate: string,
-  description: string,
-  edition: number,
-  isDeleted: boolean,
-  isFavorite: boolean,
-  isNew: boolean,
-  maidIn: CatalogItemReference
-  name: string,
-  order: number,
-  price: number,
-  proto: any,
-  title: string,
-  _id: string,
-  _key: string,
-  _type: string
 }
 
 /**
@@ -46,7 +22,7 @@ class CatalogState extends StateModule {
    * @return {Object}
    */
   initState() {
-    const params: Params = {
+    const params: CatalogURLParams = {
       page: 1,
       skip: 0,
       limit: 10,
@@ -73,7 +49,7 @@ class CatalogState extends StateModule {
   async initParams(params = {}) {
     // Параметры из URl. Их нужно валидирвать, приводить типы и брать толкьо нужные
     const urlParams = qs.parse(window.location.search) as any;
-    let validParams: Params = {
+    let validParams: CatalogURLParams = {
       skip: Number(urlParams.skip) || 0,
       page: Number(urlParams.page) || 1,
       limit: Number(urlParams.limit) || 10,

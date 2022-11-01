@@ -1,5 +1,5 @@
 import StateModule from "@src/store/module";
-import {CatalogItem} from "@src/store/catalog";
+import {CatalogItem} from "@src/store/data-model/shop";
 
 /**
  * Состояние товара
