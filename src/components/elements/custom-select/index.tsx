@@ -1,51 +1,70 @@
-import React, { useEffect, useRef } from 'react';
-import propTypes from 'prop-types';
+import React, {useEffect, useRef} from 'react';
 import { cn as bem } from "@bem-react/classname";
 import './styles.css';
 import CustomSelectListItem from './list-item'
 import { useState } from 'react';
 import { useMemo } from 'react';
 
-function CustomSelect(props) {
+interface CustomSelectOption {
+  title: string,
+  value: string,
+  code: string
+}
+interface CustomSelectProps {
+  options: CustomSelectOption[],
+  onChange: (value: string) => any,
+  value: string,
+}
+
+function CustomSelect(props: CustomSelectProps) {
   const cn = bem('CustomSelect');
   const [selectedItem, setSelectedItem] = useState(props.options.find(i => i.value === props.value) ?? props.options[0])
   const [searchString, setSearchString] = useState("")
-  const [opened, setOpened] = useState(null)
+  const [opened, setOpened] = useState<boolean | null>(null)
 
-  const currentSelection = useRef()
-  const selectorRef = useRef()
-  const componentRef = useRef()
-  const dropdownRef = useRef()
+  const currentSelection = useRef<HTMLSpanElement | null>(null)
+  const selectorRef = useRef<HTMLSpanElement | null>(null)
+  const componentRef = useRef<HTMLDivElement | null>(null)
+  const dropdownRef = useRef<HTMLDivElement | null>(null)
 
   const searchRegExp = useMemo(() => {
     return searchString ? new RegExp(`${searchString}`, "i") : null
   }, [searchString])
 
   const callbacks = {
-    handleClickOutside: (e) => {
-      if(opened && !componentRef.current.contains(e.target)) {
-        callbacks.handleDropdownOpenClose()
+    handleClickOutside: (e: any) => {
+      if(componentRef.current) {
+        if(opened && !componentRef.current.contains(e.target)) {
+          callbacks.handleDropdownOpenClose()
+        }
       }
     },
-    handleArrowFocusShift: (e) => {
+    handleArrowFocusShift: (e: any) => {
       if(e.code !== "ArrowDown" && e.code !== "ArrowUp") return
       e.preventDefault()
-      if(e.code === "ArrowDown" && currentSelection.current?.nextSibling)
-        currentSelection.current = currentSelection.current.nextSibling
-      if(e.code === "ArrowUp" && currentSelection.current?.previousSibling)
-        currentSelection.current = currentSelection.current.previousSibling
-      currentSelection.current?.focus()
+      if(currentSelection.current !== null) {
+        if(e.code === "ArrowDown" && currentSelection.current.nextSibling) {
+          currentSelection.current = currentSelection.current.nextSibling as HTMLSpanElement
+        }
+        if(e.code === "ArrowUp" && currentSelection.current.previousSibling) {
+          currentSelection.current = currentSelection.current.previousSibling as HTMLSpanElement
+        }
+        currentSelection.current.focus()
+      }
     },
     handleDropdownOpenClose: () => {
       if(opened) return setOpened(false)
       if(dropdownRef.current) dropdownRef.current.style.display = "block"
       setTimeout(() => setOpened(true))
     },
-    handleEscapeKeyWhileOpened: (e) => {
+    handleEscapeKeyWhileOpened: (e: any) => {
       if(e.code === "Escape" && opened) callbacks.handleDropdownOpenClose()
     },
-    handleDropdownOpenByKeys: (e) => {
-      if((e.code === "Enter" || e.code === "Space") && !opened) callbacks.handleDropdownOpenClose()
+    handleDropdownOpenByKeys: (e: any) => {
+      if((e.code === "Enter" || e.code === "Space") && !opened) {
+        e.preventDefault()
+        callbacks.handleDropdownOpenClose()
+      }
     },
     handleDropdownCloseAnimationEnd: () => {
       if(!opened && dropdownRef.current)
@@ -67,7 +86,7 @@ function CustomSelect(props) {
   useEffect(() => {
     if(props.value !== undefined && props.value !== selectedItem.value) setSelectedItem(props.options.find(i => i.value === props.value) ?? props.options[0])
     if(!opened) setSearchString("")
-    if(selectorRef && opened === false) selectorRef.current.focus()
+    if(selectorRef.current && opened === false) selectorRef.current.focus()
   }, [props, opened])
 
   const defaultRenderItems = useMemo(() => {
@@ -99,23 +118,13 @@ function CustomSelect(props) {
              onTransitionEnd={callbacks.handleDropdownCloseAnimationEnd}>
         <input className={cn('search')} value={searchString} placeholder="Поиск" onChange={(e) => setSearchString(e.target.value)}/>
         <div className={cn('dropdown-items')}>
-          {props.renderItems || defaultRenderItems}
+          {defaultRenderItems}
         </div>
       </div>
     </div>
   )
 }
 
-CustomSelect.propTypes = {
-  options: propTypes.arrayOf(propTypes.object).isRequired,
-  onChange: propTypes.func,
-  value: propTypes.any,
-  renderItems: propTypes.arrayOf(propTypes.node)
-}
-
-CustomSelect.defaultProps = {
-  onChange: () => { }
-}
 
 
 export default React.memo(CustomSelect);

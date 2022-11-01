@@ -28,7 +28,7 @@ interface UserProfileInfo {
 export interface UserInfo {
   dateCreate: string,
   dateUpdate: string,
-  emaiL: string,
+  email: string,
   isDeleted: boolean,
   isNew: boolean,
   order: number,

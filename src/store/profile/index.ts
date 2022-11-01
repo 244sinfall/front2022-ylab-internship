@@ -1,5 +1,6 @@
 import StateModule from "@src/store/module";
 import {UserInfo} from "@src/store/data-model/user";
+import {ProfileValues} from "@src/store/data-model/store/profile";
 
 /**
  * Состояние профиля
@@ -10,11 +11,9 @@ class ProfileState extends StateModule{
    * @return {Object}
    */
   initState() {
-    const data: UserInfo | {} = {}
     return {
-      data: data,
       waiting: false
-    };
+    } as ProfileValues;
   }
 
   /**
@@ -24,7 +23,6 @@ class ProfileState extends StateModule{
     // Сброс текущего товара и установка признака ожидания загрузки
     this.setState({
       waiting: true,
-      data: {}
     }, 'Ожидание загрузки профиля');
 
     try {
@@ -37,7 +35,6 @@ class ProfileState extends StateModule{
     } catch (e){
       // Ошибка при загрузке
       this.setState({
-        data: {},
         waiting: false
       }, 'Ошибка загрузки профиля');
     }

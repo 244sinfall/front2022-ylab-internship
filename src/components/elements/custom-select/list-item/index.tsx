@@ -1,17 +1,24 @@
 import React from 'react';
-import propTypes from 'prop-types';
 import {cn as bem} from "@bem-react/classname";
 import './styles.css'
 
-const CustomSelectListItem = React.forwardRef((props, ref) => {
+interface CustomSelectListItemProps {
+  name: string,
+  onClick?: () => any,
+  code?: string
+  tabIndex?: number,
+  selected?: boolean
+}
+
+const CustomSelectListItem = React.forwardRef<HTMLSpanElement, CustomSelectListItemProps>((props, ref) => {
   const cn = bem('CustomSelectListItem');
   return (
-    <span ref={ref} data-selected={props.selected} className={cn()}
+    <span ref={ref} data-selected={props.selected ?? false} className={cn()}
           onClick={props.onClick}
           onKeyDown={e => {
             if(e.code === "Enter" || e.code === "Space") {
               e.preventDefault()
-              props.onClick()
+              props.onClick && props.onClick()
             }
           }}
           role="option" tabIndex={props.tabIndex}>
@@ -21,17 +28,4 @@ const CustomSelectListItem = React.forwardRef((props, ref) => {
   )
 })
 
-CustomSelectListItem.propTypes = {
-  name: propTypes.string.isRequired,
-  onClick: propTypes.func,
-  code: propTypes.string,
-  tabIndex: propTypes.number,
-  selected: propTypes.bool,
-}
-
-CustomSelectListItem.defaultProps = {
-  onClick: () => {},
-  tabIndex: 0
-}
-
-export default CustomSelectListItem;
+export default React.memo(CustomSelectListItem);

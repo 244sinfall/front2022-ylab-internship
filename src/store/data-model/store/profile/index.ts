@@ -1,6 +1,6 @@
 import {UserInfo} from "@src/store/data-model/user";
 
 export interface ProfileValues {
-  data: UserInfo | {},
+  data?: UserInfo,
   waiting: boolean
 }
