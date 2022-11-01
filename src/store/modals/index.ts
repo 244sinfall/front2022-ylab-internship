@@ -1,13 +1,18 @@
 import StateModule from "@src/store/module";
 
+interface ModalWindow {
+  name: string,
+  params: any,
+  resolve: Promise<any>
+}
 /**
  * Управление модальными окнами
  */
 class ModalsState extends StateModule{
-
   initState() {
+    const modals: ModalWindow[] = []
     return {
-      opened: []
+      opened: modals
     };
   }
 
@@ -19,7 +24,7 @@ class ModalsState extends StateModule{
   async open(name, params = {}){
     return new Promise(resolve => {
       this.setState({
-        opened: [...this.getState().opened, { name: name, params, resolve }]
+        opened: [...this.getState().opened, { name: name, params, resolve }] as ModalWindow[]
       }, `Открытие модалки ${name}`)
     })
   }
@@ -27,12 +32,12 @@ class ModalsState extends StateModule{
    * Закрытие модального окна. Данное решение работает безотказно до тех пор, пока не появится кейс закрытия одной модалки
    * из другой модалки / другого компонента
    */
-  async close(result){
+  async close(result?: any){
     const lastOpenedModal = this.getState().opened.at(-1)
     if(lastOpenedModal.resolve) {
       lastOpenedModal.resolve(result)
     }
-    this.setState({opened: this.getState().opened.slice(0, -1) }, `Закрытие модалки`);
+    this.setState({opened: this.getState().opened.slice(0, -1) as ModalWindow[] }, `Закрытие модалки`);
   }
 
   /**

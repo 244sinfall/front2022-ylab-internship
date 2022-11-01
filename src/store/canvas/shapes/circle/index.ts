@@ -1,7 +1,8 @@
 import Shape from '@src/store/canvas/shapes';
 
 export default class Circle extends Shape {
-  static build(id, color, fill, coordinates, scale, params = {}) {
+  radius: number
+  static build(id, color, fill, coordinates, scale, params: any) {
     const opts = {
       id: id,
       color: color,
@@ -49,7 +50,7 @@ export default class Circle extends Shape {
   }
   draw(context, currentCoordinates, scale) {
     context.save()
-    super.draw(context)
+    super.draw(context, currentCoordinates, scale)
     context.beginPath()
     const realCircle = {
       x: (this.x1 * scale) - currentCoordinates.x,

@@ -1,6 +1,12 @@
 import StateModule from "@src/store/module";
 import * as shapes from "./shapes/exports"
 import {v4 as uuidv4} from 'uuid';
+import Shape from "@src/store/canvas/shapes";
+
+export interface ShapeCoordinate {
+  x: number,
+  y: number
+}
 
 /**
  * Состояние холста
@@ -12,11 +18,12 @@ class CanvasState extends StateModule{
    * @return {Object}
    */
   initState() {
+    const selectedShape: Shape | null = null
     return {
-      coordinates: {x: 0, y: 0},
+      coordinates: {x: 0, y: 0} as ShapeCoordinate,
       scale: 1,
-      shapes: [],
-      selectedShape: null,
+      shapes: [] as Shape[],
+      selectedShape: selectedShape,
     };
   }
 
@@ -27,13 +34,13 @@ class CanvasState extends StateModule{
    * @param fill true - заливать фигуру, false - не заливать
    */
   addShape(shapeType, color, fill) {
-    const params = {}
+    const params: any = {}
     if(shapeType === "square") {
       shapeType = "rectangle"
       params.isSquare = true
     }
-    const newShape = shapes[shapeType].build(uuidv4(), color, fill, this.getState().coordinates, this.getState().scale, params)
-    this.setState({...this.getState(), shapes: [...this.getState().shapes, newShape]})
+    const newShape = shapes[shapeType].build(uuidv4(), color, fill, this.getState().coordinates, this.getState().scale, params) as Shape
+    this.setState({...this.getState(), shapes: [...this.getState().shapes, newShape] as Shape[]})
   }
 
   /**
@@ -65,7 +72,7 @@ class CanvasState extends StateModule{
    * Удаляет все фигуры из внешнего состояния
    */
   removeAll() {
-    this.setState({...this.getState(), shapes: [], selectedShape: null})
+    this.setState({...this.getState(), shapes: [] as Shape[], selectedShape: null})
   }
 }
 

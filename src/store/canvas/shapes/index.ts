@@ -6,14 +6,23 @@
  * @param context Контекст канваса
  * @returns {*}
  */
+import {ShapeCoordinate} from "@src/store/canvas";
 
 export default class Shape {
-  _id = ""
+  protected _id = ""
   color = "#000000"
   fill = false
   selected = false
-  static build() {
-    return new Shape()
+  startTime = performance.now()
+  y1 = 0
+  x1 = 0
+  width = 0
+  private _height = 0;
+  public get height() {
+        return this._height;
+    }
+  public set height(value) {
+      this._height = value;
   }
   constructor() {
     if(this.constructor === Shape) {
@@ -25,8 +34,10 @@ export default class Shape {
   /**
    * Установка цвет (одинаково для всех наследников)
    * @param context
+   * @param currentCoordinate
+   * @param scale
    */
-  draw(context) {
+  draw(context: CanvasRenderingContext2D, currentCoordinate: ShapeCoordinate, scale: number) {
     context.lineWidth = this.selected ? 2 : 1
     context.fillStyle = this.color
     context.strokeStyle = this.color
@@ -46,7 +57,7 @@ export default class Shape {
    * @param currentCoordinates Текущие координаты
    * @param scale Текущий масштаб
    */
-  freeFall(context, currentCoordinates, scale) {
+  freeFall(context: CanvasRenderingContext2D, currentCoordinates: ShapeCoordinate, scale: number) {
     const timeNow = performance.now()
     if(this.y1 + this.height < 400) {
       this.y1 =  this.y1 + (0.0000981 * ((timeNow - this.startTime) ** 2))
@@ -61,12 +72,12 @@ export default class Shape {
    * @param delta {{x: number, y: number}}
    * @param scale Масштаб канваса
    */
-  move(delta, scale = 1) {
+  move(delta: ShapeCoordinate, scale = 1) {
     this.y1 += delta.y / scale
     this.x1 += delta.x / scale
   }
 
-  getBoundingRect(scale, currentCoordinates) {
+  getBoundingRect(scale: number, currentCoordinates: ShapeCoordinate) {
     const realX1 = (this.x1 * scale) - currentCoordinates.x
     const realY1 = (this.y1 * scale) - currentCoordinates.y
     return ({

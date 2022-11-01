@@ -2,7 +2,15 @@ import Shape from '@src/store/canvas/shapes';
 import * as images from './images'
 
 export default class Leaf extends Shape {
-  static build(id, color, fill, coordinates, scale, params = {}) {
+  image: HTMLImageElement
+  angle: number = 0
+  private _rotationDirection: boolean;
+  private _rotationTime: number;
+  private _rotateIn: number;
+  private _rotationForce: number;
+  private _rotationForceTime: number;
+  private _rotateChangeForceIn: number;
+  static build(id, color, fill, coordinates, scale, params: any) {
     const img = new Image()
     img.src = images['leaf' + (Math.floor(Math.random() * 5) + 1)]
     const size = params.size ?? 10 + Math.random() * 50

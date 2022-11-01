@@ -1,18 +1,25 @@
 import StateModule from "@src/store/module";
 import qs from "@src/utils/search-params";
 
+interface Category {
+  children: Category[]
+  parent: { _id: string } | null
+  title: string
+  _id: string
+}
+
 /**
  * Состояние товара
  */
 class CategoriesState extends StateModule{
-
   /**
    * Начальное состояние
    * @return {Object}
    */
   initState() {
+    const items: Category[] = []
     return {
-      items: [],
+      items: items,
       waiting: false
     };
   }
@@ -25,10 +32,9 @@ class CategoriesState extends StateModule{
 
     const params = {fields:'_id,title,parent(_id)', limit:'*'};
     const json = await this.services.api.request({url: `/api/v1/categories/${qs.stringify(params)}`});
-
     // Товар загружен успешно
     this.setState({
-      items: json.result.items,
+      items: json.result.items as Category[],
       waiting: false
     }, 'Катеории загружены');
   }

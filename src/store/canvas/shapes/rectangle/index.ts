@@ -1,7 +1,7 @@
 import Shape from '@src/store/canvas/shapes';
 
 export default class Rectangle extends Shape {
-  static build(id, color, fill, coordinates, scale, params = {}) {
+  static build(id, color, fill, coordinates, scale, params: any) {
     const width = Math.ceil(Math.random() * 100)
     const opts = {
       id: id,
@@ -27,7 +27,7 @@ export default class Rectangle extends Shape {
 
   draw(context, currentCoordinates, scale) {
     context.save()
-    super.draw(context)
+    super.draw(context, currentCoordinates, scale)
     const realX1 = (this.x1 * scale) - currentCoordinates.x
     const realY1 = (this.y1 * scale) - currentCoordinates.y
     const realWidth = this.width * scale

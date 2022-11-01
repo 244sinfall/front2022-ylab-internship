@@ -2,6 +2,40 @@ import StateModule from "@src/store/module";
 import qs from '@src/utils/search-params';
 import diff from "@src/utils/diff";
 
+interface Params {
+  page: number,
+  skip: number,
+  limit: number,
+  sort: string,
+  query: string,
+  category: string
+}
+
+interface CatalogItemReference {
+  _id: string,
+  _type: string
+}
+
+export interface CatalogItem {
+  category: CatalogItemReference
+  dateCreate: string,
+  dateUpdate: string,
+  description: string,
+  edition: number,
+  isDeleted: boolean,
+  isFavorite: boolean,
+  isNew: boolean,
+  maidIn: CatalogItemReference
+  name: string,
+  order: number,
+  price: number,
+  proto: any,
+  title: string,
+  _id: string,
+  _key: string,
+  _type: string
+}
+
 /**
  * Состояние каталога
  */
@@ -12,18 +46,20 @@ class CatalogState extends StateModule {
    * @return {Object}
    */
   initState() {
+    const params: Params = {
+      page: 1,
+      skip: 0,
+      limit: 10,
+      sort: 'order',
+      query: '',
+      category: ''
+    }
+    const items: CatalogItem[] = []
     return {
-      items: [],
+      items: items,
       count: 0,
       loaded: 0,
-      params: {
-        page: 1,
-        skip: 0,
-        limit: 10,
-        sort: 'order',
-        query: '',
-        category: ''
-      },
+      params,
       waiting: false
     };
   }
@@ -36,14 +72,15 @@ class CatalogState extends StateModule {
    */
   async initParams(params = {}) {
     // Параметры из URl. Их нужно валидирвать, приводить типы и брать толкьо нужные
-    const urlParams = qs.parse(window.location.search);
-    let validParams = {};
-    if (urlParams.page) validParams.page = Number(urlParams.page) || 1;
-    if (urlParams.limit) validParams.limit = Number(urlParams.limit) || 10;
-    if (urlParams.sort) validParams.sort = urlParams.sort;
-    if (urlParams.query) validParams.query = urlParams.query;
-    if (urlParams.category) validParams.category = urlParams.category;
-
+    const urlParams = qs.parse(window.location.search) as any;
+    let validParams: Params = {
+      skip: Number(urlParams.skip) || 0,
+      page: Number(urlParams.page) || 1,
+      limit: Number(urlParams.limit) || 10,
+      sort: urlParams.sort || "",
+      query: urlParams.query || "",
+      category: urlParams.category || "",
+    };
     // Итоговые параметры из начальных, из URL и из переданных явно
     const newParams = {...this.initState().params, ...validParams, ...params};
     // Установка параметров и подгрузка данных
@@ -95,7 +132,7 @@ class CatalogState extends StateModule {
     const json = await this.services.api.request({url: `/api/v1/articles${qs.stringify(apiParams)}`});
 
     // Установка полученных данных и сброс признака загрузки
-    const newItems = [...this.getState().items, ...json.result.items]
+    const newItems = [...this.getState().items, ...json.result.items] as CatalogItem[]
     this.setState({
       ...this.getState(),
       items: newItems,
@@ -158,11 +195,10 @@ class CatalogState extends StateModule {
 
     // ?search[query]=text&search[category]=id
     const json = await this.services.api.request({url: `/api/v1/articles${qs.stringify(apiParams)}`});
-
     // Установка полученных данных и сброс признака загрузки
     await this.setState({
       ...this.getState(),
-      items: json.result.items,
+      items: json.result.items as CatalogItem[],
       loaded: json.result.items.length,
       count: json.result.count,
       waiting: false

@@ -5,9 +5,13 @@
  */
 
 import Shape from '@src/store/canvas/shapes';
+import {ShapeCoordinate} from "@src/store/canvas";
 
 export default class Triangle extends Shape {
-  static build(id, color, fill, coordinates, scale, params = {}) {
+  pointA: ShapeCoordinate = {x: 0, y: 0}
+  pointB: ShapeCoordinate = {x: 0, y: 0}
+  pointC: ShapeCoordinate = {x: 0, y: 0}
+  static build(id, color, fill, coordinates, scale, params: any) {
     const generatePoint = () => {
       return ({
         x: coordinates.x + Math.ceil(Math.random() * (400 / scale)),
@@ -90,7 +94,7 @@ export default class Triangle extends Shape {
   }
   draw(context, currentCoordinates, scale) {
     context.save()
-    super.draw(context)
+    super.draw(context, currentCoordinates, scale)
     const getRealPoint = (point) => {
       return ({
         x: (point.x * scale) - currentCoordinates.x,

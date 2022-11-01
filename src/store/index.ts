@@ -1,11 +1,39 @@
-import * as modules from './exports.js';
+import * as modules from './exports';
+import Services from "@src/services";
+import StateModule from "@src/store/module";
+
+export interface ModuleConfig {
+  name: string
+}
+
+interface StoreConfig {
+  log?: boolean
+  modules?: Object
+}
+
+interface StoreModules {
+  basket?: StateModule
+  catalog?: StateModule
+  modals?: StateModule
+  article?: StateModule
+  locale?: StateModule
+  categories?: StateModule
+  session?: StateModule
+  profile?: StateModule
+  chat?: StateModule
+  canvas?: StateModule
+}
 
 class Store {
-
   /**
    * @param services {Services}
    * @param config {Object}
    */
+  services: Services
+  config: StoreConfig
+  modules: StoreModules = {}
+  state: StoreModules = {}
+  listeners: (() => any)[]
   constructor(services, config = {}) {
     // Менеджер сервисов
     this.services = services;
@@ -14,20 +42,21 @@ class Store {
       ...config
     }
     // Состояние приложения (данные)
-    this.state = {};
     // Слушатели изменений state
     this.listeners = [];
 
     // Модули
-    this.modules = {};
     for (const name of Object.keys(modules)) {
       // Экземпляр модуля. Передаём ему ссылку на store и навзание модуля.
-      this.modules[name] = new modules[name](this, {name, ...this.config.modules[name] || {}});
+      this.modules[name] = new modules[name](this, this._getModuleConfig(name));
       // По названию модля устанавливается свойство с анчальным состоянием от модуля
       this.state[name] = this.modules[name].initState();
     }
   }
-
+  private _getModuleConfig(name: string) {
+    const moduleConfig = this.config.modules ? this.config.modules[name] ? this.config.modules[name]: {} : {}
+    return {name, ...moduleConfig}
+  }
   /**
    * Создает новый модуль состояния из базового. Может использоваться для дублирования логики, но разделения значений
    * @param name Имя нового состояния
@@ -35,7 +64,7 @@ class Store {
    * @returns {(function(): void)|*} Функция для уничтожения созданного состояния
    */
   createSeparateState(name, base) {
-    this.modules[name] = new modules[base](this, {name: name, ...this.config.modules[base] || {}})
+    this.modules[name] = new modules[name](this, this._getModuleConfig(name));
     this.state[name] = this.modules[name].initState();
     return () => {
       delete this.modules[name]

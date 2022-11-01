@@ -1,4 +1,9 @@
 import StateModule from "@src/store/module";
+import {CatalogItem} from "@src/store/catalog";
+
+interface BasketItem extends CatalogItem {
+  amount?: number
+}
 
 /**
  * Состояние корзины
@@ -11,25 +16,26 @@ class BasketState extends StateModule{
    */
   initState() {
     return {
-      items: [],
-        sum: 0,
-        amount: 0
+      items: [] as BasketItem[],
+      sum: 0,
+      amount: 0
     };
   }
   async addItemToBasket(item) {
     let sum = 0
     let exists = false;
     const items = this.getState().items.map(i => {
-      let result = i;
+      let result = i as BasketItem;
       // Искомый товар для увеличения его количества
       if (result._id ===  item._id) {
         exists = true;
-        result = {...result, amount: result.amount + 1};
+
+        result = {...result, amount: result.amount ? result.amount + 1 : 1};
       }
       // Добавляея в общую сумму
-      sum += result.price * result.amount;
+      sum += result.price * (result.amount ?? 1);
       return result
-    });
+    }) as BasketItem[];
     if (!exists) {
       items.push({...item, amount: 1})
       sum += item.price
@@ -60,14 +66,14 @@ class BasketState extends StateModule{
       // Добавляея в общую сумму
       sum += result.price * result.amount;
       return result
-    });
+    }) as BasketItem[];
 
     // Если товар не был найден в корзине, то добавляем его из каталога
     if (!exists) {
       // Поиск товара в каталоге, чтобы его в корзину добавить
       const json = await this.services.api.request({url: `/api/v1/articles/${_id}`});
 
-      const item = json.result;
+      const item = json.result as CatalogItem;
       items.push({...item, amount: count});
       // Досчитываем сумму
       sum += item.price * count;
@@ -93,7 +99,7 @@ class BasketState extends StateModule{
       // Подсчёт суммы если твоар не удаляем.
       sum += item.price * item.amount;
       return true;
-    });
+    }) as BasketItem[];
     this.setState({
       items,
       sum,
