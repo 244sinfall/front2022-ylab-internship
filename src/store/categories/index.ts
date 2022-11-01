@@ -1,7 +1,7 @@
 import StateModule from "@src/store/module";
 import qs from "@src/utils/search-params";
 
-interface Category {
+export interface Category {
   children: Category[]
   parent: { _id: string } | null
   title: string

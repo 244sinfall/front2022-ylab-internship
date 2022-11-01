@@ -12,7 +12,7 @@ interface Locales {
  * @param [plural] {Number} Число для плюрализации
  * @returns {String} Перведенный текст
  */
-export default function translate(lang: Locales, text: string, plural: number) {
+export default function translate(lang: Locales, text: string, plural?: number) {
   const languageKey = lang as unknown as keyof Locales
   const result = locales[languageKey] && typeof locales[languageKey][text] !== 'undefined' ? locales[languageKey][text] : text;
 

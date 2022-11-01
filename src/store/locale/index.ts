@@ -4,7 +4,6 @@ import StateModule from "@src/store/module";
  * Состояние товара
  */
 class LocaleState extends StateModule{
-
   /**
    * Начальное состояние
    * @return {Object}

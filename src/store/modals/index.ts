@@ -1,6 +1,6 @@
 import StateModule from "@src/store/module";
 
-interface ModalWindow {
+export interface ModalWindow {
   name: string,
   params: any,
   resolve: Promise<any>

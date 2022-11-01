@@ -1,6 +1,6 @@
 import * as modules from './exports';
 import Services from "@src/services";
-import StateModule from "@src/store/module";
+import {GlobalState, ModuleName, StoreModules} from "@src/store/data-model/store";
 
 export interface ModuleConfig {
   name: string
@@ -11,19 +11,6 @@ interface StoreConfig {
   modules?: Object
 }
 
-interface StoreModules {
-  basket?: StateModule
-  catalog?: StateModule
-  modals?: StateModule
-  article?: StateModule
-  locale?: StateModule
-  categories?: StateModule
-  session?: StateModule
-  profile?: StateModule
-  chat?: StateModule
-  canvas?: StateModule
-}
-
 class Store {
   /**
    * @param services {Services}
@@ -31,8 +18,8 @@ class Store {
    */
   services: Services
   config: StoreConfig
-  modules: StoreModules = {}
-  state: StoreModules = {}
+  modules: StoreModules
+  state: GlobalState
   listeners: (() => any)[]
   constructor(services, config = {}) {
     // Менеджер сервисов
@@ -44,14 +31,17 @@ class Store {
     // Состояние приложения (данные)
     // Слушатели изменений state
     this.listeners = [];
-
+    let initializedModules = {}
+    let initializedState = {}
     // Модули
     for (const name of Object.keys(modules)) {
       // Экземпляр модуля. Передаём ему ссылку на store и навзание модуля.
-      this.modules[name] = new modules[name](this, this._getModuleConfig(name));
+      initializedModules[name] = new modules[name](this, this._getModuleConfig(name));
       // По названию модля устанавливается свойство с анчальным состоянием от модуля
-      this.state[name] = this.modules[name].initState();
+      initializedState[name] = initializedModules[name].initState();
     }
+    this.modules = initializedModules as StoreModules
+    this.state = initializedState as GlobalState
   }
   private _getModuleConfig(name: string) {
     const moduleConfig = this.config.modules ? this.config.modules[name] ? this.config.modules[name]: {} : {}
@@ -63,9 +53,9 @@ class Store {
    * @param base Имя состояния, которое клонируется
    * @returns {(function(): void)|*} Функция для уничтожения созданного состояния
    */
-  createSeparateState(name, base) {
-    this.modules[name] = new modules[name](this, this._getModuleConfig(name));
-    this.state[name] = this.modules[name].initState();
+  createSeparateState(name: string, base:string) {
+    this.modules[name] = new modules[base](this, this._getModuleConfig(name));
+    this.state[name] = this.modules[base].initState();
     return () => {
       delete this.modules[name]
       delete this.state[name]
@@ -75,8 +65,8 @@ class Store {
    * Доступ к модулю состояния
    * @param name {String} Название модуля
    */
-  get(name) {
-    return this.modules[name];
+  get(name: ModuleName) {
+    return this.modules[name as keyof StoreModules]!
   }
 
   /**
