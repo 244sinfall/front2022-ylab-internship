@@ -38,7 +38,7 @@ function ToolsContainer(props: ToolsContainerProps) {
   }
 
   return (
-    <LayoutFlex flex={props.hideMenu ? "between" : "end"} indent="big">
+    <LayoutFlex flex={props.hideMenu ? "end" : "between"} indent="big">
       {!props.hideMenu && <Menu items={options.menu}/>}
       <BasketSimple onOpen={callbacks.openModalBasket} amount={select.amount} sum={select.sum}
                     t={t}/>

@@ -5,7 +5,7 @@ import useStore from '@src/hooks/use-store';
 import Shape from "@src/store/canvas/shapes";
 
 interface ShapeControlsProps {
-  shape: Shape,
+  shape: Shape | null,
   options: any
 }
 /**
@@ -19,11 +19,13 @@ const ShapeControls = (props: ShapeControlsProps) => {
   const callbacks = {
     onShapeChange: useCallback((name: string, value: string | number) => {
       if(!isNaN(parseInt(value as string))) value = parseInt(value as string)
-      store.modules.canvas.updateShape(props.shape, name, value)
+      if(props.shape) {
+        store.modules.canvas.updateShape(props.shape, name, value)
+      }
     }, [props.shape])
   }
   const {t} = useTranslate()
-  const key = props.shape.constructor.name + "Options"
+  const key = props.shape?.constructor?.name + "Options"
   const Component = shapesOptions[key as keyof typeof shapesOptions]
   return (
     <>

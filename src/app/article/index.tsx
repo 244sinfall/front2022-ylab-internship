@@ -37,7 +37,7 @@ function Article(){
   return (
     <Layout>
       <TopContainer/>
-      <HeadContainer title={select.article.title || ''}/>
+      <HeadContainer title={select.article?.title || ''}/>
       <ToolsContainer hideMenu={false}/>
       <Spinner active={select.waiting}>
         <ArticleCard article={select.article} onAdd={callbacks.addToBasket} t={t}/>

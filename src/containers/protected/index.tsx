@@ -23,7 +23,7 @@ function Protected(props: ProtectedProps) {
     }
   }, [select.exists, select.waiting]);
 
-  return !select.exists || select.waiting ? <div>Проверка доступа...</div> : <>props.children</> ;
+  return !select.exists || select.waiting ? <div>Проверка доступа...</div> : <>{props.children}</> ;
 }
 
 export default React.memo(Protected);

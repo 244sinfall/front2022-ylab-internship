@@ -40,7 +40,7 @@ function ArticleModal(props: ArticleModalProps){
   };
 
   return (
-    <LayoutModal title={select.article.title || ''} onClose={callbacks.onClose} labelClose={t('articleModal.close')}>
+    <LayoutModal title={select.article?.title || ''} onClose={callbacks.onClose} labelClose={t('articleModal.close')}>
       <Spinner active={select.waiting}>
         <ArticleCard onGotoPage={callbacks.onGotoPage} article={select.article} onAdd={callbacks.addToBasket} t={t}/>
       </Spinner>
