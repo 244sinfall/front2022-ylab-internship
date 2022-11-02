@@ -7,7 +7,7 @@
  * @returns {Array} Корневые узлы
  */
 
-interface TreeToListValidObject {
+export interface TreeToListValidObject {
   children?: TreeToListValidObject[]
 }
 

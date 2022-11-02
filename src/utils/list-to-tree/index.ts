@@ -1,3 +1,5 @@
+import {TreeToListValidObject} from "@src/utils/tree-to-list";
+
 interface ListToTreeValidObject {
   _id?: string | number
   children?: ListToTreeValidObject[] | null
@@ -9,7 +11,7 @@ interface ListToTreeValidObject {
  * @param key {String} Свойство с первичным ключём
  * @returns {Array} Корневые узлы
  */
-export default function listToTree(list: ListToTreeValidObject[], key = '_id') {
+export default function listToTree(list: ListToTreeValidObject[], key = '_id'): TreeToListValidObject[] {
   let trees: any = {};
   let roots: any = {};
   for (const item of list) {

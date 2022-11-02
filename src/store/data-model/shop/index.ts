@@ -3,7 +3,9 @@
  */
 interface CatalogItemReference {
   _id: string,
-  _type: string
+  _type: string,
+  title?: string
+  code?: string
 }
 
 /**

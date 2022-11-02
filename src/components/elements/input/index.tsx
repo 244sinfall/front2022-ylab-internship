@@ -6,9 +6,9 @@ import './style.css';
 interface InputProps {
   value: string,
   type?: string,
-  name: string,
-  placeholder: string,
-  onChange?: (text: string, name: string) => any,
+  name?: string,
+  placeholder?: string,
+  onChange?: (text: string, name?: string) => any,
   theme?: string
 }
 

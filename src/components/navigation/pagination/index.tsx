@@ -38,7 +38,6 @@ function Pagination(props: PaginationProps) {
   const clickHandler = (page: number) => {
     return () => props.onChange(page);
   };
-
   return (
     <ul className={cn()}>
       {items.map((num, i) => num

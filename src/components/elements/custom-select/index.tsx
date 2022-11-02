@@ -4,16 +4,12 @@ import './styles.css';
 import CustomSelectListItem from './list-item'
 import { useState } from 'react';
 import { useMemo } from 'react';
+import { CustomSelectOption } from '@src/store/data-model/components/custom-select';
 
-interface CustomSelectOption {
-  title: string,
-  value: string,
-  code: string
-}
 interface CustomSelectProps {
   options: CustomSelectOption[],
-  onChange: (value: string) => any,
-  value: string,
+  onChange?: (value: string) => any,
+  value?: string,
 }
 
 function CustomSelect(props: CustomSelectProps) {
@@ -95,7 +91,7 @@ function CustomSelect(props: CustomSelectProps) {
         return <CustomSelectListItem key={v.value} name={v.title} code={v.code} onClick={() => {
           if(v.value !== selectedItem.value) {
             setSelectedItem({value: v.value, title: v.title, code: v.code})
-            props.onChange(v.value)
+            if(props.onChange) props.onChange(v.value)
           }
           callbacks.handleDropdownOpenClose()
         }} ref={currentSelection.current === null ? currentSelection :

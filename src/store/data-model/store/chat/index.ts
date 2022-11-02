@@ -11,6 +11,7 @@ export interface ChatMessage {
   text: string,
   _id: string,
   _key: string
+  isDelivering?: boolean
 }
 
 export interface ChatValues {

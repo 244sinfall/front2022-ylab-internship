@@ -20,10 +20,10 @@ class ModalsState extends StateModule{
    * @param name {String} Название модалки
    * @param params {Object} Параметры, которые передадуться модальному окну
    */
-  async open(name: string, params: any){
+  async open(name: string, params?: any){
     return new Promise(resolve => {
       this.setState({
-        opened: [...this.getState().opened, { name: name, params, resolve }] as ModalWindow[]
+        opened: [...this.getState().opened, { name: name, params: params ?? {}, resolve }] as ModalWindow[]
       }, `Открытие модалки ${name}`)
     })
   }
