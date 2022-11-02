@@ -1,15 +1,18 @@
 import React from 'react';
-
-import propTypes from 'prop-types';
-
 import './style.css'
-
 import {cn as bem} from "@bem-react/classname";
 
-const ChatForm = props => {
+interface ChatFormProps {
+  onChange: (e: any) => any,
+  onSubmit: () => any,
+  t: (text: string) => string,
+  value: string
+}
+
+const ChatForm = (props: ChatFormProps) => {
   const cn = bem('ChatForm')
   const callbacks = {
-    onSubmit: e => {
+    onSubmit: (e: any) => {
       e.preventDefault()
       props.onSubmit()
     },
@@ -19,22 +22,11 @@ const ChatForm = props => {
       <form onSubmit={callbacks.onSubmit} className={cn('form')}>
         <textarea className={cn('textarea')}
                   onChange={props.onChange} placeholder={props.t('chat.placeholder')}
-                  value={props.value}></textarea>
+                  value={props.value ?? ""}></textarea>
         <button className={cn('button')} type='submit'>{props.t('chat.submitMessage')}</button>
       </form>
     </div>
   );
 };
-
-ChatForm.propTypes = {
-  onChange: propTypes.func.isRequired,
-  onSubmit: propTypes.func.isRequired,
-  t: propTypes.func.isRequired,
-  value: propTypes.string
-};
-
-ChatForm.defaultProps = {
-  value: ""
-}
 
 export default React.memo(ChatForm);

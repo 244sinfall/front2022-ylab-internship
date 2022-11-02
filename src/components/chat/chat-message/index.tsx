@@ -1,11 +1,17 @@
 import './style.css'
-
 import React from 'react';
-
 import {cn as bem} from "@bem-react/classname";
-import propTypes from 'prop-types';
 
-const ChatMessage = (props) => {
+interface ChatMessageProps{
+  isAuthor?: boolean,
+  isDelivering?: boolean,
+  userName: string,
+  messageDate: string,
+  text: string,
+  t: (text: string) => string
+}
+
+const ChatMessage = (props: ChatMessageProps) => {
   const cn = bem('ChatMessage')
   return (
     <span className={cn({isAuthor: props.isAuthor})}>
@@ -23,18 +29,5 @@ const ChatMessage = (props) => {
     </span>
   );
 };
-
-ChatMessage.propTypes = {
-  isAuthor: propTypes.bool,
-  isDelivering: propTypes.bool,
-  userName: propTypes.string.isRequired,
-  messageDate: propTypes.string.isRequired,
-  text: propTypes.string.isRequired,
-  t: propTypes.func.isRequired
-}
-
-ChatMessage.defaultProps = {
-  isAuthor: false,
-}
 
 export default React.memo(ChatMessage);
