@@ -6,8 +6,8 @@ export interface AuthData {
 }
 
 export interface SessionValues {
-  user: UserInfo | {},
-  token: string,
+  user: UserInfo | null,
+  token: string | null,
   exists: boolean,
   errors: any[] | null
   waiting: boolean
