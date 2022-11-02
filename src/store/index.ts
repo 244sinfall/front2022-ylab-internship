@@ -53,7 +53,7 @@ class Store {
    */
   createSeparateState(name: string, base:string) {
     const baseModuleKey = base as keyof StoreModules
-    const module: any = new modules[baseModuleKey](this, this._getModuleConfig(base));
+    const module: any = new modules[baseModuleKey](this, this._getModuleConfig(name));
     this.modules[name as keyof typeof this.modules] = module
     this.state[name as keyof typeof this.state] = module.initState();
     return () => {
