@@ -1,12 +1,11 @@
 import StateModule from "@src/store/module";
 import {BasketItem, CatalogItem} from "@src/store/data-model/shop";
-import {BasketValues} from "@src/store/data-model/store/basket";
 
 
 /**
  * Состояние корзины
  */
-class BasketState extends StateModule{
+class BasketState extends StateModule<BasketState>{
 
   /**
    * Начальное состояние
@@ -19,9 +18,7 @@ class BasketState extends StateModule{
       amount: 0
     };
   }
-  getState() {
-    return super.getState() as BasketValues
-  }
+
   async addItemToBasket(item: CatalogItem) {
     let sum = 0
     let exists = false;

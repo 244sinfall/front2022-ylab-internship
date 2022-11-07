@@ -8,7 +8,7 @@ import { CustomSelectOption } from '@src/store/data-model/components/custom-sele
 
 interface CustomSelectProps {
   options: CustomSelectOption[],
-  onChange?: (value: string) => any,
+  onChange?: (value: string) => void,
   value?: string,
 }
 

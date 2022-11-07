@@ -32,10 +32,10 @@ function ChatContainer() {
   // Инициализация чата + уничтожение при демонтировании
   useInit(() => {
     if(select.token) {
-      const destroy = store.modules.chat.init(select.token)
+      const destroy = store.get("chat").init(select.token)
       return () => destroy.then(destroy => {
         destroy()
-        store.modules.chat.clearChat()
+        store.get("chat").clearChat()
       })
     }
   }, []);
@@ -59,7 +59,7 @@ function ChatContainer() {
   useLayoutEffect(() => {
     if(chatBoxRef.current &&
       chatBoxRef.current.scrollHeight - chatBoxRef.current.scrollTop - chatBoxRef.current.clientHeight < 400
-      || select.messages.at(-1).author._id === select.userId) {
+      || select.userId && select.messages.at(-1)?.author._id === select.userId) {
       chatBoxRef.current?.scrollTo({top: chatBoxRef.current.scrollHeight, behavior: 'smooth'})
     }
   }, [select.messages])
@@ -72,15 +72,17 @@ function ChatContainer() {
     onItemsScroll: useCallback(async (e: any) => {
       if (e.target.scrollTop === 0 && !select.maxOut && !select.waiting && chatBoxRef.current) {
         setCurrentTopPoint(chatBoxRef.current.scrollHeight)
-        oldestLoaded && await store.modules.chat.loadOlderMessages(oldestLoaded._id)
+        oldestLoaded && await store.get("chat").loadOlderMessages(oldestLoaded._id)
       }
     }, [oldestLoaded, select.maxOut]),
     // Редактирование сообщения в чатбоксе
     onMessageTextChange: useCallback((e: any) => setMessage(e.target.value), []),
     // Отправка сообщения
     onMessageSubmit: useCallback(() => {
-      const safeMessage = message.trim()
-      if(safeMessage) store.modules.chat.sendMessage(message, select.userId, select.userName).then(() => setMessage(""))
+      if(select.userId && select.userName) {
+        const safeMessage = message.trim()
+        if(safeMessage) store.get("chat").sendMessage(message, select.userId, select.userName).then(() => setMessage(""))
+      }
     }, [message])
   }
 

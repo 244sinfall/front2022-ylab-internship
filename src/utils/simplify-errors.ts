@@ -1,10 +1,14 @@
-interface Issue {
+type Issue  = {
   path: string[],
   message: string
 }
 
+export type SimplifiedErrors = {
+  [key: string]: string[]
+}
+
 export default function simplifyErrors(issues: Issue[]){
-  let result: any = {};
+  let result: SimplifiedErrors = {};
   for (const issue of issues){
     const key = issue.path.join('.') || 'other';
     if(result && Array.isArray(result[key as keyof typeof result])) {

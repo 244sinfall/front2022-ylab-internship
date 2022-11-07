@@ -22,17 +22,17 @@ function Basket() {
   const callbacks = {
     // Закрытие любой модалки
     closeModal: useCallback(async() => {
-      await store.modules.modals.close()
+      await store.get("modals").close()
     }, []),
     // Открывает информацию о товаре в модальном окне
-    onItemInspect: useCallback((_id: string) => store.modules.modals.open('article', { id: _id }), []),
+    onItemInspect: useCallback((_id: string) => store.get("modals").open('article', { id: _id }), []),
     // Удаление из корзины
-    removeFromBasket: useCallback((_id: string) => store.modules.basket.removeFromBasket(_id), []),
+    removeFromBasket: useCallback((_id: string) => store.get("basket").removeFromBasket(_id), []),
     // Открытие модального окна для добавления новых товаров. Возвраается промис с массивом объектов товаров, которые
     // выбрал пользователь
     onAddMore: useCallback(async() => {
-      const resultItems = await store.modules.modals.open('addExtraItems') as CatalogItem[]
-      resultItems.forEach(i => store.modules.basket.addItemToBasket(i))
+      const resultItems = await store.get("modals").open('addExtraItems') as CatalogItem[]
+      resultItems.forEach(i => store.get("basket").addItemToBasket(i))
     }, [])
   };
 

@@ -14,8 +14,8 @@ function Main() {
   const {t} = useTranslate();
   useInit(async () => {
     await Promise.all([
-      store.modules.catalog.initParams(),
-      store.modules.categories.load()
+      store.get("catalog").initParams(),
+      store.get("categories").load()
     ]);
   }, [], {backForward: true});
 

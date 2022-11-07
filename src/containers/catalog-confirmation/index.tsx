@@ -10,7 +10,7 @@ const CatalogConfirmation = () => {
   const store = useStore();
 
   const callbacks = {
-    close: (res = 0) => store.modules.modals.close(res),
+    close: (res = 0) => store.get("modals").close(res),
     valueChange: (newValue: string) => {
       let newValueInt = parseInt(newValue)
       if(isNaN(newValueInt) || newValueInt < 0) newValueInt = 0

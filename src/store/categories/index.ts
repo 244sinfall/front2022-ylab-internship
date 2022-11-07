@@ -1,10 +1,10 @@
 import StateModule from "@src/store/module";
 import qs from "@src/utils/search-params";
-import {Category} from "@src/store/data-model/store/categories";
+import {CategoriesValues, Category} from "@src/store/data-model/store/categories";
 /**
  * Состояние товара
  */
-class CategoriesState extends StateModule{
+class CategoriesState extends StateModule<CategoriesState>{
   /**
    * Начальное состояние
    * @return {Object}
@@ -14,7 +14,7 @@ class CategoriesState extends StateModule{
     return {
       items: items,
       waiting: false
-    };
+    } as CategoriesValues;
   }
 
   /**

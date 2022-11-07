@@ -12,6 +12,7 @@ import useSelector from '@src/hooks/use-selector';
 function Canvas(){
   const {t} = useTranslate()
   // Для обновления редактора примитива и его опций
+
   const select = useSelector(state => ({
     shape: state.canvas.selectedShape,
     options: state.canvas.selectedShapeOptions

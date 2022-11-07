@@ -1,7 +1,7 @@
 import shallowequal from 'shallowequal';
 import Shape from "@src/store/canvas/shapes";
-import {CanvasValues} from "@src/store/data-model/store/canvas";
-import {ShapeCoordinate} from "@src/store/canvas";
+import CanvasState, {ShapeCoordinate} from "@src/store/canvas";
+import {IState} from "@src/store/data-model/store";
 
 /**
  * Класс управляет канвасом и хранит его параметры во внетреннем состоянии,
@@ -10,15 +10,15 @@ import {ShapeCoordinate} from "@src/store/canvas";
 export class CanvasDrawer {
   private readonly _canvas: HTMLCanvasElement
   private readonly _context: CanvasRenderingContext2D
-  private readonly _onExport: (newState: any) => any
-  private _state: CanvasValues
+  private readonly _onExport: (newState: IState<CanvasState>) => void
+  private _state: IState<CanvasState>
   private _drawnItems: Shape[]
   private _animationFrame: number
   private _updateTime: number
   private _updateTimeout: NodeJS.Timeout
   private _mouseDown: boolean
   private _mouseDownPos: ShapeCoordinate
-  constructor(canvas: HTMLCanvasElement, initState: CanvasValues, onExport: (newState: CanvasValues) => any) {
+  constructor(canvas: HTMLCanvasElement, initState: IState<CanvasState>, onExport: (newState: IState<CanvasState>) => any) {
     this._canvas = canvas
     const context = this._canvas.getContext('2d')
     if(context === null) throw new Error("Контект не найден")
@@ -48,7 +48,7 @@ export class CanvasDrawer {
       rect.x2 > 0 && rect.y2 > 0 && rect.y1 < 600 && rect.x1 < 600
     )
   }
-  importState(newState: CanvasValues) {
+  importState(newState: IState<CanvasState>) {
     if(!shallowequal(this._state, newState)) {
       this._state = newState
       this._updateItems()
@@ -88,7 +88,7 @@ export class CanvasDrawer {
     newState.coordinates = this._state.coordinates
     newState.scale = this._state.scale
     newState.selectedShape = this._state.selectedShape
-    if(newState.selectedShape !== null) newState.selectedShapeOptions = {...this._state.selectedShape}
+    newState.selectedShapeOptions = newState.selectedShape !== null ? {...this._state.selectedShape} : null
     // Опции сохраняются отдельно, чтобы обеспечить иммутабельность
     this._onExport(newState)
   }

@@ -5,7 +5,7 @@ import './style.css';
 import {CatalogItem} from "@src/store/data-model/shop";
 
 interface ArticleCardProps {
-  article?: CatalogItem,
+  article: CatalogItem | null,
   onAdd?: (itemId: string) => any,
   onGotoPage?: (itemId: string) => any,
   t: (text: string) => string
@@ -36,7 +36,7 @@ function ArticleCard(props: ArticleCardProps) {
       </div>
       <div className={cn('controls')}>
         <button onClick={() => props.onAdd && props.article && props.onAdd(props.article._id)}>{props.t('article.add')}</button>
-        {props.onGotoPage && <button onClick={() => props.onGotoPage && props.article &&  props.onGotoPage(props.article?._id)}>{props.t('article.goTo')}</button> }
+        {props.onGotoPage && <button onClick={() => props.onGotoPage && props.article &&  props.onGotoPage(props.article._id)}>{props.t('article.goTo')}</button> }
       </div>
     </div>
   )

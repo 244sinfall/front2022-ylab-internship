@@ -1,7 +1,7 @@
 import React, {useEffect, useRef, useState} from 'react';
 
 interface InfiniteScrollerProps {
-  onIntersection: () => any,
+  onIntersection: () => void,
   children: React.ReactNode | React.ReactNode[]
 }
 

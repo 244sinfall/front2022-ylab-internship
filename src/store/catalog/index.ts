@@ -9,7 +9,7 @@ import {CatalogURLParams, CatalogValues} from "@src/store/data-model/store/catal
 /**
  * Состояние каталога
  */
-class CatalogState extends StateModule {
+class CatalogState extends StateModule<CatalogState> {
 
   /**
    * Начальное состояние
@@ -67,9 +67,6 @@ class CatalogState extends StateModule {
     const newParams = {...this.initState().params, ...params};
     // Установк параметров и подгрузка данных
     await this.setParams(newParams);
-  }
-  getState() {
-    return super.getState() as CatalogValues
   }
   /**
    * Метод для догрузки нового товара без изменения параметров. Используется свойство loaded, которое не сохраняется у

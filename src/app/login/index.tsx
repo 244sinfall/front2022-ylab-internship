@@ -1,4 +1,4 @@
-import React, {useCallback, useState} from "react";
+import React, {FormEvent, useCallback, useState} from "react";
 import {useLocation, useNavigate} from "react-router-dom";
 import useTranslate from "@src/hooks/use-translate";
 import Layout from "@src/components/layouts/layout";
@@ -32,9 +32,9 @@ function Login() {
       setData(prevData => ({...prevData, [name]: value}));
     }, []),
 
-    onSubmit: useCallback(async(e: any) => {
+    onSubmit: useCallback(async(e: FormEvent<HTMLFormElement>) => {
       e.preventDefault();
-      await store.modules.session.signIn(data, () => {
+      await store.get("session").signIn(data, () => {
         // Возврат на страницу, с которой пришли
         const state = location.state as any
         const back = state.back && state.back !== location.pathname
@@ -53,21 +53,20 @@ function Login() {
       <LayoutFlex flex={"start"} indent={"big"}>
         <form onSubmit={callbacks.onSubmit}>
           <h2>{t('auth.title')}</h2>
-          <Field label={t('auth.login')} error={select.errors?.login}>
+          <Field label={t('auth.login')} error={select.errors}>
             <Input name="login" onChange={callbacks.onChange}
                    value={data.login}/>
           </Field>
-          <Field label={t('auth.password')} error={select.errors?.password}>
+          <Field label={t('auth.password')} error={select.errors}>
             <Input name="password" type="password" onChange={callbacks.onChange}
                    value={data.password}/>
           </Field>
-          <Field error={select.errors?.other}/>
-          <Field>
+          <Field error={select.errors}/>
+          <Field error={null}>
             <button disabled={select.waiting} type="submit">{t('auth.signIn')}</button>
           </Field>
         </form>
       </LayoutFlex>
-
     </Layout>
   )
 }

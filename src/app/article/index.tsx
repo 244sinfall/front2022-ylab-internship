@@ -18,7 +18,7 @@ function Article(){
 
   useInit(async () => {
     if(params.id) {
-      await store.modules.article.load(params.id);
+      await store.get('article').load(params.id);
     }
   }, []);
 
@@ -31,7 +31,7 @@ function Article(){
 
   const callbacks = {
     // Добавление в корзину
-    addToBasket: useCallback((_id: string) => store.modules.basket.addToBasket(_id), []),
+    addToBasket: useCallback((_id: string) => store.get("basket").addToBasket(_id), []),
   };
 
   return (

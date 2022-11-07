@@ -1,6 +1,6 @@
 import * as modules from './exports';
 import Services from "@src/services";
-import {GlobalState, StoreModules} from "@src/store/data-model/store";
+import {IModules, IRootState, IStoreModules} from "@src/store/data-model/store";
 
 export interface ModuleConfig {
   name: string
@@ -18,9 +18,9 @@ class Store {
    */
   services: Services
   config: StoreConfig
-  readonly modules: StoreModules
-  state: GlobalState
-  listeners: (() => any)[]
+  readonly modules: IStoreModules
+  state: IRootState
+  listeners: (() => void)[]
   constructor(services: Services, config: StoreConfig) {
     // Менеджер сервисов
     this.services = services;
@@ -37,8 +37,8 @@ class Store {
       // По названию модля устанавливается свойство с анчальным состоянием от модуля
       initializedState[name] = initializedModules[name].initState();
     }
-    this.modules = initializedModules as StoreModules
-    this.state = initializedState as GlobalState
+    this.modules = initializedModules as IStoreModules
+    this.state = initializedState as IRootState
   }
   private _getModuleConfig(name: string) {
     const moduleConfig = this.config.modules ? this.config.modules[name as keyof typeof this.config.modules] ?
@@ -52,7 +52,7 @@ class Store {
    * @returns {(function(): void)|*} Функция для уничтожения созданного состояния
    */
   createSeparateState(name: string, base:string) {
-    const baseModuleKey = base as keyof StoreModules
+    const baseModuleKey = base as keyof IStoreModules
     const module: any = new modules[baseModuleKey](this, this._getModuleConfig(name));
     this.modules[name as keyof typeof this.modules] = module
     this.state[name as keyof typeof this.state] = module.initState();
@@ -61,7 +61,9 @@ class Store {
       delete this.state[name as keyof typeof this.state]
     }
   }
-
+  get<T extends keyof IModules>(name: T): IStoreModules[T] {
+    return this.modules[name]
+  }
   /**
    * Выбор state
    * @return {Object}
@@ -92,13 +94,12 @@ class Store {
       listener();
     }
   }
-
   /**
    * Подписка на изменение state
    * @param callback {Function}
    * @return {Function} Функция для отписки
    */
-  subscribe(callback: () => any) {
+  subscribe(callback: () => void) {
     this.listeners.push(callback);
     // Возвращаем функцию для удаления слушателя
     return () => {

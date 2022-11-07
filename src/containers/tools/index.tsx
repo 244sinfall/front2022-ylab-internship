@@ -25,7 +25,7 @@ function ToolsContainer(props: ToolsContainerProps) {
   const callbacks = {
     // Открытие корзины
     openModalBasket: useCallback(async() => {
-      await store.modules.modals.open('basket');
+      await store.get("modals").open('basket');
     }, []),
   };
 

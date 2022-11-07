@@ -20,7 +20,7 @@ function App() {
   const store = useStore();
 
   useInit(async ()=>{
-    await store.modules.session.remind();
+    await store.get("session").remind();
   })
 
   return (

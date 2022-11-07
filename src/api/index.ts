@@ -4,7 +4,9 @@ import {APIConfig} from "@src/config";
 class APIService {
   services: Services
   config: APIConfig
-  defaultHeaders: any
+  defaultHeaders: {
+    [key: string]: string
+  }
   /**
    * @param services {Services} Менеджер сервисов
    * @param config {Object}

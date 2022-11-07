@@ -5,15 +5,12 @@ import {ModalsValues, ModalWindow} from "@src/store/data-model/store/modals";
 /**
  * Управление модальными окнами
  */
-class ModalsState extends StateModule{
+class ModalsState extends StateModule<ModalsState>{
   initState() {
     const modals: ModalWindow[] = []
     return {
       opened: modals
     } as ModalsValues;
-  }
-  getState() {
-    return super.getState() as ModalsValues
   }
   /**
    * Открытие модального окна по названию

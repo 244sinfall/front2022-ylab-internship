@@ -5,7 +5,7 @@ import {ArticleValues} from "@src/store/data-model/store/article";
 /**
  * Состояние товара
  */
-class ArticleState extends StateModule{
+class ArticleState extends StateModule<ArticleState>{
 
   /**
    * Начальное состояние

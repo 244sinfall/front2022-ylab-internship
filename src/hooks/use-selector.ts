@@ -1,21 +1,20 @@
 import {useEffect, useMemo, useState} from "react";
 import shallowequal from 'shallowequal';
 import useStore from "./use-store";
-import {GlobalState} from "@src/store/data-model/store";
+import {IRootState} from "@src/store/data-model/store";
 
 /**
  * Хук для доступа к объекту хранилища
  * @return {Store|{}}
  */
-export default function useSelector(selector: (state: GlobalState) => any) {
-
+export default function useSelector<T>(selector: (state: IRootState) => T) {
   const store = useStore();
   const [state, setState] = useState(() => selector(store.getState()));
   // Подписка в useMemo чтобы сразу подписаться и только при первом рендере
   const unsubscribe = useMemo(() => {
     return store.subscribe(() => {
       // Новая выборка
-      const newState = selector(store.getState() as GlobalState);
+      const newState = selector(store.getState());
       // Установка выбранных данных, если они изменились
       setState((prevState: any) => {
         // Сравнение с предыдущей выборкой

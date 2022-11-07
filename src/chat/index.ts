@@ -128,12 +128,12 @@ class ChatService {
    * @param fromDate {string | undefined} Дата, с которой необходимо вернуть новые сообщения
    * @returns {Promise<*>}
    */
-  async getNewMessages(fromDate: string | undefined) {
+  async getNewMessages(fromDate: string | null) {
     const socket = await this._getSocket()
     return socket.send(JSON.stringify({
       method: "last",
       payload: {
-        fromDate: fromDate
+        fromDate: fromDate ?? undefined
       }
     }))
   }

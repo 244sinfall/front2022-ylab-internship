@@ -1,5 +1,11 @@
 import treeToList from "./index";
 
+type TestItem = {
+  _id: number,
+  title: string,
+  children: TestItem[]
+}
+
 describe('treeToList', () => {
   test('test1', () => {
 
@@ -27,8 +33,7 @@ describe('treeToList', () => {
         ]
       }
     ]
-
-    const cb = (item: any, level: any) => ({value: item._id, title: '- '.repeat(level) + item.title});
+    const cb = (item: TestItem, level: number) => ({value: item._id, title: '- '.repeat(level) + item.title});
 
     expect(treeToList(tree, cb)).toEqual([
       {value: 2, title: 'Электроника'},

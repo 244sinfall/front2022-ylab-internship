@@ -4,7 +4,7 @@ import './styles.css'
 
 interface CustomSelectListItemProps {
   name: string,
-  onClick?: () => any,
+  onClick?: () => void,
   code?: string
   tabIndex?: number,
   selected?: boolean

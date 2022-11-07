@@ -2,7 +2,7 @@ import StateModule from "@src/store/module";
 import * as shapes from "./shapes/exports"
 import {v4 as uuidv4} from 'uuid';
 import Shape from "@src/store/canvas/shapes";
-import {CanvasValues} from "@src/store/data-model/store/canvas";
+import {IState} from "@src/store/data-model/store";
 
 export interface ShapeCoordinate {
   x: number,
@@ -12,23 +12,20 @@ export interface ShapeCoordinate {
 /**
  * Состояние холста
  */
-class CanvasState extends StateModule{
+class CanvasState extends StateModule<CanvasState>{
 
   /**
    * Начальное состояние
    * @return {Object}
    */
   initState() {
-    const selectedShape: Shape | null = null
     return {
       coordinates: {x: 0, y: 0} as ShapeCoordinate,
       scale: 1,
       shapes: [] as Shape[],
-      selectedShape: selectedShape,
+      selectedShape: null as Shape | null,
+      selectedShapeOptions: null as any | null
     };
-  }
-  getState() {
-    return super.getState() as CanvasValues
   }
   /**
    * Добавляет шейп во внешнее состояние. По умолчанию шейп рисуется в видимых канвасу координатах.
@@ -72,7 +69,7 @@ class CanvasState extends StateModule{
    * Полностью перезаписывает состояние (для синхронизации со стейтом канваса)
    * @param newState Новое состояние целиком
    */
-  updateState(newState: CanvasValues) {
+  updateState(newState: IState<CanvasState>) {
     this.setState(newState)
   }
   /**

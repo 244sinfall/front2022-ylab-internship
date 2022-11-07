@@ -11,7 +11,7 @@ interface SessionStateConfig extends ModuleConfig {
 /**
  * Сессия
  */
-class SessionState extends StateModule {
+class SessionState extends StateModule<SessionState> {
   config: SessionStateConfig
   /**
    * Начальное состояние
@@ -34,7 +34,7 @@ class SessionState extends StateModule {
    * @param onSuccess
    * @returns {Promise<void>}
    */
-  async signIn(data: AuthData, onSuccess: () => any) {
+  async signIn(data: AuthData, onSuccess: () => void) {
     this.setState(this.initState(), 'Авторизация (начало)');
     try {
       const json = await this.services.api.request({

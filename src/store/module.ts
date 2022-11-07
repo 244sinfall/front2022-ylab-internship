@@ -1,12 +1,12 @@
 import Store from "@src/store/index";
 import Services from "@src/services";
-import {GlobalState} from "@src/store/data-model/store";
+import {IModules, IState} from "@src/store/data-model/store";
 
 export interface StateModuleConfig {
   name: string
 }
 
-class StateModule {
+abstract class StateModule<T extends StateModule<T>> {
   store: Store
   services: Services
   config: StateModuleConfig
@@ -28,11 +28,11 @@ class StateModule {
     return {};
   }
 
-  getState() {
-    return this.store.getState()[this.config.name as keyof GlobalState];
+  getState(): IState<T> {
+    return this.store.getState()[this.config.name as keyof IModules] as IState<T>;
   }
 
-  setState(newState: any, description = 'setState'){
+  setState(newState: IState<T>, description = 'setState'){
     this.store.setState({
       ...this.store.getState(),
       [this.config.name]: newState

@@ -1,11 +1,12 @@
 import React from 'react';
 import {cn as bem} from "@bem-react/classname";
 import './style.css';
+import {SimplifiedErrors} from "@src/utils/simplify-errors";
 
 interface FieldProps {
   label?: React.ReactNode | React.ReactNode[]
   children?: React.ReactNode | React.ReactNode[]
-  error?: React.ReactNode | React.ReactNode[]
+  error: SimplifiedErrors | null
 }
 
 function Field(props: FieldProps){
@@ -18,7 +19,7 @@ function Field(props: FieldProps){
         {props.children}
       </div>
       <div className={cn('error')}>
-        {props.error}
+        {props.error && String(props.error)}
       </div>
     </div>
   )

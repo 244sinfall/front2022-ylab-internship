@@ -56,10 +56,10 @@ function CatalogList(props: CatalogListProps) {
   // В корзине кнопку добавление товара. При нажатии на эту кнопку открывается модалка с каталогом, где можно добавить новый товар для корзины
   const callbacks = {
     // Добавление в корзину
-    addToBasket: useCallback((_id: string, count: number) => store.modules.basket.addToBasket(_id, count), []),
+    addToBasket: useCallback((_id: string, count: number) => store.get("basket").addToBasket(_id, count), []),
     // Открытие модалки добавления в корзину
     addConfirmation: useCallback(async(_id: string) => {
-      const result = await store.modules.modals.open('confirm')
+      const result = await store.get("modals").open('confirm')
       if(typeof result === 'number' && !isNaN(result) && result >= 1) await callbacks.addToBasket(_id, result)
     }, []),
     //Пагианция

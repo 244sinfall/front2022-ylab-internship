@@ -18,9 +18,8 @@ function Profile(){
     waiting: state.profile.waiting,
     exists: state.session.exists
   }));
-
   useInit(async () => {
-    await store.modules.profile.load();
+    await store.get("profile").load();
   }, []);
 
   return (

@@ -1,9 +1,10 @@
 import StateModule from "@src/store/module";
+import {LocaleValues} from "@src/store/data-model/store/locale";
 
 /**
  * Состояние товара
  */
-class LocaleState extends StateModule{
+class LocaleState extends StateModule<LocaleState>{
   /**
    * Начальное состояние
    * @return {Object}
@@ -11,7 +12,7 @@ class LocaleState extends StateModule{
   initState() {
     return {
       lang: 'ru',
-    };
+    } as LocaleValues;
   }
 
   async setLang(lang: string) {

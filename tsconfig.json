@@ -8,8 +8,6 @@
     "module": "ES6",
     "jsx": "react",
     "noImplicitAny": true,
-    // Пока переносим
-    "allowJs": true,
     "moduleResolution": "node",
     "baseUrl": "./",
     "paths": {

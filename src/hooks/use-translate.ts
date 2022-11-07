@@ -13,7 +13,7 @@ export default function useTranslate() {
   // Текущая локаль
   const lang = useSelector(state => state.locale.lang);
   // Функция для семны локали
-  const setLang = useCallback((lang: string) => store.modules.locale.setLang(lang), []);
+  const setLang = useCallback((lang: string) => store.get("locale").setLang(lang), []);
 
   // Функция для локализации текстов
   const t = useCallback((text: string, number?: number) => {

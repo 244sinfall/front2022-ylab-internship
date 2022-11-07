@@ -1,9 +1,9 @@
 import StateModule from "@src/store/module";
-import {ChatMessage, ChatValues} from "@src/store/data-model/store/chat";
+import {ChatMessage} from "@src/store/data-model/store/chat";
 /**
  * Состояние чата
  */
-class ChatState extends StateModule{
+class ChatState extends StateModule<ChatState>{
   //@todo Типобезопасность. Модели для данных
   /**
    * Начальное состояние
@@ -11,15 +11,14 @@ class ChatState extends StateModule{
    */
   initState() {
     return {
-      messages: [],
-      lastSubmittedKeys: [],
+      messages: [] as ChatMessage[],
+      lastSubmittedKeys: [] as string[],
       maxOut: false,
       waiting: false,
       authorized: false,
-    } as ChatValues;
-  }
-  getState() {
-    return super.getState() as ChatValues
+      oldestMessage: null as string | null,
+      lastMessageDate: null as string | null
+    };
   }
   async _onAuthResponseReceived(result: boolean) {
     if (!result) return await this.services.chat.stopKeepAlive()
@@ -86,7 +85,7 @@ class ChatState extends StateModule{
   async _onDisconnect(token: string, e: any) {
     if(e.wasClean) return
     await this.services.chat.stopKeepAlive()
-    this.setState({...this.getState(), authorized: false, lastMessageDate: this.getState().messages.at(-1)?.dateCreate})
+    this.setState({...this.getState(), authorized: false, lastMessageDate: this.getState().messages.at(-1)?.dateCreate ?? null})
     const timeout = setInterval(() => {
       this.services.chat.establish()
         .then((persistence) => persistence && clearInterval(timeout))
@@ -125,7 +124,7 @@ class ChatState extends StateModule{
     const key = await this.services.chat.sendMessage(message)
     this.setState({...this.getState(), lastSubmittedKeys: [...this.getState().lastSubmittedKeys, key],
       messages: [...this.getState().messages,
-        {_key: key, text: message, author: {_id: userId, profile: {name: userName}}, dateCreate: new Date().toString(), isDelivering: true}]})
+        {_id: "",_key: key, text: message, author: {_id: userId, profile: {name: userName}}, dateCreate: new Date().toString(), isDelivering: true}]})
   }
 
   /**

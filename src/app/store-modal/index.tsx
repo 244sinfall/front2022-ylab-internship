@@ -19,16 +19,16 @@ const StoreModal = () => {
   useInit(async () => {
     await Promise.all([
       (store.modules[catalogName as keyof typeof store.modules] as CatalogState).initParams(),
-      store.modules.categories.load()
+      store.get("categories").load()
     ]);
   }, [], {backForward: true});
   const callbacks = {
-    onClose: useCallback(() => store.modules.modals.close(), []),
-    onItemInspect: useCallback((_id: string) => store.modules.modals.open('article', { id: _id }), []),
+    onClose: useCallback(() => store.get("modals").close(), []),
+    onItemInspect: useCallback((_id: string) => store.get("modals").open('article', { id: _id }), []),
     // Открытие модалки добавления в корзину
     addConfirmation: useCallback(async(_id: string) => {
-      const result = await store.modules.modals.open('confirm')
-      if(typeof result === 'number' && !isNaN(result) && result >= 1) await store.modules.basket.addToBasket(_id, result)
+      const result = await store.get("modals").open('confirm')
+      if(typeof result === 'number' && !isNaN(result) && result >= 1) await store.get("basket").addToBasket(_id, result)
     }, []),
   }
   const renderFunction = useCallback((item: CatalogItem) => (

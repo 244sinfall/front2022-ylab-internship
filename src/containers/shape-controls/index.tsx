@@ -20,7 +20,7 @@ const ShapeControls = (props: ShapeControlsProps) => {
     onShapeChange: useCallback((name: string, value: string | number) => {
       if(!isNaN(parseInt(value as string))) value = parseInt(value as string)
       if(props.shape) {
-        store.modules.canvas.updateShape(props.shape, name, value)
+        store.get("canvas").updateShape(props.shape, name, value)
       }
     }, [props.shape])
   }

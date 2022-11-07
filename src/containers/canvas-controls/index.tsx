@@ -15,11 +15,10 @@ const CanvasControls = (props: CanvasControlsProps) => {
   const [selectedShape, setSelectedShape] = useState("")
   const [isFilling, setIsFilling] = useState(false)
   const [color, setColor] = useState("#000000")
-
   const callbacks = {
     onShapeSelectionChange: useCallback((value: string) => setSelectedShape(value), []),
-    onDraw: useCallback(() => store.modules.canvas.addShape(selectedShape, color, isFilling), [selectedShape, isFilling, color]),
-    onRemoveAll: useCallback(() => store.modules.canvas.removeAll(), []),
+    onDraw: useCallback(() => store.get('canvas').addShape(selectedShape, color, isFilling), [selectedShape, isFilling, color]),
+    onRemoveAll: useCallback(() => store.get("canvas").removeAll(), []),
     onColorChange: useCallback<ColorChangeHandler>((color) => setColor(color.hex), []),
     onFillCheck: useCallback((e: any) => setIsFilling(e.target.checked), [])
   }

@@ -22,16 +22,16 @@ function TopContainer() {
     onSignIn: useCallback(() => navigate('/login', {state: {back: location.pathname}}), [location.pathname]),
 
     // Отмена авторизации
-    onSignOut: useCallback(async() => await store.modules.session.signOut(), [location.pathname]),
+    onSignOut: useCallback(async() => await store.get("session").signOut(), [location.pathname]),
 
     // Открыть магазин в модальном окне
-    openCatalogModal: useCallback(() => store.modules.modals.open('separateStore'), [])
+    openCatalogModal: useCallback(() => store.get("modals").open('separateStore'), [])
   };
 
   return (
     <LayoutFlex flex="end" indent="small">
       <button onClick={callbacks.openCatalogModal}>{t('catalog.openInModal')}</button>
-      {select.exists && <Link to="/profile">{select.user.profile.name}</Link>}
+      {select.exists && <Link to="/profile">{select.user?.profile.name}</Link>}
       {select.exists
         ? <button onClick={callbacks.onSignOut}>{t('session.signOut')}</button>
         : <button onClick={callbacks.onSignIn}>{t('session.signIn')}</button>
