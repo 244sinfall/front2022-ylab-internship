@@ -8,8 +8,8 @@ import Spinner from "@src/components/elements/spinner";
 import Item from "@src/components/catalog/item";
 import InfiniteScroller from '@src/containers/infinite-scroller';
 import {CatalogItem} from "@src/store/data-model/shop";
-import {CatalogValues} from "@src/store/data-model/store/catalog";
 import CatalogState from "@src/store/catalog";
+import {IState} from "@src/store/data-model/store";
 
 interface CatalogListProps {
   catalogName?: string,
@@ -21,13 +21,13 @@ function CatalogList(props: CatalogListProps) {
   const store = useStore();
   const catalogName = (props.catalogName ? props.catalogName : "catalog") as keyof typeof store.state
   const select = useSelector(state => ({
-    items: (state[catalogName] as CatalogValues).items,
-    page: (state[catalogName] as CatalogValues).params.page,
-    limit: (state[catalogName] as CatalogValues).params.limit,
-    count: (state[catalogName] as CatalogValues).count,
-    waiting: (state[catalogName] as CatalogValues).waiting,
-    params: (state[catalogName] as CatalogValues).params,
-    loaded: (state[catalogName] as CatalogValues).loaded
+    items: (state[catalogName] as IState<CatalogState>).items,
+    page: (state[catalogName] as IState<CatalogState>).params.page,
+    limit: (state[catalogName] as IState<CatalogState>).params.limit,
+    count: (state[catalogName] as IState<CatalogState>).count,
+    waiting: (state[catalogName] as IState<CatalogState>).waiting,
+    params: (state[catalogName] as IState<CatalogState>).params,
+    loaded: (state[catalogName] as IState<CatalogState>).loaded
   }));
   // Массив координат крайни элементов текущего списка товара
   const prevThresholds = useRef<number[]>([])

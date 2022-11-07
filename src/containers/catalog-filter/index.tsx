@@ -8,8 +8,8 @@ import listToTree from "@src/utils/list-to-tree";
 import treeToList from "@src/utils/tree-to-list";
 import CustomSelect from '@src/components/elements/custom-select';
 import CatalogState from "@src/store/catalog";
-import {CatalogValues} from "@src/store/data-model/store/catalog";
 import {Category} from "@src/store/data-model/store/categories";
+import {IState} from "@src/store/data-model/store";
 
 interface CatalogFilterProps {
   catalogName?: string
@@ -21,9 +21,9 @@ function CatalogFilter(props: CatalogFilterProps) {
   const store = useStore();
   const catalogModule = (store.modules[catalogName] as CatalogState)
   const select = useSelector(state => ({
-    sort: (state[catalogName] as CatalogValues).params.sort,
-    query: (state[catalogName] as CatalogValues).params.query,
-    category: (state[catalogName] as CatalogValues).params.category,
+    sort: (state[catalogName] as IState<CatalogState>).params.sort,
+    query: (state[catalogName] as IState<CatalogState>).params.query,
+    category: (state[catalogName] as IState<CatalogState>).params.category,
     categories: state.categories.items,
   }));
   const {t} = useTranslate();

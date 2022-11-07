@@ -2,7 +2,7 @@ import StateModule from "@src/store/module";
 import qs from '@src/utils/search-params';
 import diff from "@src/utils/diff";
 import {CatalogItem} from "@src/store/data-model/shop";
-import {CatalogURLParams, CatalogValues} from "@src/store/data-model/store/catalog";
+import {CatalogURLParams} from "@src/store/data-model/store/catalog";
 
 
 
@@ -31,7 +31,7 @@ class CatalogState extends StateModule<CatalogState> {
       loaded: 0,
       params,
       waiting: false
-    } as CatalogValues;
+    };
   }
 
   /**

@@ -1,6 +1,6 @@
 import StateModule from "@src/store/module";
 import qs from "@src/utils/search-params";
-import {CategoriesValues, Category} from "@src/store/data-model/store/categories";
+import {Category} from "@src/store/data-model/store/categories";
 /**
  * Состояние товара
  */
@@ -10,11 +10,10 @@ class CategoriesState extends StateModule<CategoriesState>{
    * @return {Object}
    */
   initState() {
-    const items: Category[] = []
     return {
-      items: items,
+      items: [] as Category[],
       waiting: false
-    } as CategoriesValues;
+    };
   }
 
   /**

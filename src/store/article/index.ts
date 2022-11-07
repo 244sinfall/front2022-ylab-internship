@@ -1,7 +1,5 @@
 import StateModule from "@src/store/module";
 import {CatalogItem} from "@src/store/data-model/shop";
-import {ArticleValues} from "@src/store/data-model/store/article";
-
 /**
  * Состояние товара
  */
@@ -13,9 +11,9 @@ class ArticleState extends StateModule<ArticleState>{
    */
   initState() {
     return {
-      data: null,
+      data: null as CatalogItem | null,
       waiting: false
-    } as ArticleValues;
+    };
   }
   /**
    * Загрузка товаров по id

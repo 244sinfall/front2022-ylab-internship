@@ -1,8 +1,8 @@
 import StateModule from "@src/store/module";
-import simplifyErrors from "@src/utils/simplify-errors";
+import simplifyErrors, {SimplifiedErrors} from "@src/utils/simplify-errors";
 import {ModuleConfig} from "@src/store";
 import {UserInfo} from "@src/store/data-model/user";
-import {AuthData, SessionValues} from "@src/store/data-model/store/session";
+import {AuthData} from "@src/store/data-model/store/session";
 
 interface SessionStateConfig extends ModuleConfig {
   tokenHeader: string
@@ -18,14 +18,13 @@ class SessionState extends StateModule<SessionState> {
    * @return {Object}
    */
   initState() {
-    const user: UserInfo | null = null
     return {
-      user: user,
-      token: null,
-      errors: null,
+      user: null as UserInfo | null,
+      token: null as string | null,
+      errors: null as SimplifiedErrors | null,
       exists: false,
       waiting: true
-    } as SessionValues;
+    };
   }
 
   /**
