@@ -10,25 +10,65 @@ import {ShapeCoordinate} from "@src/store/canvas";
 
 export default class Shape {
   protected _id = ""
-  color = "#000000"
-  fill = false
+  private _color = "#000000"
+  private _fill = false
   selected = false
   startTime = performance.now()
-  y1 = 0
-  x1 = 0
-  width = 0
+  private _y1 = 0
+  private _x1 = 0
+  private _width = 0
   private _height = 0;
+  public get color() {
+    return this._color
+  }
+  public set color(newColor: string) {
+    this._color = newColor
+  }
+  public get fill() {
+    return this._fill
+  }
+  public set fill(newFill: boolean) {
+    this._fill = newFill
+  }
+  public get x1() {
+    return this._x1
+  }
+  public set x1(newX1: number) {
+    this._x1 = newX1
+  }
+  public get y1() {
+    return this._y1
+  }
+  public set y1(newY1: number) {
+    this._y1 = newY1
+  }
   public get height() {
-        return this._height;
-    }
-  public set height(value) {
-      this._height = value;
+    return this._height;
+  }
+  public set height(newHeight) {
+    this._height = newHeight;
+  }
+  public get width() {
+    return this._width
+  }
+  public set width(newWidth: number) {
+    this._width = newWidth
   }
   constructor() {
     if(this.constructor === Shape) {
       throw new Error("Невозможно создать экземпляр абстрактного класса")
     }
     this.startTime = performance.now()
+  }
+  getPublicFields() {
+    return ({
+      color: this.color,
+      fill: this.fill,
+      y1: this.y1,
+      x1: this.x1,
+      width: this.width,
+      height: this.height
+    })
   }
 
   /**

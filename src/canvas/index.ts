@@ -18,7 +18,7 @@ export class CanvasDrawer {
   private _updateTimeout: NodeJS.Timeout
   private _mouseDown: boolean
   private _mouseDownPos: ShapeCoordinate
-  constructor(canvas: HTMLCanvasElement, initState: IState<CanvasState>, onExport: (newState: IState<CanvasState>) => any) {
+  constructor(canvas: HTMLCanvasElement, initState: IState<CanvasState>, onExport: (newState: IState<CanvasState>) => void) {
     this._canvas = canvas
     const context = this._canvas.getContext('2d')
     if(context === null) throw new Error("Контект не найден")
@@ -51,7 +51,7 @@ export class CanvasDrawer {
   importState(newState: IState<CanvasState>) {
     if(!shallowequal(this._state, newState)) {
       this._state = newState
-      this._updateItems()
+      this._updateItems(false)
     }
   }
   /**
@@ -88,24 +88,26 @@ export class CanvasDrawer {
     newState.coordinates = this._state.coordinates
     newState.scale = this._state.scale
     newState.selectedShape = this._state.selectedShape
-    newState.selectedShapeOptions = newState.selectedShape !== null ? {...this._state.selectedShape} : null
     // Опции сохраняются отдельно, чтобы обеспечить иммутабельность
     this._onExport(newState)
   }
 
   /**
    * Пересчитывает отображаемые примитивы
-   * @param immediately Мгновенное обновление
+   * @param shouldUpdateState Флаг для отмены отправки состояния в state (false). Дефолт: тру
+   * @param immediately Флаг мгновенного обновления (false). Дефолт - true. При false задержка обновления
    * @private
    */
-  _updateItems(immediately = false) {
-    if(immediately || performance.now() - this._updateTime > 500) {
-      this._updateState()
-    } else {
-      clearTimeout(this._updateTimeout)
-      this._updateTimeout = setTimeout(() => {
+  _updateItems(shouldUpdateState = true, immediately = false) {
+    if(shouldUpdateState) {
+      if(immediately || performance.now() - this._updateTime > 500) {
         this._updateState()
-      }, 100)
+      } else {
+        clearTimeout(this._updateTimeout)
+        this._updateTimeout = setTimeout(() => {
+          this._updateState()
+        }, 100)
+      }
     }
     this._drawnItems = this._state.shapes.filter(shape => this._shouldDisplay(shape))
     if(this._drawnItems.filter(shape => shape.shouldFreeFall()).length > 0) {
@@ -135,15 +137,15 @@ export class CanvasDrawer {
     document.documentElement.style.userSelect = "none"
     this._mouseDownPos = {x: e.clientX, y: e.clientY}
     this._mouseDown = true
-    if(e.target === this._canvas && this._state.selectedShape) {
+    if(this._state.selectedShape) {
       this._state.selectedShape = null
-      this._updateItems(true)
+      this._updateItems(true, true)
     }
     for (let i = this._drawnItems.length - 1; i >= 0; i--) {
       if(this._drawnItems[i].isIntersecting(this._state.scale, this._state.coordinates, {x: e.offsetX, y: e.offsetY})) {
         this._state.selectedShape = this._drawnItems[i]
         this._state.selectedShape.selected = true
-        this._updateItems(true)
+        this._updateItems(true,true)
         return
       }
     }
@@ -157,7 +159,7 @@ export class CanvasDrawer {
     if(e.target === this._canvas && this._state.selectedShape) {
       this._state.selectedShape.startTime = performance.now()
       this._state.selectedShape.selected = false
-      this._updateItems(true)
+      this._updateItems(true, true)
     }
     this._mouseDown = false
   }

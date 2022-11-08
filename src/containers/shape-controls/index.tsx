@@ -1,12 +1,13 @@
-import React, {useCallback} from 'react';
-import * as shapesOptions from './exports'
+import React, {useCallback, useEffect, useState} from 'react';
 import useTranslate from '@src/hooks/use-translate';
 import useStore from '@src/hooks/use-store';
 import Shape from "@src/store/canvas/shapes";
+import './style.css'
+import shallowequal from "shallowequal";
+import ShapeOptions from "@src/components/canvas/shape-options";
 
-interface ShapeControlsProps {
-  shape: Shape | null,
-  options: any
+interface ShapeControlsProps<T> {
+  shape: T
 }
 /**
  * Поскольку у всех примитивов разные поля, нужные разные компоненты под выбранный примитив. См папку shapes
@@ -14,24 +15,28 @@ interface ShapeControlsProps {
  * @returns {JSX.Element}
  * @constructor
  */
-const ShapeControls = (props: ShapeControlsProps) => {
+const ShapeControls = <T extends Shape>(props: ShapeControlsProps<T>) => {
   const store = useStore()
+  const [values, setValues] = useState(props.shape.getPublicFields())
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      if(!shallowequal(values, props.shape.getPublicFields())) return setValues(props.shape.getPublicFields())
+    }, 500)
+    return () => clearInterval(intervalId)
+  }, [props.shape, values])
+
   const callbacks = {
-    onShapeChange: useCallback((name: string, value: string | number) => {
-      if(!isNaN(parseInt(value as string))) value = parseInt(value as string)
+    onShapeChange: useCallback((prop: string, value: string | number | boolean) => {
       if(props.shape) {
-        store.get("canvas").updateShape(props.shape, name, value)
+        const modified = Object.assign(Object.create(Object.getPrototypeOf(props.shape)), props.shape, {[prop]: value})
+        store.get("canvas").updateShape(modified)
       }
-    }, [props.shape])
+    }, [props.shape, values])
   }
   const {t} = useTranslate()
-  const key = props.shape?.constructor?.name + "Options"
-  const Component = shapesOptions[key as keyof typeof shapesOptions]
-  return (
-    <>
-      {Component && <Component onFieldChange={callbacks.onShapeChange} t={t} {...props.options}/>}
-    </>
-  )
+
+  return <ShapeOptions values={values} t={t} onChange={callbacks.onShapeChange}/>
 };
 
 export default React.memo(ShapeControls);

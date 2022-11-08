@@ -15,7 +15,6 @@ function Canvas(){
 
   const select = useSelector(state => ({
     shape: state.canvas.selectedShape,
-    options: state.canvas.selectedShapeOptions
   }))
   const drawOptions = [
     {code: " ", title: "Выберите фигуру", value: ""},
@@ -32,7 +31,7 @@ function Canvas(){
       <ToolsContainer hideMenu={false}/>
       <CanvasControls drawOptions={drawOptions}/>
       <CanvasProvider/>
-      <ShapeControls shape={select.shape} options={select.options}/>
+      {select.shape && <ShapeControls shape={select.shape}/>}
     </Layout>
   )
 }

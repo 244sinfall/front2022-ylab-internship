@@ -55,8 +55,8 @@
   "canvas.color": "Цвет",
   "canvas.fill": "Залить",
   "canvas.radius": "Радиус",
-  "canvas.startXCoordinate": "Начало координат (х)",
-  "canvas.startYCoordinate": "Начало координат (у)",
+  "canvas.x1": "Начало координат (х)",
+  "canvas.y1": "Начало координат (у)",
   "canvas.width": "Ширина",
   "canvas.height": "Высота",
   "canvas.shouldFill": "Заполнить цветом?"

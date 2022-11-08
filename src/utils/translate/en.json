@@ -53,8 +53,8 @@
   "canvas.color": "Color",
   "canvas.fill": "Filled",
   "canvas.radius": "Radius",
-  "canvas.startXCoordinate": "X start coordinate",
-  "canvas.startYCoordinate": "Y start coordinate",
+  "canvas.x1": "X start coordinate",
+  "canvas.y1": "Y start coordinate",
   "canvas.width": "Width",
   "canvas.height": "Height",
   "canvas.shouldFill": "Should fill it?"

@@ -40,6 +40,44 @@ export default class Triangle extends Shape {
   get height() {
     return Math.max(this.pointA.y, this.pointB.y, this.pointC.y) - Math.min(this.pointA.y, this.pointB.y, this.pointC.y)
   }
+  get width() {
+    return Math.max(this.pointA.x, this.pointB.x, this.pointC.x) - Math.min(this.pointA.x, this.pointB.x, this.pointC.x)
+  }
+  set height(newHeight) {
+    const points = [this.pointA, this.pointB, this.pointB]
+    const topPointY = Math.min(...points.map(point => point.y))
+    const topPoint = points.find(point => point.y === topPointY)
+    if(topPoint) {
+      topPoint.y += this.height - newHeight
+    }
+  }
+  set width(newPoint: number) {
+    const points = [this.pointA, this.pointB, this.pointB]
+    const topPointY = Math.min(...points.map(point => point.x))
+    const topPoint = points.find(point => point.x === topPointY)
+    if(topPoint) {
+      topPoint.x += this.width - newPoint
+    }
+  }
+  get x1() {
+    return Math.min(this.pointA.x, this.pointB.x, this.pointC.x)
+  }
+  get y1() {
+    return Math.min(this.pointA.y, this.pointB.y, this.pointC.y)
+  }
+  set x1(newX1: number) {
+    let delta = newX1 - this.x1
+    this.pointA.x += delta
+    this.pointB.x += delta
+    this.pointC.x += delta
+
+  }
+  set y1(newY1: number) {
+    let delta = newY1 - this.y1
+    this.pointA.y += delta
+    this.pointB.y += delta
+    this.pointC.y += delta
+  }
   getBoundingRect(scale: number, currentCoordinates: ShapeCoordinate) {
     const minX = Math.min(this.pointA.x, this.pointB.x, this.pointC.x)
     const minY = Math.min(this.pointA.y, this.pointB.y, this.pointC.y)

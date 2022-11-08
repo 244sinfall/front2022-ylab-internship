@@ -24,7 +24,6 @@ class CanvasState extends StateModule<CanvasState>{
       scale: 1,
       shapes: [] as Shape[],
       selectedShape: null as Shape | null,
-      selectedShapeOptions: null as any | null
     };
   }
   /**
@@ -47,21 +46,13 @@ class CanvasState extends StateModule<CanvasState>{
   /**
    * Метод для изменения существующего примитива в shapes. Находит его через уникальный ID
    * @param shape Примитив
-   * @param field Строка, поле для изменения (допускается точечная нотация)
-   * @param value Значение для установки в свойство
    */
-  updateShape(shape: Shape, field: string, value: any) {
+  updateShape<T extends Shape>(shape: T) {
     const newShapes = [...this.getState().shapes]
-    const selectedShape = newShapes.find(sh => sh.equals(shape))
-    const fieldDirection = field.split('.')
-    if(selectedShape) {
-      let neededObject: Shape | any = selectedShape
-      while(fieldDirection.length !== 1) {
-        neededObject = neededObject[fieldDirection.shift() as keyof unknown] as any
-      }
-      const lastLevelField = fieldDirection.at(-1) as string
-      neededObject[lastLevelField] = value
-      this.setState({...this.getState(), shapes: newShapes })
+    const selectedShapeIndex = newShapes.findIndex(sh => sh.equals(shape))
+    if(selectedShapeIndex != -1) {
+      newShapes[selectedShapeIndex] = shape
+      this.setState({...this.getState(), shapes: newShapes, selectedShape: newShapes[selectedShapeIndex]})
     }
   }
 

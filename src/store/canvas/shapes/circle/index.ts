@@ -12,7 +12,6 @@ export default class Circle extends Shape {
       y1: params.y1 ?? coordinates.y + Math.ceil(Math.random() * (400 / scale)),
       radius: params.radius ?? Math.ceil(Math.random() * 50),
     }
-
     return new Circle(opts.id, opts.color, opts.fill, opts.x1, opts.y1, opts.radius)
   }
 
@@ -39,6 +38,15 @@ export default class Circle extends Shape {
    */
   get height() {
     return this.radius * 2
+  }
+  get width() {
+    return this.radius * 2
+  }
+  set height(newHeight: number) {
+    this.radius = newHeight / 2
+  }
+  set width(newWidth: number) {
+    this.radius = newWidth / 2
   }
   constructor(id: string, color: string, fill: boolean, x1: number, y1: number, radius: number) {
     super();
