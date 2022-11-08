@@ -35,6 +35,7 @@ export class CanvasDrawer {
     this._canvas.addEventListener("mousedown", this._onMouseDown)
     window.addEventListener("mousemove", this._onMouseMove)
     window.addEventListener("mouseup", this._onMouseUp)
+    this._updateItems(false, true)
   }
   /**
    * Проверка на вхождение в канвас
