@@ -4,7 +4,7 @@ import {UserInfo} from "@src/store/data-model/user";
 /**
  * Состояние профиля
  */
-class ProfileState extends StateModule<ProfileState>{
+class ProfileState extends StateModule {
   /**
    * Начальное состояние
    * @return {Object}

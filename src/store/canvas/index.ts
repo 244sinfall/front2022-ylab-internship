@@ -12,7 +12,7 @@ export interface ShapeCoordinate {
 /**
  * Состояние холста
  */
-class CanvasState extends StateModule<CanvasState>{
+class CanvasState extends StateModule{
 
   /**
    * Начальное состояние

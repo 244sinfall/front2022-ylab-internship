@@ -6,7 +6,7 @@ export interface StateModuleConfig {
   name: string
 }
 
-abstract class StateModule<T extends StateModule<T>> {
+abstract class StateModule {
   store: Store
   services: Services
   config: StateModuleConfig
@@ -28,11 +28,11 @@ abstract class StateModule<T extends StateModule<T>> {
     return {};
   }
 
-  getState(): IState<T> {
+  getState<T extends StateModule>(this: T): IState<T> {
     return this.store.getState()[this.config.name as keyof IModules] as IState<T>;
   }
 
-  setState(newState: IState<T>, description = 'setState'){
+  setState<T extends StateModule>(newState: IState<T>, description = 'setState'){
     this.store.setState({
       ...this.store.getState(),
       [this.config.name]: newState

@@ -3,7 +3,7 @@ import {CatalogItem} from "@src/store/data-model/shop";
 /**
  * Состояние товара
  */
-class ArticleState extends StateModule<ArticleState>{
+class ArticleState extends StateModule{
 
   /**
    * Начальное состояние

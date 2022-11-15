@@ -11,7 +11,7 @@ interface SessionStateConfig extends ModuleConfig {
 /**
  * Сессия
  */
-class SessionState extends StateModule<SessionState> {
+class SessionState extends StateModule {
   config: SessionStateConfig
   /**
    * Начальное состояние

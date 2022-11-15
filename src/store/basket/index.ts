@@ -5,7 +5,7 @@ import {BasketItem, CatalogItem} from "@src/store/data-model/shop";
 /**
  * Состояние корзины
  */
-class BasketState extends StateModule<BasketState>{
+class BasketState extends StateModule{
 
   /**
    * Начальное состояние

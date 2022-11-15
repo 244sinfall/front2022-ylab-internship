@@ -11,4 +11,4 @@ export type IRootState = {
   [P in keyof IStoreModules]: ReturnType<IStoreModules[P]['initState']>
 }
 
-export type IState<T extends StateModule<T>> = ReturnType<T['initState']>
+export type IState<T extends StateModule> = ReturnType<T['initState']>

@@ -9,7 +9,7 @@ import {CatalogURLParams} from "@src/store/data-model/store/catalog";
 /**
  * Состояние каталога
  */
-class CatalogState extends StateModule<CatalogState> {
+class CatalogState extends StateModule {
 
   /**
    * Начальное состояние

@@ -5,7 +5,7 @@ import {ModalWindow} from "@src/store/data-model/store/modals";
 /**
  * Управление модальными окнами
  */
-class ModalsState extends StateModule<ModalsState>{
+class ModalsState extends StateModule{
   initState() {
     return {
       opened: [] as ModalWindow[]

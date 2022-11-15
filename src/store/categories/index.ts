@@ -4,7 +4,7 @@ import {Category} from "@src/store/data-model/store/categories";
 /**
  * Состояние товара
  */
-class CategoriesState extends StateModule<CategoriesState>{
+class CategoriesState extends StateModule{
   /**
    * Начальное состояние
    * @return {Object}

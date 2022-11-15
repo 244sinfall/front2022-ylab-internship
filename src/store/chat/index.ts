@@ -3,7 +3,7 @@ import {ChatMessage} from "@src/store/data-model/store/chat";
 /**
  * Состояние чата
  */
-class ChatState extends StateModule<ChatState>{
+class ChatState extends StateModule{
   //@todo Типобезопасность. Модели для данных
   /**
    * Начальное состояние
